@@ -25,7 +25,6 @@ describe("API pública de emendas", () => {
   it("consulta a carga oficial persistida e expõe os filtros de situação e valor pago", async () => {
     const response = await fetch(`${baseUrl}/api/v1/emendas?ano=2025&uf=RJ&status=informacao_insuficiente&minPaid=0`);
     const payload = await response.json();
-
     expect(response.status).toBe(200);
     expect(payload.meta).toMatchObject({ year: 2025, uf: "RJ", status: "informacao_insuficiente", minPaid: 0 });
     expect(payload.meta.coverage).toContain("carga oficial persistida");
@@ -38,14 +37,19 @@ describe("API pública de emendas", () => {
     expect(response.status).toBe(400);
   });
 
+  it("aplica autoria e função orçamentária aos registros oficiais persistidos", async () => {
+    const response = await fetch(`${baseUrl}/api/v1/emendas?ano=2025&autor=GENERAL%20GIRAO&funcao=Defesa%20nacional`);
+    const payload = await response.json();
+    expect(response.status).toBe(200);
+    expect(payload.meta).toMatchObject({ author: "GENERAL GIRAO", budgetFunction: "Defesa nacional" });
+    expect(payload.data).toHaveLength(1);
+    expect(payload.data[0]).toMatchObject({ code: "202539940017", author: "GENERAL GIRAO", budgetFunction: "Defesa nacional" });
+  });
+
   it("pagina a carga oficial persistida sem repetir os registros da primeira página", async () => {
-    const [firstResponse, secondResponse] = await Promise.all([
-      fetch(`${baseUrl}/api/v1/emendas?ano=2025&pagina=1`),
-      fetch(`${baseUrl}/api/v1/emendas?ano=2025&pagina=2`),
-    ]);
+    const [firstResponse, secondResponse] = await Promise.all([fetch(`${baseUrl}/api/v1/emendas?ano=2025&pagina=1`), fetch(`${baseUrl}/api/v1/emendas?ano=2025&pagina=2`)]);
     const [firstPage, secondPage] = await Promise.all([firstResponse.json(), secondResponse.json()]);
     const firstCodes = new Set(firstPage.data.map((record: { code: string }) => record.code));
-
     expect(firstResponse.status).toBe(200);
     expect(secondResponse.status).toBe(200);
     expect(firstPage.meta.page).toBe(1);

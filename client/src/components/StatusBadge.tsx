@@ -1,3 +1,4 @@
+import React from "react";
 import { CircleAlert, CircleCheck, CircleHelp, Clock3, TriangleAlert } from "lucide-react";
 import type { ComplianceStatus } from "../../../server/portalTransparency";
 

@@ -20,6 +20,10 @@ function matchesQuery(record: Awaited<ReturnType<typeof fetchPortalAmendments>>[
     .some(value => value?.toLocaleLowerCase("pt-BR").includes(query));
 }
 
+function matchesFilter(value: string | null, filter: string | undefined) {
+  return !filter || Boolean(value?.toLocaleLowerCase("pt-BR").includes(filter.toLocaleLowerCase("pt-BR")));
+}
+
 export async function getOfficialSuggestions(query: string) {
   const db = await getDb();
   if (!db) throw new Error("Banco de dados indisponível.");
@@ -45,11 +49,7 @@ export function registerPublicApi(app: Express) {
   app.get("/api/v1/openapi.json", (_req, res) => {
     res.json({
       openapi: "3.0.3",
-      info: {
-        title: "API pública — Emendas em Foco",
-        version: "0.1.0",
-        description: "Dados oficiais de emendas com proveniência. Campos ainda não fornecidos pelas fontes são retornados como null.",
-      },
+      info: { title: "API pública — Emendas em Foco", version: "0.1.0", description: "Dados oficiais de emendas com proveniência. Campos ainda não fornecidos pelas fontes são retornados como null." },
       paths: {
         "/api/v1/emendas": {
           get: {
@@ -60,6 +60,8 @@ export function registerPublicApi(app: Express) {
               { name: "q", in: "query", schema: { type: "string", example: "saúde" } },
               { name: "status", in: "query", schema: { type: "string", enum: complianceStatuses, example: "informacao_insuficiente" } },
               { name: "minPaid", in: "query", schema: { type: "number", minimum: 0, example: 100000 } },
+              { name: "autor", in: "query", schema: { type: "string", example: "GENERAL GIRAO" } },
+              { name: "funcao", in: "query", schema: { type: "string", example: "Defesa nacional" } },
               { name: "pagina", in: "query", schema: { type: "integer", minimum: 1, default: 1 } },
             ],
             responses: { "200": { description: "Registros oficiais e metadados de proveniência." }, "400": { description: "Parâmetros inválidos." }, "502": { description: "Fonte oficial indisponível." } },
@@ -85,28 +87,17 @@ export function registerPublicApi(app: Express) {
     const status = complianceStatuses.includes(rawStatus as ComplianceStatus) ? rawStatus as ComplianceStatus : undefined;
     const rawMinPaid = typeof req.query.minPaid === "string" ? req.query.minPaid : undefined;
     const minPaid = rawMinPaid === undefined ? undefined : Number(rawMinPaid);
+    const author = typeof req.query.autor === "string" ? req.query.autor.trim() || undefined : undefined;
+    const budgetFunction = typeof req.query.funcao === "string" ? req.query.funcao.trim() || undefined : undefined;
     const invalidMinPaid = rawMinPaid !== undefined && !(typeof minPaid === "number" && Number.isFinite(minPaid) && minPaid >= 0);
     if (!year || !Number.isInteger(page) || page < 1 || page > 100 || (rawStatus !== undefined && !status) || invalidMinPaid) return res.status(400).json({ error: "Parâmetros inválidos." });
 
     try {
       const stored = await hasStoredAmendments(year);
-      const records = stored
-        ? await searchStoredAmendments({ query, year, uf, status, minPaid, page })
-        : await fetchPortalAmendments({ year, page, uf });
-      const filtered = records.filter(record => matchesQuery(record, query) && (!status || record.complianceStatus === status) && (minPaid === undefined || (record.paid !== null && record.paid >= minPaid)));
+      const records = stored ? await searchStoredAmendments({ query, year, uf, status, minPaid, author, budgetFunction, page }) : await fetchPortalAmendments({ year, page, uf });
+      const filtered = records.filter(record => matchesQuery(record, query) && matchesFilter(record.author, author) && matchesFilter(record.budgetFunction, budgetFunction) && (!status || record.complianceStatus === status) && (minPaid === undefined || (record.paid !== null && record.paid >= minPaid)));
       res.set("Cache-Control", "public, max-age=300");
-      return res.json({
-        data: filtered,
-        meta: {
-          year,
-          uf: uf ?? null,
-          page,
-          count: filtered.length,
-          status: status ?? null,
-          minPaid: minPaid ?? null,
-          coverage: stored ? "Consulta da carga oficial persistida para o ano. A entrega física continua sem inferência enquanto não houver conciliação entre fontes." : "Consulta de uma página da fonte oficial. A base conciliada nacional é publicada à medida que as cargas forem concluídas.",
-        },
-      });
+      return res.json({ data: filtered, meta: { year, uf: uf ?? null, page, count: filtered.length, status: status ?? null, minPaid: minPaid ?? null, author: author ?? null, budgetFunction: budgetFunction ?? null, coverage: stored ? "Consulta da carga oficial persistida para o ano. A entrega física continua sem inferência enquanto não houver conciliação entre fontes." : "Consulta de uma página da fonte oficial. A base conciliada nacional é publicada à medida que as cargas forem concluídas." } });
     } catch {
       return res.status(502).json({ error: "Não foi possível consultar a fonte oficial neste momento." });
     }
@@ -116,10 +107,7 @@ export function registerPublicApi(app: Express) {
     const query = typeof req.query.q === "string" ? req.query.q.trim() : "";
     if (query.length < 2) return res.status(400).json({ error: "Informe ao menos dois caracteres em q." });
     try {
-      return res.json({
-        data: await getOfficialSuggestions(query),
-        meta: { query, reconciliationNote: "Objetos de propostas ainda não conciliados com emendas são exibidos somente como sugestões de busca." },
-      });
+      return res.json({ data: await getOfficialSuggestions(query), meta: { query, reconciliationNote: "Objetos de propostas ainda não conciliados com emendas são exibidos somente como sugestões de busca." } });
     } catch {
       return res.status(503).json({ error: "Não foi possível consultar as sugestões oficiais neste momento." });
     }
