@@ -140,3 +140,6 @@
 - [x] Definir e registrar o conteúdo, a proveniência e os limites das exportações CSV e PDF do resumo financeiro filtrado.
 - [x] Implementar botões acessíveis para exportar em CSV e PDF o recorte exibido no painel anual.
 - [x] Validar arquivos exportados, conteúdo do recorte, acessibilidade, responsividade e build.
+- [x] Verificar a disponibilidade do repositório GitHub Spacecoa e a integração autorizável para acesso a documentos.
+- [x] Preparar e submeter a vinculação do projeto ao GitHub somente após confirmação explícita da operação.
+- [x] Verificar o acesso aos documentos após a vinculação e registrar o escopo efetivamente disponível.
