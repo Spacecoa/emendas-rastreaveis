@@ -42,8 +42,16 @@ export default function PortalLayout({
       <a className="skip-link" href="#conteudo">
         Pular para o conteúdo principal
       </a>
-      <header className="border-b border-black/10 bg-[#faf9f6]/90 backdrop-blur">
-        <div className="container flex min-h-20 items-center justify-between gap-5">
+      <header className="site-header">
+        <div className="site-header-meta hidden sm:block">
+          <div className="container flex items-center justify-between py-2">
+            <span>Dados públicos · leitura responsável</span>
+            <span>
+              <strong>2022–2025</strong> · fontes verificáveis
+            </span>
+          </div>
+        </div>
+        <div className="container flex min-h-[4.5rem] items-center justify-between gap-5">
           <Link
             href="/"
             className="group flex items-center gap-3 rounded-sm font-black tracking-[-0.05em] focus:outline-none focus-visible:ring-4 focus-visible:ring-[#1e4a77]/35"
@@ -62,7 +70,7 @@ export default function PortalLayout({
           </Link>
           <nav
             aria-label="Navegação principal"
-            className="hidden items-center gap-6 text-sm font-medium md:flex"
+            className="hidden items-center gap-2 text-sm font-semibold md:flex"
           >
             {navigation.map(item =>
               item.external ? (
@@ -81,7 +89,7 @@ export default function PortalLayout({
             )}
           </nav>
           <button
-            className="grid size-10 place-items-center rounded-full border border-black/15 bg-white md:hidden"
+            className="grid size-10 place-items-center rounded-md border border-black/15 bg-white md:hidden"
             aria-label={open ? "Fechar menu" : "Abrir menu"}
             aria-expanded={open}
             onClick={() => setOpen(value => !value)}
@@ -92,7 +100,7 @@ export default function PortalLayout({
         {open && (
           <nav
             aria-label="Navegação móvel"
-            className="container flex flex-col gap-1 border-t border-black/10 py-4 md:hidden"
+            className="container flex flex-col gap-1 border-t border-black/10 bg-[#faf9f6] py-4 md:hidden"
           >
             {navigation.map(item =>
               item.external ? (
@@ -120,7 +128,7 @@ export default function PortalLayout({
       <main id="conteudo" tabIndex={-1}>
         {children}
       </main>
-      <footer className="mt-20 border-t border-black/10 bg-[#eceeeb]">
+      <footer className="site-footer mt-20 border-t border-black/10">
         <div className="container grid gap-8 py-10 md:grid-cols-2 xl:grid-cols-4">
           <section>
             <p className="font-black tracking-[-0.04em]">Emendas em Foco</p>
@@ -189,7 +197,7 @@ export function CompactSearchLink() {
   return (
     <Link
       href="/busca"
-      className="inline-flex items-center gap-2 rounded-full border border-black/15 bg-white px-4 py-2 text-sm font-semibold shadow-sm transition hover:bg-[#edf4fb] focus:outline-none focus-visible:ring-4 focus-visible:ring-[#1e4a77]/35"
+      className="inline-flex items-center gap-2 rounded-md border border-black/15 bg-white px-4 py-2 text-sm font-semibold shadow-sm transition hover:border-[#1e4a77]/45 hover:bg-[#edf4fb] focus:outline-none focus-visible:ring-4 focus-visible:ring-[#1e4a77]/35"
     >
       <Search size={16} /> Nova consulta
     </Link>

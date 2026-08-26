@@ -157,7 +157,10 @@ export default function CoveragePage() {
     <PortalLayout>
       <div className="container py-12 sm:py-16">
         <header className="max-w-4xl">
-          <p className="eyebrow">COBERTURA E RASTREABILIDADE</p>
+          <div className="flex flex-wrap items-center gap-3">
+            <p className="eyebrow">COBERTURA E RASTREABILIDADE</p>
+            <span className="source-stamp">Base persistida</span>
+          </div>
           <h1 className="mt-3 text-4xl font-black tracking-[-0.065em] sm:text-5xl">
             O que está carregado,
             <br className="hidden sm:block" /> e o que ainda não se pode

@@ -29,3 +29,7 @@ As opções recomendadas ao usuário devem preservar requisitos já adotados: fo
 | Recomendação | Melhor evolução incremental | Melhor base de longo prazo | Ideal para foco analítico | Ideal para identidade cultural/editorial |
 
 > **Recomendação:** combinar a opção **1** na camada pública de leitura com a opção **2** nos filtros, tabelas, exportações e API. Assim, a plataforma mantém uma aparência acolhedora, mas opera como um serviço público previsível e acessível.
+
+## Direção adotada
+
+Em 26 de agosto de 2026, foi autorizada a combinação recomendada. A interface passou a usar títulos editoriais em serif, superfícies off-white e selos de proveniência nas áreas de leitura pública; navegação, busca, filtros, tabelas e ações foram alinhados a controles retangulares, contraste institucional e estados previsíveis. A alteração não modifica os dados, a metodologia, as fontes ou os limites de interpretação da plataforma.

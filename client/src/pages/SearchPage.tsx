@@ -123,7 +123,10 @@ export default function SearchPage() {
   return (
     <PortalLayout>
       <div className="container py-12 sm:py-16">
-        <p className="eyebrow">CONSULTA PÚBLICA</p>
+        <div className="flex flex-wrap items-center gap-3">
+          <p className="eyebrow">CONSULTA PÚBLICA</p>
+          <span className="source-stamp">Recorte compartilhável</span>
+        </div>
         <h1 className="mt-3 text-4xl font-black tracking-[-0.06em] sm:text-5xl">
           Encontre uma emenda, um lugar ou uma autoria.
         </h1>
@@ -211,7 +214,7 @@ export default function SearchPage() {
                   </p>
                 </div>
               ) : (
-                <div className="mt-6 min-w-0 overflow-hidden rounded-[1.4rem] bg-white shadow-[0_8px_30px_rgba(18,25,32,.05)]">
+                <div className="institutional-table mt-6 min-w-0 overflow-hidden rounded-[0.9rem] bg-white">
                   <div className="results-scroll">
                     <table className="min-w-[860px] w-full text-left">
                       <caption className="sr-only">

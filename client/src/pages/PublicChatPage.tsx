@@ -71,7 +71,10 @@ export default function PublicChatPage() {
       <div className="container py-12 sm:py-16">
         <div className="flex flex-wrap items-start justify-between gap-5">
           <div className="max-w-3xl">
-            <p className="eyebrow">CONSULTA CONVERSACIONAL</p>
+            <div className="flex flex-wrap items-center gap-3">
+              <p className="eyebrow">CONSULTA CONVERSACIONAL</p>
+              <span className="source-stamp">Resposta fundamentada</span>
+            </div>
             <h1 className="mt-3 text-4xl font-black tracking-[-0.06em] sm:text-5xl">
               Pergunte aos dados, com fonte e limite.
             </h1>

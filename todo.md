@@ -130,4 +130,7 @@
 - [x] Expor e validar os totais financeiros oficiais de emendas por exercício de 2022 a 2025.
 - [x] Adicionar painel visual acessível de valores totais anuais na cobertura pública, com fonte e limite de interpretação.
 - [x] Cobrir o painel anual com testes de precisão, acessibilidade, responsividade e build.
-- [ ] Avaliar e selecionar uma direção estética alternativa para futura evolução visual, sem alterar a interface sem autorização explícita.
+- [x] Avaliar e selecionar uma direção estética alternativa para futura evolução visual, sem alterar a interface sem autorização explícita.
+- [x] Aplicar linguagem Cívico editorial nas páginas públicas principais, com hierarquia de leitura, ritmo tipográfico e proveniência em destaque.
+- [x] Aplicar padrões Institucional claro a navegação, busca, filtros, tabelas, ações e estados de interface.
+- [x] Revalidar acessibilidade, responsividade e consistência visual da combinação estética adotada.

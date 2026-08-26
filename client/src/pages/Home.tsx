@@ -71,7 +71,10 @@ export default function Home() {
             aria-hidden="true"
           />
           <div className="relative max-w-4xl">
-            <p className="eyebrow">REGISTROS PÚBLICOS, LEITURA CLARA</p>
+            <div className="flex flex-wrap items-center gap-3">
+              <p className="eyebrow">REGISTROS PÚBLICOS, LEITURA CLARA</p>
+              <span className="source-stamp">Fonte e limite visíveis</span>
+            </div>
             <h1 className="mt-5 max-w-3xl text-5xl font-black leading-[.92] tracking-[-0.07em] text-[#151a20] sm:text-6xl lg:text-7xl">
               Acompanhe a emenda{" "}
               <span className="font-light italic">sem pular etapas.</span>
