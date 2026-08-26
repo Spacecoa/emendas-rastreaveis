@@ -14,9 +14,10 @@ Cada registro de domínio preserva **fonte**, **URL de origem**, **data de extra
 | `physical_milestones` | Execução física ou finalística | Instrumento + marco | Fonte, URL, data e hash |
 | `accountabilities` | Situação da prestação de contas | Instrumento | Fonte, URL, data e hash |
 | `municipalities` | Código IBGE, UF, população e geografia | Código IBGE | Fonte, URL, data e hash |
+| `source_catalog_entries` | Beneficiário, objeto ou instrumento oficial que ainda não tem vínculo auditável com uma emenda | Tipo + chave externa + hash; `amendmentId` só após conciliação | Fonte, URL, data e hash |
 | `compliance_alerts` | Fatos que podem disparar aviso | Emenda + tipo de alteração | Fonte, URL, data e hash |
 | `ingestion_runs` | Auditoria de cada carga | Fonte + início da execução | Ano, UF, registros extraídos, registros conciliados e taxa de casamento |
 
 ## Taxa de casamento
 
-A taxa de casamento é calculada como `registros conciliados / registros extraídos`. A conciliação planejada usa **código da emenda + ano + órgão + CNPJ do beneficiário**. Na primeira carga do Portal da Transparência, antes da integração de uma segunda base, o valor é **0,0000** e não representa falha nem cobertura nacional: significa somente que ainda não havia outra fonte integrada para conciliar.
+A taxa de casamento é calculada como `registros conciliados / registros extraídos`. A conciliação planejada usa **código da emenda + ano + órgão + CNPJ do beneficiário**. Registros complementares que não possuem todas essas chaves — como propostas, instrumentos e objetos do Transferegov — permanecem com `reconciliationStatus = nao_conciliado`; eles nunca são apresentados como evidência de execução de uma emenda específica. Enquanto o primeiro recorte não tiver chaves suficientes para casamento, a taxa publicada continua **0,0000**, sem representar falha nem cobertura nacional.

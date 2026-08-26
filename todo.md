@@ -3,7 +3,7 @@
 - [x] Modelar as entidades de autoria, emenda, programação, estágios financeiros, beneficiário, instrumento, objeto, execução física, prestação de contas, município, alerta e proveniência.
 - [x] Criar migrações do banco e consultas públicas com dados ausentes representados por `null`.
 - [ ] Implementar regras auditáveis do semáforo de cumprimento e taxa de conciliação entre fontes.
-- [ ] Construir navegação pública, página inicial, busca unificada acessível e autocompletar agrupado.
+- [x] Construir navegação pública, página inicial, busca unificada acessível e autocompletar agrupado.
 - [ ] Construir páginas públicas de município, parlamentar e emenda com fontes oficiais, linha do tempo e alternativas tabulares.
 - [ ] Implementar filtros combináveis, URLs compartilháveis e exportação em CSV, JSON e XLSX.
 - [x] Publicar metodologia, glossário e limitações em português claro.
@@ -19,7 +19,13 @@
 - [ ] Configurar remetente verificado e ativar o envio externo de alertas por e-mail quando o usuário fornecer essa configuração.
 - [ ] Publicar a versão e ativar a agenda recorrente da carga oficial no ambiente de produção.
 - [ ] Implementar regras conservadoras para os estados executada, pendência e não cumprida quando fontes oficiais adicionais forem integradas.
-- [ ] Adicionar autocompletar agrupado por parlamentar, município, CNPJ, emenda e objeto, sem inventar resultados ausentes.
+- [x] Adicionar autocompletar agrupado por parlamentar, município, CNPJ, emenda e objeto, sem inventar resultados ausentes.
+- [x] Integrar fonte oficial e persistência real de beneficiários, instrumentos e objetos para habilitar CNPJ e objeto no autocompletar.
+- [x] Cobrir as sugestões agrupadas com testes que validem os cinco grupos usando registros oficiais persistidos.
+- [x] Validar o grupo de CNPJ com registros oficiais persistidos e teste de integração sem mocks.
+- [x] Normalizar a categoria de município com registros municipais reais, sem usar localidade genérica como substituto.
+- [x] Adicionar teste de integração sem mocks para a API de sugestões cobrindo os cinco grupos com dados persistidos.
+- [x] Adicionar teste de integração sem mocks para o retorno do grupo de beneficiários por CNPJ na API de sugestões.
 - [x] Exibir fontes oficiais clicáveis e data de atualização nas páginas de município e parlamentar.
 - [ ] Ampliar filtros combináveis e refletir todos os filtros na URL e nas exportações.
 - [ ] Executar auditoria axe-core das páginas críticas no CI e testar navegação, busca e exportação.

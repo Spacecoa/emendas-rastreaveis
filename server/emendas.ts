@@ -103,6 +103,13 @@ export async function searchStoredAmendments(input: { query: string; year: numbe
   return records.filter((record): record is OfficialAmendment => record !== null && (input.minPaid === undefined || (record.paid !== null && record.paid >= input.minPaid)));
 }
 
+export async function hasStoredAmendments(year: number): Promise<boolean> {
+  const db = await getDb();
+  if (!db) return false;
+  const rows = await db.select({ id: amendments.id }).from(amendments).where(eq(amendments.year, year)).limit(1);
+  return rows.length > 0;
+}
+
 function authorHash(name: string) {
   return createHash("sha256").update(`portal-transparencia:autor:${name.toLocaleUpperCase("pt-BR")}`).digest("hex");
 }

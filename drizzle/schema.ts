@@ -121,7 +121,7 @@ export const beneficiaries = mysqlTable(
     extractedAt: timestamp("extractedAt").notNull(),
     recordHash: varchar("recordHash", { length: 64 }).notNull(),
   },
-  table => [index("beneficiaries_cnpj_idx").on(table.cnpj), index("beneficiaries_name_idx").on(table.name)]
+  table => [index("beneficiaries_cnpj_idx").on(table.cnpj), index("beneficiaries_name_idx").on(table.name), uniqueIndex("beneficiaries_hash_unique").on(table.recordHash)]
 );
 
 export const amendments = mysqlTable(
@@ -203,6 +203,26 @@ export const amendmentObjects = mysqlTable("amendment_objects", {
   extractedAt: timestamp("extractedAt").notNull(),
   recordHash: varchar("recordHash", { length: 64 }).notNull(),
 });
+
+export const sourceCatalogEntries = mysqlTable(
+  "source_catalog_entries",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    recordKind: mysqlEnum("recordKind", ["beneficiario", "objeto", "instrumento"]).notNull(),
+    externalKey: varchar("externalKey", { length: 120 }),
+    cnpj: varchar("cnpj", { length: 14 }),
+    label: text("label").notNull(),
+    uf: varchar("uf", { length: 2 }),
+    referenceYear: int("referenceYear"),
+    reconciliationStatus: mysqlEnum("reconciliationStatus", ["nao_conciliado", "conciliado"]).default("nao_conciliado").notNull(),
+    amendmentId: int("amendmentId"),
+    source: varchar("source", { length: 160 }).notNull(),
+    sourceUrl: text("sourceUrl").notNull(),
+    extractedAt: timestamp("extractedAt").notNull(),
+    recordHash: varchar("recordHash", { length: 64 }).notNull(),
+  },
+  table => [index("source_catalog_kind_label_idx").on(table.recordKind, table.uf), index("source_catalog_cnpj_idx").on(table.cnpj), uniqueIndex("source_catalog_hash_unique").on(table.recordHash)]
+);
 
 export const physicalMilestones = mysqlTable("physical_milestones", {
   id: int("id").autoincrement().primaryKey(),

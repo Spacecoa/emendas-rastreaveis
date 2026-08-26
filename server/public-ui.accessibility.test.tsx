@@ -35,6 +35,9 @@ vi.mock("@/lib/trpc", () => ({
           },
         }),
       },
+      suggestions: {
+        useQuery: () => ({ data: { beneficiaries: [{ label: "20308871000184 · HAPKIDO DO BRASIL", value: "20308871000184" }], municipalities: [{ label: "Itatiaia · RJ", value: "Itatiaia" }], objects: [{ label: "Objeto oficial de teste", value: "Objeto oficial de teste" }] } }),
+      },
     },
   },
 }));
@@ -58,7 +61,9 @@ describe("acessibilidade das áreas públicas críticas", () => {
     fireEvent.change(input, { target: { value: "of" } });
     expect(within(container).getByText("Emendas")).toBeTruthy();
     expect(within(container).getByText("Parlamentares e bancadas")).toBeTruthy();
-    expect(within(container).getByText("Municípios e localidades")).toBeTruthy();
+    expect(within(container).getByText("Municípios")).toBeTruthy();
+    expect(within(container).getByText("CNPJ e beneficiários")).toBeTruthy();
+    expect(within(container).getByText("Objetos")).toBeTruthy();
     const result = await axe.run(container, { rules: { "color-contrast": { enabled: false } } });
     expect(result.violations).toEqual([]);
   });

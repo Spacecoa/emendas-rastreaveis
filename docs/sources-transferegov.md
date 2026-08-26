@@ -16,3 +16,15 @@ As regras do semáforo são deliberadamente condicionais: evidência física vin
 ## Referência
 
 [1]: https://docs.api.transferegov.gestao.gov.br/transferenciasespeciais/ "API de dados abertos do módulo de Transferências Especiais do Transferegov"
+
+## Dados discricionários e legais para beneficiários e objetos
+
+O Transferegov também publica arquivos CSV diários de transferências discricionárias e legais. Os conjuntos de propostas, convênios, emendas parlamentares, planos de aplicação detalhados, pagamentos a favorecidos, metas e proponentes são candidatos para preencher beneficiários, objetos, instrumentos e execução física sem inventar valores. A primeira carga deve ser limitada a um recorte e deve publicar a chave de conciliação, a taxa de casamento e as limitações antes de promover novos estados do semáforo.
+
+| Entidade da plataforma | Arquivo oficial candidato | Uso planejado |
+| --- | --- | --- |
+| Beneficiário e CNPJ | `siconv_proponentes.csv.zip`, `siconv_pagamento.csv.zip` | Registrar a pessoa jurídica e manter sua proveniência por linha. |
+| Objeto e instrumento | `siconv_proposta.csv.zip`, `siconv_convenio.csv.zip` | Registrar a descrição oficial do objeto e o número do instrumento. |
+| Execução física | `siconv_meta_crono_fisico.csv.zip`, `siconv_etapa_crono_fisico.csv.zip` | Registrar metas e etapas sem inferir a entrega final. |
+
+[2]: https://www.gov.br/transferegov/pt-br/ferramentas-gestao/dados-abertos/download-dados "Download de Dados Transferegov.br — Módulo Discricionárias e Legais"

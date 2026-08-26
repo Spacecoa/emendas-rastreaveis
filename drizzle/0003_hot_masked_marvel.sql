@@ -1,0 +1,1 @@
+ALTER TABLE `beneficiaries` ADD CONSTRAINT `beneficiaries_hash_unique` UNIQUE(`recordHash`);

@@ -1,9 +1,33 @@
 import type { Express, Request, Response } from "express";
 import { fetchPortalAmendments } from "./portalTransparency";
+import { and, eq, like, or } from "drizzle-orm";
+import { amendments, authors, beneficiaries, municipalities, sourceCatalogEntries } from "../drizzle/schema";
+import { getDb } from "./db";
 
 function parseYear(value: unknown) {
   const parsed = Number(value ?? new Date().getFullYear());
   return Number.isInteger(parsed) && parsed >= 2016 && parsed <= 2100 ? parsed : null;
+}
+
+export async function getOfficialSuggestions(query: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Banco de dados indisponível.");
+  const pattern = `%${query}%`;
+  const cnpjPattern = /^\d+$/.test(query) ? `${query}%` : pattern;
+  const [amendmentRows, authorRows, beneficiaryRows, municipalityRows, objectRows] = await Promise.all([
+    db.select({ code: amendments.code, number: amendments.amendmentNumber, year: amendments.year }).from(amendments).where(or(like(amendments.code, pattern), like(amendments.amendmentNumber, pattern))).limit(5),
+    db.select({ name: authors.name }).from(authors).where(like(authors.name, pattern)).limit(5),
+    db.select({ cnpj: beneficiaries.cnpj, name: beneficiaries.name, sourceUrl: beneficiaries.sourceUrl }).from(beneficiaries).where(/^\d+$/.test(query) ? like(beneficiaries.cnpj, cnpjPattern) : like(beneficiaries.name, pattern)).limit(5),
+    db.select({ name: municipalities.name, uf: municipalities.uf, sourceUrl: municipalities.sourceUrl }).from(municipalities).where(like(municipalities.name, pattern)).limit(5),
+    db.select({ label: sourceCatalogEntries.label, sourceUrl: sourceCatalogEntries.sourceUrl }).from(sourceCatalogEntries).where(and(eq(sourceCatalogEntries.recordKind, "objeto"), like(sourceCatalogEntries.label, pattern))).limit(5),
+  ]);
+  return {
+    amendments: amendmentRows.map(row => ({ code: String(row.code), number: row.number === null ? null : String(row.number), year: row.year })),
+    authors: authorRows.map(row => ({ name: String(row.name) })),
+    beneficiaries: beneficiaryRows.map(row => ({ cnpj: row.cnpj === null ? null : String(row.cnpj), name: String(row.name), sourceUrl: row.sourceUrl })),
+    municipalities: municipalityRows.map(row => ({ name: String(row.name), uf: String(row.uf), sourceUrl: row.sourceUrl })),
+    objects: objectRows.map(row => ({ label: String(row.label), sourceUrl: row.sourceUrl })),
+  };
 }
 
 export function registerPublicApi(app: Express) {
@@ -26,6 +50,13 @@ export function registerPublicApi(app: Express) {
               { name: "pagina", in: "query", schema: { type: "integer", minimum: 1, default: 1 } },
             ],
             responses: { "200": { description: "Registros oficiais e metadados de proveniência." }, "400": { description: "Parâmetros inválidos." }, "502": { description: "Fonte oficial indisponível." } },
+          },
+        },
+        "/api/v1/sugestoes": {
+          get: {
+            summary: "Sugestões oficiais de emendas, autores, beneficiários, municípios e objetos",
+            parameters: [{ name: "q", in: "query", required: true, schema: { type: "string", minLength: 2, example: "Itatia" } }],
+            responses: { "200": { description: "Sugestões agrupadas com origem oficial." }, "400": { description: "Parâmetro inválido." } },
           },
         },
       },
@@ -57,6 +88,19 @@ export function registerPublicApi(app: Express) {
       });
     } catch (error) {
       return res.status(502).json({ error: "Não foi possível consultar a fonte oficial neste momento." });
+    }
+  });
+
+  app.get("/api/v1/sugestoes", async (req: Request, res: Response) => {
+    const query = typeof req.query.q === "string" ? req.query.q.trim() : "";
+    if (query.length < 2) return res.status(400).json({ error: "Informe ao menos dois caracteres em q." });
+    try {
+      return res.json({
+        data: await getOfficialSuggestions(query),
+        meta: { query, reconciliationNote: "Objetos de propostas ainda não conciliados com emendas são exibidos somente como sugestões de busca." },
+      });
+    } catch {
+      return res.status(503).json({ error: "Não foi possível consultar as sugestões oficiais neste momento." });
     }
   });
 }

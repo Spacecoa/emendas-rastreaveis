@@ -3,11 +3,12 @@ import { and, eq } from "drizzle-orm";
 import { z } from "zod";
 import { alertSubscriptions } from "../drizzle/schema";
 import { getDb } from "./db";
-import { getRecentSourceStatus, getStoredAmendment, searchStoredAmendments } from "./emendas";
+import { getRecentSourceStatus, getStoredAmendment, hasStoredAmendments, searchStoredAmendments } from "./emendas";
 import { fetchPortalAmendments, fetchPortalDocuments, type OfficialAmendment } from "./portalTransparency";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { protectedProcedure, publicProcedure, router } from "./_core/trpc";
+import { getOfficialSuggestions } from "./publicApi";
 
 const queryInput = z.object({
   query: z.string().trim().max(120).default(""),
@@ -46,16 +47,24 @@ export const appRouter = router({
   }),
   emendas: router({
     search: publicProcedure.input(queryInput).query(async ({ input }) => {
-      const storedRecords = await searchStoredAmendments(input);
-      const records = storedRecords.length ? storedRecords : await fetchPortalAmendments(input);
+      const [storedRecords, storedYearAvailable] = await Promise.all([searchStoredAmendments(input), hasStoredAmendments(input.year)]);
+      const records = storedYearAvailable ? storedRecords : await fetchPortalAmendments(input);
       const filtered = records.filter(record => matches(record, input.query) && (!input.status || record.complianceStatus === input.status) && (input.minPaid === undefined || (record.paid !== null && record.paid >= input.minPaid))).slice(0, 40);
       return {
         records: filtered,
         count: filtered.length,
         query: input.query,
-        sourceCoverage: storedRecords.length
+        sourceCoverage: storedYearAvailable
           ? "Resultados da carga oficial persistida. O recorte atual é RJ/2025, com cobertura e taxa de conciliação descritas na metodologia."
           : "Resultados da página consultada na fonte oficial. A ampliação nacional depende das cargas persistidas e conciliadas.",
+      };
+    }),
+    suggestions: publicProcedure.input(z.object({ query: z.string().trim().min(2).max(120) })).query(async ({ input }) => {
+      const suggestions = await getOfficialSuggestions(input.query);
+      return {
+        beneficiaries: suggestions.beneficiaries.map(item => ({ label: item.cnpj ? `${item.cnpj} · ${item.name}` : item.name, value: item.cnpj ?? item.name })),
+        municipalities: suggestions.municipalities.map(item => ({ label: `${item.name} · ${item.uf}`, value: item.name })),
+        objects: suggestions.objects.map(item => ({ label: item.label, value: item.label })),
       };
     }),
     overview: publicProcedure.input(queryInput.omit({ query: true })).query(async ({ input }) => {

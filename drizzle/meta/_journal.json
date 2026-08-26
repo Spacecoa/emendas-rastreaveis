@@ -22,6 +22,20 @@
       "when": 1787703242774,
       "tag": "0002_lumpy_shinobi_shaw",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1787707133498,
+      "tag": "0003_hot_masked_marvel",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1787707602679,
+      "tag": "0004_clammy_mentor",
+      "breakpoints": true
     }
   ]
 }
