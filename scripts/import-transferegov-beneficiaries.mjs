@@ -17,7 +17,7 @@ try {
     `INSERT INTO data_sources (name, baseUrl, licence, latestSuccessfulLoadAt, latestAttemptAt, status, coverageNote)
      VALUES (?, ?, ?, ?, ?, ?, ?)
      ON DUPLICATE KEY UPDATE latestSuccessfulLoadAt = VALUES(latestSuccessfulLoadAt), latestAttemptAt = VALUES(latestAttemptAt), status = VALUES(status), coverageNote = VALUES(coverageNote)`,
-    [sourceName, sourceUrl, "Dados Abertos Transferegov.br", now, now, "available", "Carga limitada por UF de proponentes públicos; ainda não concilia instrumentos e objetos com emendas da CGU."],
+    [sourceName, sourceUrl, "Dados Abertos Transferegov.br", now, now, "available", "Carga limitada por UF de proponentes públicos; registros ainda não conciliados com emendas da CGU; taxa de casamento publicada como 0,0000."],
   );
   const [sources] = await connection.execute("SELECT id FROM data_sources WHERE name = ? LIMIT 1", [sourceName]);
   const sourceId = sources[0]?.id;
@@ -39,7 +39,7 @@ try {
   }
   await connection.execute(
     `INSERT INTO ingestion_runs (sourceId, requestedYear, requestedUf, status, recordsExtracted, recordsMatched, matchRate, finishedAt, runHash)
-     VALUES (?, NULL, ?, ?, ?, 0, NULL, ?, ?)`,
+     VALUES (?, NULL, ?, ?, ?, 0, 0, ?, ?)`,
     [sourceId, records[0]?.uf ?? null, "completed", records.length, now, createHash("sha256").update(JSON.stringify(records.map(record => record.record_hash))).digest("hex")],
   );
   console.log(JSON.stringify({ ok: true, recordsExtracted: records.length, recordsPersisted: persisted }));

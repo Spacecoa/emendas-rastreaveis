@@ -29,3 +29,8 @@
 - [x] Exibir fontes oficiais clicáveis e data de atualização nas páginas de município e parlamentar.
 - [ ] Ampliar filtros combináveis e refletir todos os filtros na URL e nas exportações.
 - [ ] Executar auditoria axe-core das páginas críticas no CI e testar navegação, busca e exportação.
+- [x] Alinhar os filtros de situação, valor mínimo pago e paginação da API REST à busca persistida, com teste HTTP sem mocks.
+- [x] Corrigir o estado vazio da busca para não afirmar ausência de conciliação quando o recorte de filtros apenas não retorna registros.
+- [x] Testar a paginação REST com páginas distintas da carga persistida, confirmando que os registros não se repetem.
+- [x] Integrar população municipal oficial do IBGE com ano de referência e proveniência no banco, sem preencher ausências.
+- [ ] Exibir indicador per capita somente em municípios com vínculo de emenda ao código IBGE e cobertura de conciliação publicada.

@@ -36,6 +36,13 @@
       "when": 1787707602679,
       "tag": "0004_clammy_mentor",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "5",
+      "when": 1787710258137,
+      "tag": "0005_secret_captain_flint",
+      "breakpoints": true
     }
   ]
 }

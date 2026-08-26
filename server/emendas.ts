@@ -98,7 +98,8 @@ export async function searchStoredAmendments(input: { query: string; year: numbe
   if (input.uf) filters.push(like(amendments.locality, `%${input.uf.toUpperCase()}%`));
   if (input.status) filters.push(eq(amendments.complianceStatus, input.status));
 
-  const rows = await db.select({ code: amendments.code }).from(amendments).leftJoin(authors, eq(amendments.authorId, authors.id)).where(and(...filters)).limit(40);
+  const page = Math.max(1, input.page ?? 1);
+  const rows = await db.select({ code: amendments.code }).from(amendments).leftJoin(authors, eq(amendments.authorId, authors.id)).where(and(...filters)).limit(40).offset((page - 1) * 40);
   const records = await Promise.all(rows.map(row => getStoredAmendment(row.code, input.year)));
   return records.filter((record): record is OfficialAmendment => record !== null && (input.minPaid === undefined || (record.paid !== null && record.paid >= input.minPaid)));
 }

@@ -3,10 +3,21 @@ import { fetchPortalAmendments } from "./portalTransparency";
 import { and, eq, like, or } from "drizzle-orm";
 import { amendments, authors, beneficiaries, municipalities, sourceCatalogEntries } from "../drizzle/schema";
 import { getDb } from "./db";
+import { hasStoredAmendments, searchStoredAmendments } from "./emendas";
+
+const complianceStatuses = ["executada_comprovada", "em_execucao", "pendencia", "nao_cumprida", "informacao_insuficiente"] as const;
+type ComplianceStatus = (typeof complianceStatuses)[number];
 
 function parseYear(value: unknown) {
   const parsed = Number(value ?? new Date().getFullYear());
   return Number.isInteger(parsed) && parsed >= 2016 && parsed <= 2100 ? parsed : null;
+}
+
+function matchesQuery(record: Awaited<ReturnType<typeof fetchPortalAmendments>>[number], query: string) {
+  if (!query) return true;
+  return [record.author, record.locality, record.number, record.code, record.budgetFunction, record.budgetSubfunction, record.type]
+    .filter(Boolean)
+    .some(value => value?.toLocaleLowerCase("pt-BR").includes(query));
 }
 
 export async function getOfficialSuggestions(query: string) {
@@ -42,11 +53,13 @@ export function registerPublicApi(app: Express) {
       paths: {
         "/api/v1/emendas": {
           get: {
-            summary: "Consulta emendas na fonte oficial configurada",
+            summary: "Consulta emendas oficiais configuradas",
             parameters: [
               { name: "ano", in: "query", schema: { type: "integer", example: 2025 } },
               { name: "uf", in: "query", schema: { type: "string", minLength: 2, maxLength: 2, example: "RJ" } },
               { name: "q", in: "query", schema: { type: "string", example: "saúde" } },
+              { name: "status", in: "query", schema: { type: "string", enum: complianceStatuses, example: "informacao_insuficiente" } },
+              { name: "minPaid", in: "query", schema: { type: "number", minimum: 0, example: 100000 } },
               { name: "pagina", in: "query", schema: { type: "integer", minimum: 1, default: 1 } },
             ],
             responses: { "200": { description: "Registros oficiais e metadados de proveniência." }, "400": { description: "Parâmetros inválidos." }, "502": { description: "Fonte oficial indisponível." } },
@@ -68,13 +81,19 @@ export function registerPublicApi(app: Express) {
     const page = Number(req.query.pagina ?? 1);
     const uf = typeof req.query.uf === "string" && /^[A-Za-z]{2}$/.test(req.query.uf) ? req.query.uf.toUpperCase() : undefined;
     const query = typeof req.query.q === "string" ? req.query.q.trim().toLocaleLowerCase("pt-BR") : "";
-    if (!year || !Number.isInteger(page) || page < 1 || page > 100) return res.status(400).json({ error: "Parâmetros inválidos." });
+    const rawStatus = typeof req.query.status === "string" ? req.query.status : undefined;
+    const status = complianceStatuses.includes(rawStatus as ComplianceStatus) ? rawStatus as ComplianceStatus : undefined;
+    const rawMinPaid = typeof req.query.minPaid === "string" ? req.query.minPaid : undefined;
+    const minPaid = rawMinPaid === undefined ? undefined : Number(rawMinPaid);
+    const invalidMinPaid = rawMinPaid !== undefined && !(typeof minPaid === "number" && Number.isFinite(minPaid) && minPaid >= 0);
+    if (!year || !Number.isInteger(page) || page < 1 || page > 100 || (rawStatus !== undefined && !status) || invalidMinPaid) return res.status(400).json({ error: "Parâmetros inválidos." });
 
     try {
-      const records = await fetchPortalAmendments({ year, page, uf });
-      const filtered = query
-        ? records.filter(record => [record.author, record.locality, record.number, record.code, record.budgetFunction, record.budgetSubfunction, record.type].filter(Boolean).some(value => value?.toLocaleLowerCase("pt-BR").includes(query)))
-        : records;
+      const stored = await hasStoredAmendments(year);
+      const records = stored
+        ? await searchStoredAmendments({ query, year, uf, status, minPaid, page })
+        : await fetchPortalAmendments({ year, page, uf });
+      const filtered = records.filter(record => matchesQuery(record, query) && (!status || record.complianceStatus === status) && (minPaid === undefined || (record.paid !== null && record.paid >= minPaid)));
       res.set("Cache-Control", "public, max-age=300");
       return res.json({
         data: filtered,
@@ -83,10 +102,12 @@ export function registerPublicApi(app: Express) {
           uf: uf ?? null,
           page,
           count: filtered.length,
-          coverage: "Consulta de uma página da fonte oficial. A base conciliada nacional é publicada à medida que as cargas forem concluídas.",
+          status: status ?? null,
+          minPaid: minPaid ?? null,
+          coverage: stored ? "Consulta da carga oficial persistida para o ano. A entrega física continua sem inferência enquanto não houver conciliação entre fontes." : "Consulta de uma página da fonte oficial. A base conciliada nacional é publicada à medida que as cargas forem concluídas.",
         },
       });
-    } catch (error) {
+    } catch {
       return res.status(502).json({ error: "Não foi possível consultar a fonte oficial neste momento." });
     }
   });
