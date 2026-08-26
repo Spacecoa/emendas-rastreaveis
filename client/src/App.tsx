@@ -9,6 +9,7 @@ import CoveragePage from "./pages/CoveragePage";
 import EntityPage from "./pages/EntityPage";
 import Home from "./pages/Home";
 import MethodologyPage from "./pages/MethodologyPage";
+import PublicChatPage from "./pages/PublicChatPage";
 import SearchPage from "./pages/SearchPage";
 
 function Router() {
@@ -18,9 +19,16 @@ function Router() {
       <Route path={"/"} component={Home} />
       <Route path={"/busca"} component={SearchPage} />
       <Route path={"/cobertura"} component={CoveragePage} />
+      <Route path={"/chat"} component={PublicChatPage} />
       <Route path={"/emendas/:code"} component={AmendmentPage} />
-      <Route path={"/municipios/:name"} component={() => <EntityPage type="municipio" />} />
-      <Route path={"/parlamentares/:name"} component={() => <EntityPage type="parlamentar" />} />
+      <Route
+        path={"/municipios/:name"}
+        component={() => <EntityPage type="municipio" />}
+      />
+      <Route
+        path={"/parlamentares/:name"}
+        component={() => <EntityPage type="parlamentar" />}
+      />
       <Route path={"/metodologia"} component={MethodologyPage} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}

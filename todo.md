@@ -117,3 +117,8 @@
 - [x] Cobrir a elegibilidade, a fórmula, a fonte e o estado indisponível em testes de integração e acessibilidade.
 - [x] Fazer a página municipal consultar emendas pelo município IBGE exato, sem depender do texto de localidade da emenda.
 - [x] Verificar a prontidão da base persistida e os limites de atualização para explicar o que aparecerá após a publicação, alinhando a documentação às pendências eliminadas.
+- [x] Definir o contrato do chat público, incluindo escopo de dados, fontes obrigatórias, recusa de alegações não verificáveis e limites de consulta.
+- [x] Implementar o serviço conversacional com contexto estruturado das emendas, cobertura e proveniência oficiais persistidas.
+- [x] Criar a página pública acessível do chat e integrá-la à navegação sem expor segredos ou dados sensíveis.
+- [x] Cobrir o chat com testes de respostas fundamentadas, limites de interpretação, validação de entrada e acessibilidade.
+- [x] Substituir o renderizador pesado do chat por uma apresentação leve compatível com o orçamento de memória do build.

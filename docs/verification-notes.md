@@ -230,4 +230,16 @@ O indicador foi liberado somente quando a emenda CGU/2025 possui `municipalityId
 
 A página municipal agora consulta emendas pelo município IBGE exato, e não pelo texto de localidade. Em **Abre Campo/MG**, por exemplo, uma emenda com pagamento oficial de R$ 2.500.000,00 e população IBGE de 14.354 habitantes resulta em R$ 174,17 por habitante; as duas fontes são apresentadas separadamente na interface.
 
+## Chat público fundamentado — 26 de agosto de 2026
+
+A rota pública `/chat` oferece perguntas em linguagem simples sobre a carga persistida. O servidor limita cada mensagem a 600 caracteres, preserva no máximo seis mensagens de histórico e aplica limite temporário de oito consultas por origem a cada minuto. O modelo `gpt-5-mini` recebe um objeto estruturado com a cobertura nacional de 2025 e até oito emendas relacionadas à pergunta; não recebe segredo, credencial ou instrução do cliente como regra de sistema.
+
+| Salvaguarda   | Implementação verificável                                                                                                              |
+| ------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| Fundamentação | A resposta é instruída a usar exclusivamente `DADOS_OFICIAIS` persistidos; sem cobertura, deve informar indisponibilidade.             |
+| Proveniência  | URLs oficiais são retornadas pelo servidor em lista própria, sem depender de citação inventada pelo modelo.                            |
+| Limites       | O prompt fixa que pagamento e conciliação documental não comprovam entrega física, regularidade ou irregularidade.                     |
+| Segurança     | Instruções adversariais continuam no conteúdo do usuário; não podem alterar as regras de sistema, acessar segredos ou modificar dados. |
+| Qualidade     | Testes cobrem contexto oficial, fontes, resposta multipartes, limite de frequência, injeção de instruções e acessibilidade da página.  |
+
 [5] [Emendas Parlamentares — Dados abertos do Portal da Transparência](https://portaldatransparencia.gov.br/download-de-dados/emendas-parlamentares)

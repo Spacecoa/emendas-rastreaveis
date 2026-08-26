@@ -5,6 +5,7 @@ import React, { useState } from "react";
 const navigation = [
   { href: "/busca", label: "Consultar" },
   { href: "/cobertura", label: "Cobertura" },
+  { href: "/chat", label: "Perguntar aos dados" },
   { href: "/metodologia", label: "Metodologia" },
   { href: "/metodologia#glossario", label: "Glossário" },
   { href: "/api/v1/openapi.json", label: "API pública", external: true },

@@ -21,6 +21,7 @@ import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { protectedProcedure, publicProcedure, router } from "./_core/trpc";
 import { getOfficialSuggestions } from "./publicApi";
+import { askPublicDataChat } from "./publicChat";
 
 const queryInput = z.object({
   query: z.string().trim().max(120).default(""),
@@ -211,6 +212,29 @@ export const appRouter = router({
         })
       )
       .query(async ({ input }) => getStoredMunicipalityAmendments(input)),
+  }),
+  chat: router({
+    ask: publicProcedure
+      .input(
+        z.object({
+          question: z.string().trim().min(1).max(600),
+          history: z
+            .array(
+              z.object({
+                role: z.enum(["user", "assistant"]),
+                content: z.string().trim().min(1).max(600),
+              })
+            )
+            .max(6)
+            .default([]),
+        })
+      )
+      .mutation(async ({ ctx, input }) =>
+        askPublicDataChat({
+          ...input,
+          requestKey: ctx.req.ip ?? ctx.req.socket.remoteAddress ?? "public",
+        })
+      ),
   }),
   subscriptions: router({
     create: protectedProcedure
