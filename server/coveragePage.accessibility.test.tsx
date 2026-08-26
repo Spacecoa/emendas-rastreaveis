@@ -21,9 +21,9 @@ vi.mock("@/lib/trpc", () => ({
               municipalities: 5571,
             },
             reconciliation: {
-              evaluated: 150,
-              matched: 112,
-              matchRate: 0.7467,
+              evaluated: 6311,
+              matched: 4710,
+              matchRate: 0.7463,
               updatedAt: new Date("2026-08-26T04:25:00.000Z"),
             },
             availableStates: [
@@ -99,7 +99,7 @@ describe("aba pública de cobertura", () => {
     expect(
       screen.getByRole("heading", { name: /O que está carregado/i })
     ).toBeTruthy();
-    expect(screen.getByText("112/150")).toBeTruthy();
+    expect(screen.getByText("4.710/6.311")).toBeTruthy();
     expect(
       screen.getByRole("heading", {
         name: /Expandir a cobertura sem pular etapas de verificação/i,

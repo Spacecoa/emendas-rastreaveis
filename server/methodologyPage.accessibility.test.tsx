@@ -17,7 +17,7 @@ describe("acessibilidade da metodologia", () => {
     expect(
       screen.getByText(/carga financeira nacional de emendas da CGU em 2025/)
     ).toBeTruthy();
-    expect(screen.getByText(/112 de 150 chaves processadas/)).toBeTruthy();
+    expect(screen.getByText(/4\.710 de 6\.311 chaves CGU/)).toBeTruthy();
     expect(
       screen.queryByText(/amostra parcial de execução financeira da CGU/)
     ).toBeNull();

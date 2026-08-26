@@ -21,7 +21,7 @@ describe("síntese pública de cobertura", () => {
         instruments: 1812,
         municipalities: 5571,
       },
-      reconciliation: { evaluated: 150, matched: 112, matchRate: 0.7467 },
+      reconciliation: { evaluated: 6311, matched: 4710, matchRate: 0.7463 },
     });
     expect(coverage?.availableStates).toHaveLength(27);
     expect(coverage?.availableStates.map(state => state.uf)).toEqual(
@@ -43,8 +43,8 @@ describe("síntese pública de cobertura", () => {
       beneficiaries: 200,
       objects: 200,
       instruments: 45,
-      reconciledObjects: 0,
-      reconciledInstruments: 0,
+      reconciledObjects: 30,
+      reconciledInstruments: 29,
     });
     expect(
       coverage?.sources.some(

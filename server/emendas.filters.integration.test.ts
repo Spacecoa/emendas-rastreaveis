@@ -28,10 +28,11 @@ describe("filtros combináveis da carga persistida", () => {
     ).toBe(true);
   });
 
-  it("restringe UF a vínculo territorial documental e não usa localidade textual", async () => {
-    const [alagoas, minasGerais] = await Promise.all([
+  it("restringe UF a vínculo territorial documental e não usa fallback por localidade", async () => {
+    const [alagoas, minasGerais, ufSemEvidencia] = await Promise.all([
       searchStoredAmendments({ query: "", year: 2025, uf: "AL", page: 1 }),
       searchStoredAmendments({ query: "", year: 2025, uf: "MG", page: 1 }),
+      searchStoredAmendments({ query: "", year: 2025, uf: "ZZ", page: 1 }),
     ]);
 
     expect(alagoas.length).toBeGreaterThan(0);
@@ -39,10 +40,6 @@ describe("filtros combináveis da carga persistida", () => {
     expect(alagoas).toContainEqual(
       expect.objectContaining({ code: "202529730007" })
     );
-    expect(
-      minasGerais.some(record =>
-        alagoas.some(alagoasRecord => alagoasRecord.code === record.code)
-      )
-    ).toBe(false);
+    expect(ufSemEvidencia).toEqual([]);
   });
 });

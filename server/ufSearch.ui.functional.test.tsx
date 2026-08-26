@@ -54,6 +54,29 @@ const records = {
     extractedAt: "2026-08-26T04:25:00.000Z",
     recordHash: "hash-se-oficial",
   },
+  MG: {
+    code: "202514030006",
+    year: 2025,
+    number: "0006",
+    author: "LEONARDO MONTEIRO",
+    locality: "Nacional",
+    type: "Emenda Individual - Transferências com Finalidade Definida",
+    budgetFunction: "Direitos da cidadania",
+    budgetSubfunction: "Direitos individuais, coletivos e difusos",
+    committed: 1000000,
+    settled: 0,
+    paid: 0,
+    remainingRegistered: 0,
+    remainingCancelled: 0,
+    remainingPaid: 1000000,
+    complianceStatus: "em_execucao" as const,
+    source: "Portal da Transparência (CGU)" as const,
+    sourceUrl:
+      "https://dadosabertos-download.cgu.gov.br/PortalDaTransparencia/saida/emendas-parlamentares/EmendasParlamentares.zip",
+    extractedAt: "2026-08-26T05:42:39.000Z",
+    recordHash:
+      "4df8c2c078bc2c84a09f9de59a8354ba34a68bd65c83cada907875cb19517410",
+  },
 } as const;
 
 vi.mock("@/lib/trpc", () => ({
@@ -117,6 +140,12 @@ describe("fluxo visível de busca territorial", () => {
       code: records.SE.code,
       locality: records.SE.locality,
     },
+    {
+      uf: "MG",
+      number: "0006",
+      code: records.MG.code,
+      locality: records.MG.locality,
+    },
   ])(
     "submete $uf, renderiza somente o resultado territorial e navega ao detalhe",
     async ({ uf, number, code, locality }) => {
@@ -140,11 +169,11 @@ describe("fluxo visível de busca territorial", () => {
     }
   );
 
-  it("submete MG e renderiza estado vazio sem controles ou links de outra UF", async () => {
+  it("renderiza estado vazio para UF sem vínculo documental", async () => {
     window.history.replaceState({}, "", "/busca?ano=2025");
     render(<SearchPage />);
     const ufInput = screen.getByLabelText("UF");
-    fireEvent.change(ufInput, { target: { value: "MG" } });
+    fireEvent.change(ufInput, { target: { value: "ZZ" } });
     fireEvent.submit(ufInput.closest("form")!);
 
     await waitFor(() =>

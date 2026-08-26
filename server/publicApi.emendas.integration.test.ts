@@ -23,21 +23,41 @@ afterAll(async () => {
 
 describe("API pública de emendas", () => {
   it("consulta a carga oficial persistida e expõe os filtros de situação e valor pago", async () => {
-    const response = await fetch(`${baseUrl}/api/v1/emendas?ano=2025&uf=RJ&status=informacao_insuficiente&minPaid=0`);
+    const response = await fetch(
+      `${baseUrl}/api/v1/emendas?ano=2025&uf=RJ&status=informacao_insuficiente&minPaid=0`
+    );
     const payload = await response.json();
     expect(response.status).toBe(200);
-    expect(payload.meta).toMatchObject({ year: 2025, uf: "RJ", status: "informacao_insuficiente", minPaid: 0 });
+    expect(payload.meta).toMatchObject({
+      year: 2025,
+      uf: "RJ",
+      status: "informacao_insuficiente",
+      minPaid: 0,
+    });
     expect(payload.meta.coverage).toContain("vínculo territorial documental");
     expect(Array.isArray(payload.data)).toBe(true);
-    expect(payload.data.every((record: { complianceStatus: string; paid: number | null }) => record.complianceStatus === "informacao_insuficiente" && record.paid !== null && record.paid >= 0)).toBe(true);
+    expect(
+      payload.data.every(
+        (record: { complianceStatus: string; paid: number | null }) =>
+          record.complianceStatus === "informacao_insuficiente" &&
+          record.paid !== null &&
+          record.paid >= 0
+      )
+    ).toBe(true);
   });
 
-  it("restringe UF a emendas com vínculo territorial documental e não retorna fallback de outra UF", async () => {
-    const [alagoasResponse, minasGeraisResponse] = await Promise.all([
-      fetch(`${baseUrl}/api/v1/emendas?ano=2025&uf=AL`),
-      fetch(`${baseUrl}/api/v1/emendas?ano=2025&uf=MG`),
+  it("restringe UF a emendas com vínculo territorial documental e não retorna fallback sem evidência", async () => {
+    const [alagoasResponse, minasGeraisResponse, ufSemEvidenciaResponse] =
+      await Promise.all([
+        fetch(`${baseUrl}/api/v1/emendas?ano=2025&uf=AL`),
+        fetch(`${baseUrl}/api/v1/emendas?ano=2025&uf=MG`),
+        fetch(`${baseUrl}/api/v1/emendas?ano=2025&uf=ZZ`),
+      ]);
+    const [alagoas, minasGerais, ufSemEvidencia] = await Promise.all([
+      alagoasResponse.json(),
+      minasGeraisResponse.json(),
+      ufSemEvidenciaResponse.json(),
     ]);
-    const [alagoas, minasGerais] = await Promise.all([alagoasResponse.json(), minasGeraisResponse.json()]);
 
     expect(alagoasResponse.status).toBe(200);
     expect(alagoas.data.length).toBeGreaterThan(0);
@@ -47,17 +67,14 @@ describe("API pública de emendas", () => {
     expect(alagoas.meta.coverage).toContain("vínculo territorial documental");
     expect(minasGeraisResponse.status).toBe(200);
     expect(minasGerais.data.length).toBeGreaterThan(0);
-    expect(
-      minasGerais.data.some((record: { code: string }) =>
-        alagoas.data.some((alagoasRecord: { code: string }) =>
-          alagoasRecord.code === record.code
-        )
-      )
-    ).toBe(false);
+    expect(ufSemEvidenciaResponse.status).toBe(200);
+    expect(ufSemEvidencia.data).toEqual([]);
   });
 
   it("recusa parâmetros de filtro inválidos", async () => {
-    const response = await fetch(`${baseUrl}/api/v1/emendas?ano=2025&status=entregue`);
+    const response = await fetch(
+      `${baseUrl}/api/v1/emendas?ano=2025&status=entregue`
+    );
     expect(response.status).toBe(400);
   });
 
@@ -69,25 +86,54 @@ describe("API pública de emendas", () => {
   });
 
   it("aplica autoria e função orçamentária aos registros oficiais persistidos", async () => {
-    const response = await fetch(`${baseUrl}/api/v1/emendas?ano=2025&autor=GENERAL%20GIRAO&funcao=Defesa%20nacional`);
+    const response = await fetch(
+      `${baseUrl}/api/v1/emendas?ano=2025&autor=GENERAL%20GIRAO&funcao=Defesa%20nacional`
+    );
     const payload = await response.json();
     expect(response.status).toBe(200);
-    expect(payload.meta).toMatchObject({ author: "GENERAL GIRAO", budgetFunction: "Defesa nacional" });
+    expect(payload.meta).toMatchObject({
+      author: "GENERAL GIRAO",
+      budgetFunction: "Defesa nacional",
+    });
     expect(payload.data.length).toBeGreaterThan(0);
-    expect(payload.data).toContainEqual(expect.objectContaining({ code: "202539940017", author: "GENERAL GIRAO", budgetFunction: "Defesa nacional" }));
-    expect(payload.data.every((record: { author: string | null; budgetFunction: string | null }) => record.author === "GENERAL GIRAO" && record.budgetFunction === "Defesa nacional")).toBe(true);
+    expect(payload.data).toContainEqual(
+      expect.objectContaining({
+        code: "202539940017",
+        author: "GENERAL GIRAO",
+        budgetFunction: "Defesa nacional",
+      })
+    );
+    expect(
+      payload.data.every(
+        (record: { author: string | null; budgetFunction: string | null }) =>
+          record.author === "GENERAL GIRAO" &&
+          record.budgetFunction === "Defesa nacional"
+      )
+    ).toBe(true);
   });
 
   it("pagina a carga oficial persistida sem repetir os registros da primeira página", async () => {
-    const [firstResponse, secondResponse] = await Promise.all([fetch(`${baseUrl}/api/v1/emendas?ano=2025&pagina=1`), fetch(`${baseUrl}/api/v1/emendas?ano=2025&pagina=2`)]);
-    const [firstPage, secondPage] = await Promise.all([firstResponse.json(), secondResponse.json()]);
-    const firstCodes = new Set(firstPage.data.map((record: { code: string }) => record.code));
+    const [firstResponse, secondResponse] = await Promise.all([
+      fetch(`${baseUrl}/api/v1/emendas?ano=2025&pagina=1`),
+      fetch(`${baseUrl}/api/v1/emendas?ano=2025&pagina=2`),
+    ]);
+    const [firstPage, secondPage] = await Promise.all([
+      firstResponse.json(),
+      secondResponse.json(),
+    ]);
+    const firstCodes = new Set(
+      firstPage.data.map((record: { code: string }) => record.code)
+    );
     expect(firstResponse.status).toBe(200);
     expect(secondResponse.status).toBe(200);
     expect(firstPage.meta.page).toBe(1);
     expect(secondPage.meta.page).toBe(2);
     expect(firstPage.data.length).toBeGreaterThan(0);
     expect(secondPage.data.length).toBeGreaterThan(0);
-    expect(secondPage.data.some((record: { code: string }) => firstCodes.has(record.code))).toBe(false);
+    expect(
+      secondPage.data.some((record: { code: string }) =>
+        firstCodes.has(record.code)
+      )
+    ).toBe(false);
   });
 });

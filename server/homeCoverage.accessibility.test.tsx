@@ -43,9 +43,9 @@ vi.mock("@/lib/trpc", () => ({
               },
             ],
             reconciliation: {
-              evaluated: 150,
-              matched: 112,
-              matchRate: 0.7467,
+              evaluated: 6311,
+              matched: 4710,
+              matchRate: 0.7463,
               updatedAt: new Date("2026-08-26T02:15:40.000Z"),
             },
           },
@@ -76,7 +76,7 @@ describe("transparência da página inicial", () => {
       screen.getByRole("heading", { name: "O que está disponível hoje." })
     ).toBeTruthy();
     expect(screen.getByText("6.311")).toBeTruthy();
-    expect(screen.getByText("112/150")).toBeTruthy();
+    expect(screen.getByText("4710/6311")).toBeTruthy();
     expect(screen.getByText("RJ")).toBeTruthy();
     expect(
       screen.getByRole("button", { name: "A–Z" }).getAttribute("aria-pressed")

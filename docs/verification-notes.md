@@ -8,9 +8,9 @@ A página de metodologia continua distinguindo execução financeira de comprova
 
 A busca foi também verificada em viewport móvel de 375 × 812 px. Os filtros passam a uma coluna, o botão de consulta ocupa largura adequada ao toque e a mensagem de recorte vazio mantém contraste, hierarquia e leitura sem sobreposição horizontal.
 
-## Transparência de cobertura e rodapé — 26 de agosto de 2026
+## Transparência de cobertura e rodapé — etapa histórica anterior à conciliação nacional — 26 de agosto de 2026
 
-A página inicial foi verificada em desktop e em viewport móvel de 375 × 812 px. A área de cobertura mostra totais persistidos, a taxa de conciliação de 55/75 (73,33%) e o limite de que vínculo documental não confirma execução física. O acesso rápido apresenta somente a UF com cobertura municipal e população oficial carregada, com controles de ordenação por A–Z e população. No celular, os indicadores, o card de UF e as quatro colunas institucionais do rodapé fluem em coluna única, sem sobreposição horizontal.
+Neste estágio histórico, a página inicial foi verificada em desktop e em viewport móvel de 375 × 812 px. A área de cobertura então mostrava a taxa parcial de 55/75 (73,33%) e o limite de que vínculo documental não confirma execução física. Esse valor foi substituído pela conciliação nacional de 4.710/6.311, registrada ao final deste documento. O acesso rápido apresenta somente a UF com cobertura municipal e população oficial carregada, com controles de ordenação por A–Z e população. No celular, os indicadores, o card de UF e as quatro colunas institucionais do rodapé fluem em coluna única, sem sobreposição horizontal.
 
 ## Filtros combináveis — 26 de agosto de 2026
 
@@ -44,7 +44,7 @@ Os registros foram preservados como **amostra oficial parcial de 2025**, e o his
 
 **Fonte:** [documentação OpenAPI oficial da API de Dados do Portal da Transparência](https://api.portaldatransparencia.gov.br/swagger-ui/index.html) e [página oficial da API de Dados da CGU](https://portaldatransparencia.gov.br/api-de-dados).
 
-## Etapa territorial MG/2025 — 26 de agosto de 2026
+## Etapa territorial MG/2025 — estágio histórico anterior à conciliação nacional — 26 de agosto de 2026
 
 Após autorização explícita, a cobertura de Minas Gerais foi carregada exclusivamente a partir de chaves territoriais documentadas no Transferegov e de cadastros/estimativas oficiais do IBGE. Foram persistidos 200 beneficiários, 200 objetos de propostas, 45 instrumentos, 853 municípios e 853 estimativas de população municipal com referência em 2025. Cada estimativa de população de MG possui ano, URL de origem e hash; nenhuma ficou sem proveniência.
 
@@ -56,7 +56,7 @@ Após autorização explícita, a cobertura de Minas Gerais foi carregada exclus
 | Correção de proveniência | O extrator de instrumentos passou a receber UF e ano do registro de proposta que documenta o recorte. A reimportação confirmou 45/45 instrumentos em MG/2025, sem associação a emenda.                                                                                                                                                   |
 | Qualidade e interface    | `pnpm check && pnpm test && git diff --check` concluiu sem falhas: 19 arquivos de teste aprovados, 30 testes aprovados e 1 teste de Resend pulado pelo remetente ainda pendente. A página inicial foi conferida em desktop e em 375 × 812 px: MG aparece antes de RJ na ordenação A–Z, com 853 municípios e a população oficial exibida. |
 
-> A taxa pública de 55/75 (73,33%) continua sendo a conciliação documental específica do recorte CGU/Transferegov então processado. Ela não foi estendida a MG e não confirma entrega física, execução municipal ou aplicação de recursos.
+> **Registro histórico:** a taxa parcial de 55/75 (73,33%) era a conciliação documental específica do recorte CGU/Transferegov então processado. Ela foi substituída pela taxa nacional de 4.710/6.311 (74,63%); nenhuma das duas confirma entrega física, execução municipal ou aplicação de recursos.
 
 **Fontes da etapa:** dados abertos de [Proponentes do Transferegov](https://repositorio.dados.gov.br/seges/detru/siconv_proponente.csv.zip), [Propostas do Transferegov](https://repositorio.dados.gov.br/seges/detru/siconv_proposta.csv.zip) e [Convênios do Transferegov](https://repositorio.dados.gov.br/seges/detru/siconv_convenio.csv.zip); [municípios do IBGE](https://servicodados.ibge.gov.br/api/v1/localidades/estados/MG/municipios) e [Estimativas da População 2025 do IBGE](https://ftp.ibge.gov.br/Estimativas_de_Populacao/Estimativas_2025/POP2025_20260113.ods).
 
@@ -85,9 +85,9 @@ O check-up posterior confirmou zero entradas de catálogo sem URL ou hash, zero 
 
 [3] [Brasília (DF) — Cidades e Estados, IBGE](https://www.ibge.gov.br/cidades-e-estados/df/brasilia.html)
 
-## Conciliação documental nacional do catálogo — 26 de agosto de 2026
+## Conciliação documental do catálogo — estágio histórico inicial — 26 de agosto de 2026
 
-A conciliação foi executada sobre 75 emendas CGU de 2025 cujos oito dígitos finais do código eram chaves numéricas distintas. A base oficial de emendas do Transferegov retornou 662 linhas de propostas associadas a essas chaves. O vínculo foi criado apenas quando `NR_EMENDA` correspondeu exatamente aos oito dígitos finais do código CGU, no mesmo exercício, e o `ID_PROPOSTA` dessa linha coincidiu com a chave externa do objeto ou instrumento já carregado.[4]
+Este é o registro histórico da primeira conciliação: ela foi executada sobre 75 emendas CGU de 2025 cujos oito dígitos finais do código eram chaves numéricas distintas. A base oficial de emendas do Transferegov retornou 662 linhas de propostas associadas a essas chaves. O vínculo foi criado apenas quando `NR_EMENDA` correspondeu exatamente aos oito dígitos finais do código CGU, no mesmo exercício, e o `ID_PROPOSTA` dessa linha coincidiu com a chave externa do objeto ou instrumento já carregado.[4] O resultado foi posteriormente substituído pela conciliação nacional de 6.311 chaves.
 
 | Medida                                                | Resultado |
 | ----------------------------------------------------- | --------: |
@@ -104,7 +104,7 @@ O vínculo novo ocorreu em AL, para a proposta `2094121`: a linha oficial do Tra
 
 [4] [Emendas — dados abertos Transferegov](https://repositorio.dados.gov.br/seges/detru/siconv_emenda.csv.zip)
 
-## Correção do filtro de UF e validação funcional — 26 de agosto de 2026
+## Correção do filtro de UF e validação funcional — estágio histórico anterior à conciliação nacional — 26 de agosto de 2026
 
 O defeito relatado na busca por UF foi reproduzido e corrigido. A implementação anterior procurava a sigla da UF como texto dentro do campo de localidade da emenda CGU. Essa aproximação textual podia associar uma consulta territorial a um registro sem relação territorial comprovada. O filtro agora retorna uma emenda apenas quando há: (a) objeto ou instrumento conciliado com `amendmentId` naquela UF; ou (b) código municipal IBGE ligado à emenda. Não há mais fallback por texto de localidade.
 
@@ -116,7 +116,7 @@ O defeito relatado na busca por UF foi reproduzido e corrigido. A implementaçã
 
 A página de detalhe das emendas AL e SE exibiu situação, etapas financeiras, fonte oficial clicável e a advertência de que execução financeira ou conciliação documental não comprova entrega física. A auditoria de interface submeteu o formulário da própria tela para AL, SE e MG e conferiu a UF na URL compartilhável e no contrato de consulta. Ela também verificou a tabela renderizada de AL/SE, a ausência de tabela, exportações e links de outra UF em MG, e o `href` correto do link de detalhe para cada emenda. Com os registros persistidos, a auditoria funcional validou CSV, JSON e XLSX para AL e SE: todos preservaram código, localidade, URL de origem e hash do único registro do recorte. Para MG, a busca e o JSON retornaram lista vazia; nenhum controle de exportação é exibido para um recorte sem vínculo. A auditoria de detalhe confirmou que o link “Abrir consulta oficial” aponta para a URL CGU registrada em AL e SE. A auditoria confirmou que há zero vínculos conciliados sem emenda, zero vínculos sem chave exata e zero entradas não conciliadas com `amendmentId`.
 
-Para ampliar a conciliação, a carga CGU de 2025 passou de 75 para 150 registros oficiais, sem uso do parâmetro `uf` não documentado. A extração correspondente de 1.139 linhas de emendas do Transferegov produziu 112 correspondências exatas por `NR_EMENDA` (74,67%). Foram preservados vínculos documentais de catálogo nas UFs AL, RJ e SE; os demais registros continuam explicitamente não conciliados. `pnpm check && pnpm test && git diff --check` passou com 21 arquivos de teste aprovados, 43 testes aprovados e 1 teste de Resend pulado pelo remetente pendente.
+**Registro histórico:** para ampliar a conciliação naquele momento, a carga CGU de 2025 passou de 75 para 150 registros oficiais, sem uso do parâmetro `uf` não documentado. A extração correspondente de 1.139 linhas de emendas do Transferegov produziu 112 correspondências exatas por `NR_EMENDA` (74,67%). Esse recorte foi substituído pela conciliação nacional de 4.710/6.311; os vínculos continuam documentais e não provam execução física. `pnpm check && pnpm test && git diff --check` passou então com 21 arquivos de teste aprovados, 43 testes aprovados e 1 teste de Resend pulado pelo remetente pendente.
 
 ## Aba pública de cobertura — 26 de agosto de 2026
 
@@ -181,21 +181,39 @@ A carga financeira nacional foi executada a partir do **arquivo único oficial**
 
 O importador é idempotente por código e exercício, atualiza os estágios financeiros do registro correspondente e registra uma execução `completed` em `ingestion_runs`. A fonte pública da CGU foi atualizada com a URL do arquivo único, licença, data e nota de cobertura. A página `/cobertura` agora mostra 6.311 **emendas CGU carregadas** como carga financeira nacional de 2025.
 
-> A conciliação do Transferegov permanece, por enquanto, no escopo de 150 emendas previamente avaliadas: 112 chaves exatas (74,67%). Esse valor não é apresentado como taxa sobre as 6.311 emendas nacionais. Os novos registros financeiros não receberam vínculo por aproximação, texto, CNPJ ou UF; uma conciliação nacional exigirá nova extração de `NR_EMENDA` para todas as chaves carregadas.
+> A conciliação nacional do Transferegov avaliou as 6.311 chaves CGU/2025 e confirmou 4.710 por igualdade exata de `NR_EMENDA` (74,63%). Foram preservadas 61.402 linhas oficiais de proposta, cada uma com hash individual. Os 1.601 códigos sem chave correspondente continuam não conciliados; não houve vínculo por aproximação, texto, CNPJ ou UF.
 
-Após atualizar as auditorias que tinham contagens rígidas da amostra anterior, `pnpm check && pnpm test && git diff --check` passou com 23 arquivos de teste aprovados, 45 testes aprovados e 1 teste de Resend pulado pelo remetente ainda pendente. A consulta visual em `/cobertura` confirmou o total nacional e a separação entre carga financeira e conciliação parcial.
+Após atualizar as auditorias que tinham contagens rígidas da amostra anterior, `pnpm check && pnpm test && git diff --check` passou com 23 arquivos de teste aprovados, 45 testes aprovados e 1 teste de Resend pulado pelo remetente ainda pendente. A validação final da conciliação nacional será registrada após atualizar as telas e testes para os novos totais.
 
 ## Pendências condicionadas e entregas suspensas — 26 de agosto de 2026
 
-| Entrega                                     | Estado atual                       | Pré-requisito para avançar                                                                                                                                                    |
-| ------------------------------------------- | ---------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Conciliação nacional Transferegov           | Pendente                           | Extrair e comparar `NR_EMENDA` para as 6.311 chaves nacionais, preservando somente igualdade exata antes de divulgar uma taxa nacional.                                       |
-| Indicador per capita                        | Bloqueado por cautela metodológica | Vínculo municipal verificável e escopo de conciliação adequado para a métrica; a mera população IBGE não habilita o cálculo.                                                  |
-| Status físico, pendência ou não cumprimento | Bloqueado por evidência            | Fonte oficial adicional que registre entrega, vigência, prestação de contas, rejeição ou outro sinal finalístico aplicável.                                                   |
-| Alertas por e-mail                          | Suspenso                           | Remetente externo verificado e decisão explícita para ativar o envio.                                                                                                         |
-| Atualização recorrente                      | Suspensa                           | Publicação, autorização explícita e redesenho da ingestão nacional em lotes idempotentes; a transação manual atual não deve ser agendada no ambiente de execução sob demanda. |
-| Publicação e vídeo para Bilibili            | Suspensos                          | Nova solicitação explícita do responsável pelo projeto.                                                                                                                       |
+| Entrega                                     | Estado atual                       | Pré-requisito para avançar                                                                                                                                  |
+| ------------------------------------------- | ---------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Conciliação nacional Transferegov           | Concluída                          | Reexecutar somente com novo arquivo oficial, preservando igualdade exata de `NR_EMENDA`, URL, data e hash antes de comparar uma nova taxa.                  |
+| Indicador per capita                        | Bloqueado por cautela metodológica | Vínculo municipal verificável e escopo de conciliação adequado para a métrica; a mera população IBGE não habilita o cálculo.                                |
+| Status físico, pendência ou não cumprimento | Bloqueado por evidência            | Fonte oficial adicional que registre entrega, vigência, prestação de contas, rejeição ou outro sinal finalístico aplicável.                                 |
+| Alertas por e-mail                          | Suspenso                           | Remetente externo verificado e decisão explícita para ativar o envio.                                                                                       |
+| Atualização recorrente                      | Suspensa                           | Publicação e autorização explícita; qualquer rotina deverá manter lotes idempotentes, limites operacionais e relatório de alterações antes de ser agendada. |
+| Publicação e vídeo para Bilibili            | Suspensos                          | Nova solicitação explícita do responsável pelo projeto.                                                                                                     |
 
 > Nenhuma dessas pendências foi preenchida por inferência. A carga nacional concluída não ativa cron, publicação ou correio eletrônico externo.
+
+## Conciliação nacional Transferegov/2025 — 26 de agosto de 2026
+
+A rotina nacional usou o arquivo oficial `siconv_emenda.csv.zip` do Transferegov, publicado no repositório de dados abertos. O ZIP processado tem SHA-256 `a68ef3c2053830a649b300bf82881c190b7f9b1d046e3441ffe873dff99cd923`; a página de carga do próprio repositório indicava 17/07/2026 06:30:47. A extração preservou 61.402 linhas cujo `NR_EMENDA` corresponde a alguma das 6.311 chaves CGU/2025.
+
+| Verificação                                      |                                                          Resultado |
+| ------------------------------------------------ | -----------------------------------------------------------------: |
+| Emendas CGU avaliadas                            |                                                              6.311 |
+| Chaves exatas conciliadas                        |                                                     4.710 (74,63%) |
+| Emendas sem chave exata                          |                                                              1.601 |
+| Linhas de proposta Transferegov preservadas      |                                                             61.402 |
+| Objetos de catálogo vinculados                   |                                                              1.231 |
+| Instrumentos de catálogo vinculados              |                                                              1.182 |
+| Linhas de emenda sem hash ou chave externa única |                                                                  0 |
+| Vínculos de emenda sem igualdade exata           |                                                                  0 |
+| Hash da execução                                 | `9957cdb67407f7e8f70a6836b0f94a4505112cb3a58a1a2b0768ce5e86ae7c96` |
+
+O processo foi repetido após a execução inicial e preservou a mesma taxa e o mesmo hash de execução. Para evitar atribuição indevida, 842 propostas que apareceram ligadas a mais de uma emenda CGU confirmada foram mantidas sem `amendmentId`. Os 1.601 casos sem correspondência continuam como ausência documental no recorte nacional: não implicam ausência de recurso, falha de execução, irregularidade ou inexistência de dados em outras fontes.
 
 [5] [Emendas Parlamentares — Dados abertos do Portal da Transparência](https://portaldatransparencia.gov.br/download-de-dados/emendas-parlamentares)

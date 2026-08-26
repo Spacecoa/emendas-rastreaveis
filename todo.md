@@ -103,3 +103,12 @@
 - [x] Corrigir a seção de limitações da metodologia que ainda chama a carga financeira nacional de amostra parcial.
 - [x] Estabilizar o tempo de execução da auditoria axe da aba de cobertura na suíte completa, sem reduzir suas verificações.
 - [x] Reexecutar a suíte completa após estabilizar o timeout da auditoria axe de cobertura e registrar o resultado aprovado.
+- [x] Confirmar o arquivo oficial nacional do Transferegov e documentar seu conteúdo, URL, data e hash para a conciliação de 2025.
+- [x] Adaptar a rotina de conciliação para comparar as 6.311 chaves CGU/2025 exclusivamente por igualdade exata de `NR_EMENDA`, com execução idempotente e observável.
+- [x] Executar a conciliação nacional, validar vínculos e ausências sem inferência por texto, CNPJ ou UF, e registrar a taxa resultante.
+- [x] Atualizar cobertura pública, metodologia, documentação e testes para distinguir a taxa nacional da conciliação parcial histórica.
+- [x] Rotular as taxas parciais remanescentes nas notas de verificação como evidências históricas, sem conflitá-las com a taxa nacional atual.
+- [x] Reexecutar a busca documental por taxas históricas após a rotulagem e confirmar a consistência com 4.710/6.311.
+- [x] Garantir o encerramento determinístico das conexões dos scripts de exportação e conciliação após a execução nacional.
+- [x] Tornar a chave externa de cada linha nacional do Transferegov única por hash, preservando múltiplas linhas oficiais da mesma combinação emenda/proposta.
+- [x] Atualizar o relatório de não conciliação para consultar a chave de proposta na estrutura nacional e reportar o universo de 6.311 emendas.

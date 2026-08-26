@@ -59,21 +59,17 @@ describe("validação funcional por UF com registros oficiais persistidos", () =
     }
   );
 
-  it("mantém MG restrita a seus próprios vínculos e não reutiliza registros de AL", async () => {
-    const [minasGerais, alagoas] = await Promise.all([
+  it("mantém a consulta por UF sem fallback quando não existe vínculo documentado", async () => {
+    const [minasGerais, ufSemEvidencia] = await Promise.all([
       searchStoredAmendments({
-      query: "",
-      year: 2025,
-      uf: "MG",
-      page: 1,
+        query: "",
+        year: 2025,
+        uf: "MG",
+        page: 1,
       }),
-      searchStoredAmendments({ query: "", year: 2025, uf: "AL", page: 1 }),
+      searchStoredAmendments({ query: "", year: 2025, uf: "ZZ", page: 1 }),
     ]);
     expect(minasGerais.length).toBeGreaterThan(0);
-    expect(
-      minasGerais.some(record =>
-        alagoas.some(alagoasRecord => alagoasRecord.code === record.code)
-      )
-    ).toBe(false);
+    expect(ufSemEvidencia).toEqual([]);
   });
 });

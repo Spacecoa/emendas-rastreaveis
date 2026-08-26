@@ -71,11 +71,10 @@ export default function MethodologyPage() {
             <BookOpenCheck className="text-[#1e4a77]" />
             <h2>Conciliação declarada</h2>
             <p>
-              A carga financeira nacional de 2025 contém 6.311 emendas. Dentro
-              do recorte de conciliação já processado, 112 de 150 (74,67%)
-              correspondem exatamente ao campo oficial <code>NR_EMENDA</code> do
-              Transferegov. Esse vínculo documental não é uma taxa sobre toda a
-              carga nacional nem uma prova de entrega física.
+              A carga financeira nacional de 2025 contém 6.311 emendas. Deste
+              universo, 4.710 (74,63%) correspondem exatamente ao campo oficial
+              <code>NR_EMENDA</code> do Transferegov. Esse vínculo documental
+              não é uma prova de entrega física.
             </p>
           </article>
           <article className="method-card">
@@ -145,10 +144,11 @@ export default function MethodologyPage() {
             IBGE para as 27 UFs. A rota CGU de emendas não documenta filtro
             territorial por UF; portanto, a busca por UF só exibe emendas quando
             existe vínculo documental no catálogo conciliado ou código municipal
-            IBGE. A conciliação do Transferegov ainda cobre apenas o recorte de
-            112 de 150 chaves processadas. Também não afirmamos a situação
-            física do objeto, a aprovação de contas ou valores per capita sem
-            vínculo municipal e evidência oficial adicional.
+            IBGE. A conciliação nacional do Transferegov alcança 4.710 de 6.311
+            chaves CGU por igualdade exata de <code>NR_EMENDA</code>. Também não
+            afirmamos a situação física do objeto, a aprovação de contas ou
+            valores per capita sem vínculo municipal e evidência oficial
+            adicional.
           </p>
         </section>
       </div>
