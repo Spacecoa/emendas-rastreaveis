@@ -56,6 +56,8 @@
 - [x] Registrar a autorização do usuário para executar diretamente todas as UFs restantes por fontes territoriais oficiais, substituindo a autorização etapa a etapa.
 - [x] Carregar e validar as UFs restantes com fonte territorial oficial, mantendo itens sem chave de emenda como não conciliados.
 - [x] Executar check-up integral de integridade, segurança, API, acessibilidade e interface após a expansão nacional.
+- [x] Conciliar documentalmente o catálogo das 27 UFs somente por chaves oficiais verificáveis, mantendo sem vínculo os registros não confirmados.
+- [x] Validar a taxa, os vínculos e os limites da conciliação nacional antes de apresentá-la como cobertura documental.
 - [x] Corrigir o extrator de instrumentos para propagar UF e ano a partir das propostas territoriais, depois regenerar o catálogo MG/2025 sem vínculos de emenda.
 - [x] Manter a publicação e o agendamento recorrente suspensos até a conclusão das etapas de expansão por UF autorizadas pelo usuário.
 - [x] Remover ou reclassificar a carga rotulada como SP/2025, pois a documentação oficial da rota CGU de emendas não expõe o parâmetro `uf`.

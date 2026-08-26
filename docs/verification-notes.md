@@ -84,3 +84,22 @@ O check-up posterior confirmou zero entradas de catálogo sem URL ou hash, zero 
 [2] [API de Localidades e Estimativas da População 2025 — IBGE](https://servicodados.ibge.gov.br/api/docs/localidades)
 
 [3] [Brasília (DF) — Cidades e Estados, IBGE](https://www.ibge.gov.br/cidades-e-estados/df/brasilia.html)
+
+## Conciliação documental nacional do catálogo — 26 de agosto de 2026
+
+A conciliação foi executada sobre 75 emendas CGU de 2025 cujos oito dígitos finais do código eram chaves numéricas distintas. A base oficial de emendas do Transferegov retornou 662 linhas de propostas associadas a essas chaves. O vínculo foi criado apenas quando `NR_EMENDA` correspondeu exatamente aos oito dígitos finais do código CGU, no mesmo exercício, e o `ID_PROPOSTA` dessa linha coincidiu com a chave externa do objeto ou instrumento já carregado.[4]
+
+| Medida | Resultado |
+| --- | ---: |
+| Emendas CGU candidatas | 75 |
+| Emendas CGU com chave exata no Transferegov | 55 |
+| Taxa por emenda | 73,33% |
+| Linhas oficiais de emendas Transferegov preservadas | 662 |
+| Objetos do catálogo vinculados em UFs fora do RJ | 1 |
+| Instrumentos do catálogo vinculados em UFs fora do RJ | 1 |
+
+O vínculo novo ocorreu em AL, para a proposta `2094121`: a linha oficial do Transferegov registra `NR_EMENDA` `29730007`, que corresponde ao código CGU `202529730007`. O objeto e o instrumento dessa mesma proposta foram associados à emenda. A validação encontrou zero entradas conciliadas sem emenda, zero entradas não conciliadas com emenda e zero vínculos de catálogo sem a chave exata documentada.
+
+> A conciliação é **documental**, não territorial por inferência. Ela não confirma que o recurso foi executado, que o objeto foi entregue, nem que o município recebeu resultado físico. Todos os registros sem chave exata continuam como `nao_conciliado`.
+
+[4] [Emendas — dados abertos Transferegov](https://repositorio.dados.gov.br/seges/detru/siconv_emenda.csv.zip)
