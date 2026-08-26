@@ -143,3 +143,4 @@
 - [x] Verificar a disponibilidade do repositório GitHub Spacecoa e a integração autorizável para acesso a documentos.
 - [x] Preparar e submeter a vinculação do projeto ao GitHub somente após confirmação explícita da operação.
 - [x] Verificar o acesso aos documentos após a vinculação e registrar o escopo efetivamente disponível.
+- [x] Consolidar e apresentar o inventário das funcionalidades atualmente acessíveis, com limites de dados, integração e publicação.
