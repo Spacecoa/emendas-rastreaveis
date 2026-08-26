@@ -10,13 +10,12 @@ import { formatCurrency, formatDate } from "@/lib/format";
 import { trpc } from "@/lib/trpc";
 import type { OfficialAmendment } from "../../../server/portalTransparency";
 
-function exportRecords(records: OfficialAmendment[], type: "csv" | "json" | "xlsx") {
+export function buildExportBlob(records: OfficialAmendment[], type: "csv" | "json" | "xlsx") {
   const rows = records.map(record => ({
     codigo_emenda: record.code, ano: record.year, numero_emenda: record.number, autor: record.author, localidade: record.locality, tipo: record.type,
     funcao: record.budgetFunction, subfuncao: record.budgetSubfunction, valor_empenhado: record.committed, valor_liquidado: record.settled, valor_pago: record.paid,
     status_cumprimento: record.complianceStatus, fonte: record.source, url_origem: record.sourceUrl, data_extracao: record.extractedAt, hash_registro: record.recordHash,
   }));
-  const name = `emendas-em-foco-${new Date().toISOString().slice(0, 10)}`;
   let blob: Blob;
   if (type === "json") blob = new Blob([JSON.stringify(rows, null, 2)], { type: "application/json" });
   else if (type === "csv") {
@@ -28,6 +27,12 @@ function exportRecords(records: OfficialAmendment[], type: "csv" | "json" | "xls
     const book = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(book, sheet, "Emendas");
     blob = new Blob([XLSX.write(book, { type: "array", bookType: "xlsx" })], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
   }
+  return blob;
+}
+
+function exportRecords(records: OfficialAmendment[], type: "csv" | "json" | "xlsx") {
+  const name = `emendas-em-foco-${new Date().toISOString().slice(0, 10)}`;
+  const blob = buildExportBlob(records, type);
   const url = URL.createObjectURL(blob); const anchor = document.createElement("a"); anchor.href = url; anchor.download = `${name}.${type}`; anchor.click(); URL.revokeObjectURL(url);
 }
 

@@ -148,7 +148,25 @@ export async function searchStoredAmendments(input: { query: string; year: numbe
       like(authors.name, pattern),
     )!);
   }
-  if (input.uf) filters.push(like(amendments.locality, `%${input.uf.toUpperCase()}%`));
+  if (input.uf) {
+    const uf = input.uf.toUpperCase();
+    filters.push(sql`(
+      EXISTS (
+        SELECT 1
+        FROM source_catalog_entries AS catalogo
+        WHERE catalogo.amendmentId = ${amendments.id}
+          AND catalogo.uf = ${uf}
+          AND catalogo.reconciliationStatus = 'conciliado'
+          AND catalogo.recordKind IN ('objeto', 'instrumento')
+      )
+      OR EXISTS (
+        SELECT 1
+        FROM municipalities AS municipio
+        WHERE municipio.id = ${amendments.municipalityId}
+          AND municipio.uf = ${uf}
+      )
+    )`);
+  }
   if (input.status) filters.push(eq(amendments.complianceStatus, input.status));
   if (input.author) filters.push(like(authors.name, `%${input.author.trim()}%`));
   if (input.budgetFunction) filters.push(like(amendments.budgetFunction, `%${input.budgetFunction.trim()}%`));

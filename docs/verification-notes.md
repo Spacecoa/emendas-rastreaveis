@@ -103,3 +103,17 @@ O vínculo novo ocorreu em AL, para a proposta `2094121`: a linha oficial do Tra
 > A conciliação é **documental**, não territorial por inferência. Ela não confirma que o recurso foi executado, que o objeto foi entregue, nem que o município recebeu resultado físico. Todos os registros sem chave exata continuam como `nao_conciliado`.
 
 [4] [Emendas — dados abertos Transferegov](https://repositorio.dados.gov.br/seges/detru/siconv_emenda.csv.zip)
+
+## Correção do filtro de UF e validação funcional — 26 de agosto de 2026
+
+O defeito relatado na busca por UF foi reproduzido e corrigido. A implementação anterior procurava a sigla da UF como texto dentro do campo de localidade da emenda CGU. Essa aproximação textual podia associar uma consulta territorial a um registro sem relação territorial comprovada. O filtro agora retorna uma emenda apenas quando há: (a) objeto ou instrumento conciliado com `amendmentId` naquela UF; ou (b) código municipal IBGE ligado à emenda. Não há mais fallback por texto de localidade.
+
+| Cenário prático na tela `/busca` | Resultado observado | Verificação de conformidade |
+| --- | --- | --- |
+| `UF=AL` | 1 emenda: código `202529730007`, autoria PAULÃO, destino ALAGOAS (UF). | A proposta `2094121` e seus objeto/instrumento possuem `NR_EMENDA` `29730007`, igual aos oito dígitos finais do código CGU. |
+| `UF=SE` | 1 emenda: código `202543440009`, autoria DELEGADA KATARINA, destino SERGIPE (UF). | A proposta `2091824` e seus objeto/instrumento possuem `NR_EMENDA` `43440009`, igual aos oito dígitos finais do código CGU. |
+| `UF=MG` | 0 registros e estado vazio explícito. | MG não possui, no recorte atual, objeto/instrumento conciliado a uma emenda CGU; o sistema não exibe resultado de outra UF. |
+
+A página de detalhe das emendas AL e SE exibiu situação, etapas financeiras, fonte oficial clicável e a advertência de que execução financeira ou conciliação documental não comprova entrega física. A auditoria de interface submeteu o formulário da própria tela para AL, SE e MG e conferiu a UF na URL compartilhável e no contrato de consulta. Ela também verificou a tabela renderizada de AL/SE, a ausência de tabela, exportações e links de outra UF em MG, e o `href` correto do link de detalhe para cada emenda. Com os registros persistidos, a auditoria funcional validou CSV, JSON e XLSX para AL e SE: todos preservaram código, localidade, URL de origem e hash do único registro do recorte. Para MG, a busca e o JSON retornaram lista vazia; nenhum controle de exportação é exibido para um recorte sem vínculo. A auditoria de detalhe confirmou que o link “Abrir consulta oficial” aponta para a URL CGU registrada em AL e SE. A auditoria confirmou que há zero vínculos conciliados sem emenda, zero vínculos sem chave exata e zero entradas não conciliadas com `amendmentId`.
+
+Para ampliar a conciliação, a carga CGU de 2025 passou de 75 para 150 registros oficiais, sem uso do parâmetro `uf` não documentado. A extração correspondente de 1.139 linhas de emendas do Transferegov produziu 112 correspondências exatas por `NR_EMENDA` (74,67%). Foram preservados vínculos documentais de catálogo nas UFs AL, RJ e SE; os demais registros continuam explicitamente não conciliados. `pnpm check && pnpm test && git diff --check` passou com 21 arquivos de teste aprovados, 43 testes aprovados e 1 teste de Resend pulado pelo remetente pendente.

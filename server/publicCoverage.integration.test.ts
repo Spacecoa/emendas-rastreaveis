@@ -10,14 +10,14 @@ describe("síntese pública de cobertura", () => {
     expect(coverage).toMatchObject({
       referenceYear: 2025,
       totals: {
-        amendments: 75,
-        financialStages: 450,
+        amendments: 150,
+        financialStages: 900,
         beneficiaries: 5400,
         objects: 5400,
         instruments: 1812,
         municipalities: 5571,
       },
-      reconciliation: { evaluated: 75, matched: 55, matchRate: 0.7333 },
+      reconciliation: { evaluated: 150, matched: 112, matchRate: 0.7467 },
     });
     expect(coverage?.availableStates).toHaveLength(27);
     expect(coverage?.availableStates.map(state => state.uf)).toEqual(expect.arrayContaining([

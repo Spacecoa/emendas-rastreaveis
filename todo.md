@@ -59,6 +59,14 @@
 - [x] Conciliar documentalmente o catálogo das 27 UFs somente por chaves oficiais verificáveis, mantendo sem vínculo os registros não confirmados.
 - [x] Validar a taxa, os vínculos e os limites da conciliação nacional antes de apresentá-la como cobertura documental.
 - [x] Produzir relatório auditável das emendas e itens de catálogo não conciliados, com causas documentais, proveniência e limites de interpretação.
+- [x] Corrigir o filtro de UF para impedir que uma consulta territorial exiba emendas de outra UF ou um recorte sem vínculo territorial verificável.
+- [x] Investigar e ampliar a conciliação apenas quando houver nova chave oficial verificável, mantendo as ausências explicitamente não conciliadas.
+- [x] Executar testes práticos completos de busca e funções em pelo menos três UFs após a correção territorial.
+- [x] Atualizar textos públicos que ainda atribuem a conciliação e a cobertura municipal exclusivamente ao RJ/2025.
+- [x] Executar a submissão interativa da busca em AL, SE e MG pela própria interface, verificando resultado correto e estado vazio sem UF indevida.
+- [x] Validar na prática os três formatos de exportação, a navegação ao detalhe e a fonte oficial nos recortes AL, SE e MG, registrando evidências auditáveis.
+- [x] Verificar em teste de interface o conteúdo renderizado de AL, SE e MG após a submissão do formulário, incluindo estado vazio sem UF indevida.
+- [x] Validar por interação de interface a navegação ao detalhe de AL e SE, os links de fonte oficial e a ausência de controles em MG vazio.
 - [x] Corrigir o extrator de instrumentos para propagar UF e ano a partir das propostas territoriais, depois regenerar o catálogo MG/2025 sem vínculos de emenda.
 - [x] Manter a publicação e o agendamento recorrente suspensos até a conclusão das etapas de expansão por UF autorizadas pelo usuário.
 - [x] Remover ou reclassificar a carga rotulada como SP/2025, pois a documentação oficial da rota CGU de emendas não expõe o parâmetro `uf`.

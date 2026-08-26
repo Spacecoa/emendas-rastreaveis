@@ -58,4 +58,17 @@ describe("exportação do recorte da busca", () => {
     const spreadsheetRows = XLSX.utils.sheet_to_json<Record<string, unknown>>(workbook.Sheets.Emendas);
     expect(spreadsheetRows).toEqual([expect.objectContaining({ codigo_emenda: "202539940017", autor: "GENERAL GIRAO", funcao: "Defesa nacional", valor_pago: 39989.35 })]);
   });
+
+  it.each(["AL", "SE", "MG"])("submete a UF %s pela própria interface e preserva o recorte na URL", uf => {
+    window.history.replaceState({}, "", "/busca?ano=2025");
+    render(<SearchPage />);
+
+    const ufInput = screen.getByLabelText("UF");
+    fireEvent.change(ufInput, { target: { value: uf } });
+    fireEvent.submit(ufInput.closest("form")!);
+
+    expect(window.location.search).toContain(`uf=${uf}`);
+    expect(window.location.search).toContain("ano=2025");
+    expect(receivedInputs).toContainEqual(expect.objectContaining({ year: 2025, uf }));
+  });
 });

@@ -18,4 +18,15 @@ describe("filtros combináveis da carga persistida", () => {
       budgetFunction: "Defesa nacional",
     });
   });
+
+  it("restringe UF a vínculo territorial documental e não usa localidade textual", async () => {
+    const [alagoas, minasGerais] = await Promise.all([
+      searchStoredAmendments({ query: "", year: 2025, uf: "AL", page: 1 }),
+      searchStoredAmendments({ query: "", year: 2025, uf: "MG", page: 1 }),
+    ]);
+
+    expect(alagoas).toHaveLength(1);
+    expect(alagoas[0]).toMatchObject({ code: "202529730007" });
+    expect(minasGerais).toHaveLength(0);
+  });
 });

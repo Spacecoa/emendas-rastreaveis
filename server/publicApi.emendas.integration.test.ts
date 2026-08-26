@@ -27,9 +27,24 @@ describe("API pública de emendas", () => {
     const payload = await response.json();
     expect(response.status).toBe(200);
     expect(payload.meta).toMatchObject({ year: 2025, uf: "RJ", status: "informacao_insuficiente", minPaid: 0 });
-    expect(payload.meta.coverage).toContain("carga oficial persistida");
+    expect(payload.meta.coverage).toContain("vínculo territorial documental");
     expect(Array.isArray(payload.data)).toBe(true);
     expect(payload.data.every((record: { complianceStatus: string; paid: number | null }) => record.complianceStatus === "informacao_insuficiente" && record.paid !== null && record.paid >= 0)).toBe(true);
+  });
+
+  it("restringe UF a emendas com vínculo territorial documental e não retorna fallback de outra UF", async () => {
+    const [alagoasResponse, minasGeraisResponse] = await Promise.all([
+      fetch(`${baseUrl}/api/v1/emendas?ano=2025&uf=AL`),
+      fetch(`${baseUrl}/api/v1/emendas?ano=2025&uf=MG`),
+    ]);
+    const [alagoas, minasGerais] = await Promise.all([alagoasResponse.json(), minasGeraisResponse.json()]);
+
+    expect(alagoasResponse.status).toBe(200);
+    expect(alagoas.data).toHaveLength(1);
+    expect(alagoas.data[0]).toMatchObject({ code: "202529730007" });
+    expect(alagoas.meta.coverage).toContain("vínculo territorial documental");
+    expect(minasGeraisResponse.status).toBe(200);
+    expect(minasGerais.data).toHaveLength(0);
   });
 
   it("recusa parâmetros de filtro inválidos", async () => {

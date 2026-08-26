@@ -61,7 +61,9 @@ export const appRouter = router({
         count: filtered.length,
         query: input.query,
         sourceCoverage: storedYearAvailable
-          ? "Resultados das cargas oficiais persistidas. Há dados complementares territorialmente comprovados para RJ/2025; a rota CGU de emendas não documenta parâmetro de UF, por isso não inferimos cobertura territorial da amostra adicional de 2025."
+          ? input.uf
+            ? "O filtro UF retorna apenas emendas com vínculo territorial documental no catálogo conciliado ou código municipal IBGE. Registros sem esse vínculo não recebem UF por texto de localidade."
+            : "Resultados das cargas oficiais persistidas. A rota CGU de emendas não documenta parâmetro de UF; cobertura territorial só é afirmada quando existe vínculo documental no catálogo conciliado ou código municipal IBGE."
           : input.uf
             ? "O filtro UF exige carga persistida: a rota CGU de emendas não documenta consulta territorial por UF."
             : "Resultados da página consultada na fonte oficial. A ampliação nacional depende das cargas persistidas e conciliadas.",

@@ -12,7 +12,7 @@ const stepNames = [
   ["Empenho", "O governo reservou o dinheiro e assumiu o compromisso de pagar."],
   ["Liquidação", "O órgão reconheceu que recebeu o bem, serviço ou etapa que permite o pagamento."],
   ["Pagamento", "O recurso foi pago. Isso não confirma, sozinho, a entrega final do objeto."],
-  ["Execução física", "Há conciliação documental parcial com o Transferegov em RJ/2025, mas ela não basta para comprovar a entrega física desta emenda."],
+  ["Execução física", "A base possui conciliação documental parcial com o Transferegov em 2025, mas ela não basta para comprovar a entrega física desta emenda."],
   ["Prestação de contas", "Informação não disponível na fonte financeira inicial."],
 ];
 

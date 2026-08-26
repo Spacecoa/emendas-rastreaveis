@@ -2,6 +2,7 @@
 
 Uso:
   python3 etl/transferegov_emendas.py --arquivo /tmp/emendas.zip --chaves 41840004,37660015 --saida /tmp/emendas-transferegov-rj.jsonl
+  python3 etl/transferegov_emendas.py --arquivo /tmp/emendas.zip --chaves-arquivo /tmp/chaves-cgu-2025.txt --saida /tmp/emendas-transferegov-2025.jsonl
 """
 from __future__ import annotations
 
@@ -21,10 +22,17 @@ SOURCE_URL = "https://repositorio.dados.gov.br/seges/detru/siconv_emenda.csv.zip
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--arquivo", type=Path, required=True)
-    parser.add_argument("--chaves", required=True, help="Números NR_EMENDA separados por vírgula.")
+    key_source = parser.add_mutually_exclusive_group(required=True)
+    key_source.add_argument("--chaves", help="Números NR_EMENDA separados por vírgula.")
+    key_source.add_argument("--chaves-arquivo", type=Path, help="Arquivo com números NR_EMENDA separados por vírgula ou quebra de linha.")
     parser.add_argument("--saida", type=Path, required=True)
     args = parser.parse_args()
-    keys = {key.strip() for key in args.chaves.split(",") if key.strip().isdigit() and len(key.strip()) == 8}
+    key_text = args.chaves
+    if args.chaves_arquivo:
+        if not args.chaves_arquivo.is_file():
+            raise ValueError(f"Arquivo de chaves não encontrado: {args.chaves_arquivo}")
+        key_text = args.chaves_arquivo.read_text(encoding="utf-8")
+    keys = {key.strip() for key in key_text.replace("\n", ",").split(",") if key.strip().isdigit() and len(key.strip()) == 8}
     if not keys:
         raise ValueError("Informe ao menos uma chave NR_EMENDA com oito dígitos.")
 

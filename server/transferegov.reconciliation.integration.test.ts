@@ -28,11 +28,11 @@ describe("conciliação CGU e Transferegov", () => {
       .from(sourceCatalogEntries)
       .where(eq(sourceCatalogEntries.recordKind, "emenda_transferegov"));
 
-    expect(run).toMatchObject({ extracted: 75, matched: 55, rate: "0.7333" });
-    expect(source.note).toContain("55 de 75");
-    expect(emendaRows).toHaveLength(662);
+    expect(run).toMatchObject({ extracted: 150, matched: 112, rate: "0.7467" });
+    expect(source.note).toContain("112 de 150");
+    expect(emendaRows).toHaveLength(1139);
     expect(linkedPhysicalCatalog.length).toBeGreaterThan(0);
     expect(linkedPhysicalCatalog.every(entry => entry.amendmentId !== null)).toBe(true);
-    expect(linkedPhysicalCatalog.filter(entry => entry.uf !== "RJ")).toHaveLength(2);
+    expect(linkedPhysicalCatalog.filter(entry => entry.uf !== "RJ")).toHaveLength(4);
   });
 });

@@ -56,7 +56,7 @@ export function registerPublicApi(app: Express) {
             summary: "Consulta emendas oficiais configuradas",
             parameters: [
               { name: "ano", in: "query", schema: { type: "integer", example: 2025 } },
-              { name: "uf", in: "query", description: "Filtro textual sobre a localidade dos registros persistidos; não é encaminhado à API CGU nem declara cobertura territorial.", schema: { type: "string", minLength: 2, maxLength: 2, example: "RJ" } },
+              { name: "uf", in: "query", description: "Filtro territorial estrito: retorna somente emendas com objeto ou instrumento conciliado naquela UF, ou código municipal IBGE vinculado. Não usa texto de localidade nem é encaminhado à API CGU.", schema: { type: "string", minLength: 2, maxLength: 2, example: "AL" } },
               { name: "q", in: "query", schema: { type: "string", example: "saúde" } },
               { name: "status", in: "query", schema: { type: "string", enum: complianceStatuses, example: "informacao_insuficiente" } },
               { name: "minPaid", in: "query", schema: { type: "number", minimum: 0, example: 100000 } },
@@ -98,7 +98,7 @@ export function registerPublicApi(app: Express) {
       const records = stored ? await searchStoredAmendments({ query, year, uf, status, minPaid, author, budgetFunction, page }) : await fetchPortalAmendments({ year, page });
       const filtered = records.filter(record => matchesQuery(record, query) && matchesFilter(record.author, author) && matchesFilter(record.budgetFunction, budgetFunction) && (!status || record.complianceStatus === status) && (minPaid === undefined || (record.paid !== null && record.paid >= minPaid)));
       res.set("Cache-Control", "public, max-age=300");
-      return res.json({ data: filtered, meta: { year, uf: uf ?? null, page, count: filtered.length, status: status ?? null, minPaid: minPaid ?? null, author: author ?? null, budgetFunction: budgetFunction ?? null, coverage: stored ? "Consulta da carga oficial persistida para o ano. O filtro UF recorta a localidade registrada e não declara cobertura territorial da API CGU. A entrega física continua sem inferência enquanto não houver conciliação entre fontes." : "Consulta de uma página da fonte oficial. A rota CGU de emendas não oferece filtro territorial por UF; a base conciliada nacional é publicada à medida que as cargas forem concluídas." } });
+      return res.json({ data: filtered, meta: { year, uf: uf ?? null, page, count: filtered.length, status: status ?? null, minPaid: minPaid ?? null, author: author ?? null, budgetFunction: budgetFunction ?? null, coverage: stored ? (uf ? "O filtro UF usa apenas vínculo territorial documental no catálogo conciliado ou código municipal IBGE; não utiliza texto de localidade. A entrega física continua sem inferência." : "Consulta da carga oficial persistida para o ano. Cobertura territorial só é declarada por vínculo documental no catálogo conciliado ou código municipal IBGE.") : "Consulta de uma página da fonte oficial. A rota CGU de emendas não oferece filtro territorial por UF; a base conciliada nacional é publicada à medida que as cargas forem concluídas." } });
     } catch {
       return res.status(502).json({ error: "Não foi possível consultar a fonte oficial neste momento." });
     }
