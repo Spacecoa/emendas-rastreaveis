@@ -90,10 +90,10 @@ export default function Home() {
               <span
                 className={`size-2 rounded-full ${portal?.status === "available" ? "bg-[#1e4a77]" : "bg-black/35"}`}
               />
-              Fonte financeira inicial: Portal da Transparência
+              Fonte financeira: Portal da Transparência (CGU)
               {portal
                 ? ` · atualizada em ${formatDate(portal.latestSuccessfulLoadAt)}`
-                : " · aguardando primeira carga"}
+                : " · consulte cobertura e proveniência"}
             </span>
             <Link
               className="inline-flex items-center gap-1 font-semibold underline decoration-black/25 underline-offset-4"

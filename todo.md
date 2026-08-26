@@ -99,3 +99,7 @@
 - [x] Documentar que a expansão territorial por UF exige fonte ou chave oficial territorial explícita, em vez de inferir cobertura pelo parâmetro não documentado.
 - [x] Remover o envio do parâmetro `uf` não documentado nas consultas CGU e impedir que futuras cargas o apresentem como recorte territorial.
 - [x] Remover o rótulo SP do histórico de ingestão e canonicalizar a proveniência pública da amostra preservada sem o parâmetro não documentado.
+- [x] Atualizar o aviso de fonte financeira na página inicial, removendo a informação desatualizada de que a primeira carga está pendente, e cobrir a regressão em teste de interface.
+- [x] Corrigir a seção de limitações da metodologia que ainda chama a carga financeira nacional de amostra parcial.
+- [x] Estabilizar o tempo de execução da auditoria axe da aba de cobertura na suíte completa, sem reduzir suas verificações.
+- [x] Reexecutar a suíte completa após estabilizar o timeout da auditoria axe de cobertura e registrar o resultado aprovado.

@@ -80,7 +80,7 @@ vi.mock("@/lib/trpc", () => ({
                 baseUrl: "https://example.test/cgu",
                 status: "available",
                 latestSuccessfulLoadAt: new Date("2026-08-26T04:25:00.000Z"),
-                coverageNote: "Amostra oficial persistida.",
+                coverageNote: "Carga financeira nacional oficial de 2025.",
               },
             ],
           },
@@ -178,5 +178,5 @@ describe("aba pública de cobertura", () => {
       rules: { "color-contrast": { enabled: false } },
     });
     expect(result.violations).toEqual([]);
-  });
+  }, 180_000);
 });

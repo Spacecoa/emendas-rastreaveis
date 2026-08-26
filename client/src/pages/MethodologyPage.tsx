@@ -140,14 +140,15 @@ export default function MethodologyPage() {
             LIMITAÇÕES ATUAIS
           </p>
           <p className="mt-3 max-w-3xl text-lg leading-8 text-white/80">
-            A plataforma reúne amostra parcial de execução financeira da CGU em
+            A plataforma reúne a carga financeira nacional de emendas da CGU em
             2025, catálogo complementar do Transferegov e população municipal do
             IBGE para as 27 UFs. A rota CGU de emendas não documenta filtro
             territorial por UF; portanto, a busca por UF só exibe emendas quando
             existe vínculo documental no catálogo conciliado ou código municipal
-            IBGE. Também não afirmamos a situação física do objeto, a aprovação
-            de contas ou valores per capita sem vínculo municipal e evidência
-            oficial adicional.
+            IBGE. A conciliação do Transferegov ainda cobre apenas o recorte de
+            112 de 150 chaves processadas. Também não afirmamos a situação
+            física do objeto, a aprovação de contas ou valores per capita sem
+            vínculo municipal e evidência oficial adicional.
           </p>
         </section>
       </div>

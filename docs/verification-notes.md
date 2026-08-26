@@ -26,12 +26,12 @@ A página de parlamentar `GENERAL GIRAO` foi verificada em desktop após a corre
 
 ## Check-up geral pré-publicação — 26 de agosto de 2026
 
-| Área verificada | Evidência e resultado |
-| --- | --- |
-| Tipagem, testes e diff | `pnpm check && pnpm test && git diff --check` foi executado. A suíte atual concluiu com 19 arquivos aprovados, 27 testes aprovados e 1 teste de Resend pulado por depender de remetente verificado, que permanece pendente por decisão do projeto. Não houve erro de espaço em branco no diff. |
-| Integridade persistida | Consultas SQL encontraram zero emendas duplicadas, zero emendas sem URL ou hash, zero estágios órfãos, zero catálogos conciliados sem emenda, zero municípios com população sem fonte/ano e zero fontes sem última tentativa. |
-| Segurança de segredo | A busca pelo identificador da chave CGU no diretório cliente não retornou ocorrências. A chave continua usada somente no servidor por variável de ambiente e não foi exibida durante a checagem. |
-| API pública | `GET /api/v1/emendas` com autoria e função retornou HTTP 200 e a emenda oficial esperada. `GET /api/v1/openapi.json` retornou HTTP 200 e documenta `autor` e `funcao`. |
+| Área verificada           | Evidência e resultado                                                                                                                                                                                                                                                                                                                                      |
+| ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Tipagem, testes e diff    | `pnpm check && pnpm test && git diff --check` foi executado. A suíte atual concluiu com 19 arquivos aprovados, 27 testes aprovados e 1 teste de Resend pulado por depender de remetente verificado, que permanece pendente por decisão do projeto. Não houve erro de espaço em branco no diff.                                                             |
+| Integridade persistida    | Consultas SQL encontraram zero emendas duplicadas, zero emendas sem URL ou hash, zero estágios órfãos, zero catálogos conciliados sem emenda, zero municípios com população sem fonte/ano e zero fontes sem última tentativa.                                                                                                                              |
+| Segurança de segredo      | A busca pelo identificador da chave CGU no diretório cliente não retornou ocorrências. A chave continua usada somente no servidor por variável de ambiente e não foi exibida durante a checagem.                                                                                                                                                           |
+| API pública               | `GET /api/v1/emendas` com autoria e função retornou HTTP 200 e a emenda oficial esperada. `GET /api/v1/openapi.json` retornou HTTP 200 e documenta `autor` e `funcao`.                                                                                                                                                                                     |
 | Interface e console atual | Após reinício às 03:06 UTC-3, a API voltou a responder e a página de parlamentar foi verificada visualmente. Não houve erro de console posterior ao reinício. O arquivo de log do servidor ainda conserva dois `SyntaxError` de recargas anteriores, às 01:48 e 02:31; eles são históricos, anteriores ao reinício, às correções e à suíte atual aprovada. |
 
 > A publicação continua suspensa. A próxima carga de UF será executada como etapa isolada, validada e apresentada para autorização explícita antes de avançar para outra UF.
@@ -48,13 +48,13 @@ Os registros foram preservados como **amostra oficial parcial de 2025**, e o his
 
 Após autorização explícita, a cobertura de Minas Gerais foi carregada exclusivamente a partir de chaves territoriais documentadas no Transferegov e de cadastros/estimativas oficiais do IBGE. Foram persistidos 200 beneficiários, 200 objetos de propostas, 45 instrumentos, 853 municípios e 853 estimativas de população municipal com referência em 2025. Cada estimativa de população de MG possui ano, URL de origem e hash; nenhuma ficou sem proveniência.
 
-| Evidência | Resultado validado |
-| --- | --- |
-| Catálogo territorial | 200 beneficiários, 200 objetos e 45 instrumentos de MG; os objetos e instrumentos foram mantidos como `nao_conciliado`, com `amendmentId` ausente. Portanto, eles não são apresentados como prova de execução física nem como vínculo com uma emenda CGU. |
-| Cobertura IBGE | 853 municípios de MG e 853 populações de referência 2025, totalizando 21.393.441 habitantes na soma dos municípios persistidos. |
-| Integridade da execução | As quatro execuções MG foram concluídas e registraram hash: Proponentes (200), Propostas (200), Convênios (45) e Estimativas da População 2025 (853). |
-| Correção de proveniência | O extrator de instrumentos passou a receber UF e ano do registro de proposta que documenta o recorte. A reimportação confirmou 45/45 instrumentos em MG/2025, sem associação a emenda. |
-| Qualidade e interface | `pnpm check && pnpm test && git diff --check` concluiu sem falhas: 19 arquivos de teste aprovados, 30 testes aprovados e 1 teste de Resend pulado pelo remetente ainda pendente. A página inicial foi conferida em desktop e em 375 × 812 px: MG aparece antes de RJ na ordenação A–Z, com 853 municípios e a população oficial exibida. |
+| Evidência                | Resultado validado                                                                                                                                                                                                                                                                                                                       |
+| ------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Catálogo territorial     | 200 beneficiários, 200 objetos e 45 instrumentos de MG; os objetos e instrumentos foram mantidos como `nao_conciliado`, com `amendmentId` ausente. Portanto, eles não são apresentados como prova de execução física nem como vínculo com uma emenda CGU.                                                                                |
+| Cobertura IBGE           | 853 municípios de MG e 853 populações de referência 2025, totalizando 21.393.441 habitantes na soma dos municípios persistidos.                                                                                                                                                                                                          |
+| Integridade da execução  | As quatro execuções MG foram concluídas e registraram hash: Proponentes (200), Propostas (200), Convênios (45) e Estimativas da População 2025 (853).                                                                                                                                                                                    |
+| Correção de proveniência | O extrator de instrumentos passou a receber UF e ano do registro de proposta que documenta o recorte. A reimportação confirmou 45/45 instrumentos em MG/2025, sem associação a emenda.                                                                                                                                                   |
+| Qualidade e interface    | `pnpm check && pnpm test && git diff --check` concluiu sem falhas: 19 arquivos de teste aprovados, 30 testes aprovados e 1 teste de Resend pulado pelo remetente ainda pendente. A página inicial foi conferida em desktop e em 375 × 812 px: MG aparece antes de RJ na ordenação A–Z, com 853 municípios e a população oficial exibida. |
 
 > A taxa pública de 55/75 (73,33%) continua sendo a conciliação documental específica do recorte CGU/Transferegov então processado. Ela não foi estendida a MG e não confirma entrega física, execução municipal ou aplicação de recursos.
 
@@ -64,12 +64,12 @@ Após autorização explícita, a cobertura de Minas Gerais foi carregada exclus
 
 Após autorização para seguir diretamente com todas as UFs restantes, foram extraídos de uma única leitura das bases nacionais do Transferegov os recortes de AC, AL, AP, AM, BA, CE, DF, ES, GO, MA, MT, MS, PA, PB, PR, PE, PI, RN, RS, RO, RR, SC, SP, SE e TO. Para cada UF, o recorte preserva a URL da fonte, a data de extração e o hash de cada linha. O cadastro de localidades e as estimativas municipais foram consultados diretamente em fontes oficiais do IBGE.[1] [2]
 
-| Dimensão | Novos registros | Total público persistido após a expansão | Verificação de integridade |
-| --- | ---: | ---: | --- |
-| Beneficiários territoriais | 5.000 | 5.400 | 200 por UF nas 27 UFs; URL e hash presentes. |
-| Objetos de propostas | 5.000 | 5.400 | 200 por UF nas 27 UFs; catálogo separado da emenda. |
-| Instrumentos | 1.653 | 1.812 | De 26 a 161 por UF; URL e hash presentes. |
-| Registros municipais e população 2025 | 4.626 | 5.571 | 27 UFs, população em todos os registros, com ano, URL e hash. |
+| Dimensão                              | Novos registros | Total público persistido após a expansão | Verificação de integridade                                    |
+| ------------------------------------- | --------------: | ---------------------------------------: | ------------------------------------------------------------- |
+| Beneficiários territoriais            |           5.000 |                                    5.400 | 200 por UF nas 27 UFs; URL e hash presentes.                  |
+| Objetos de propostas                  |           5.000 |                                    5.400 | 200 por UF nas 27 UFs; catálogo separado da emenda.           |
+| Instrumentos                          |           1.653 |                                    1.812 | De 26 a 161 por UF; URL e hash presentes.                     |
+| Registros municipais e população 2025 |           4.626 |                                    5.571 | 27 UFs, população em todos os registros, com ano, URL e hash. |
 
 O total de 5.571 registros territoriais segue a resposta oficial do IBGE, que inclui Brasília na consulta do Distrito Federal. A interface mantém a denominação técnica já usada pelo catálogo de municípios e preserva a fonte clicável em cada UF.[3]
 
@@ -89,14 +89,14 @@ O check-up posterior confirmou zero entradas de catálogo sem URL ou hash, zero 
 
 A conciliação foi executada sobre 75 emendas CGU de 2025 cujos oito dígitos finais do código eram chaves numéricas distintas. A base oficial de emendas do Transferegov retornou 662 linhas de propostas associadas a essas chaves. O vínculo foi criado apenas quando `NR_EMENDA` correspondeu exatamente aos oito dígitos finais do código CGU, no mesmo exercício, e o `ID_PROPOSTA` dessa linha coincidiu com a chave externa do objeto ou instrumento já carregado.[4]
 
-| Medida | Resultado |
-| --- | ---: |
-| Emendas CGU candidatas | 75 |
-| Emendas CGU com chave exata no Transferegov | 55 |
-| Taxa por emenda | 73,33% |
-| Linhas oficiais de emendas Transferegov preservadas | 662 |
-| Objetos do catálogo vinculados em UFs fora do RJ | 1 |
-| Instrumentos do catálogo vinculados em UFs fora do RJ | 1 |
+| Medida                                                | Resultado |
+| ----------------------------------------------------- | --------: |
+| Emendas CGU candidatas                                |        75 |
+| Emendas CGU com chave exata no Transferegov           |        55 |
+| Taxa por emenda                                       |    73,33% |
+| Linhas oficiais de emendas Transferegov preservadas   |       662 |
+| Objetos do catálogo vinculados em UFs fora do RJ      |         1 |
+| Instrumentos do catálogo vinculados em UFs fora do RJ |         1 |
 
 O vínculo novo ocorreu em AL, para a proposta `2094121`: a linha oficial do Transferegov registra `NR_EMENDA` `29730007`, que corresponde ao código CGU `202529730007`. O objeto e o instrumento dessa mesma proposta foram associados à emenda. A validação encontrou zero entradas conciliadas sem emenda, zero entradas não conciliadas com emenda e zero vínculos de catálogo sem a chave exata documentada.
 
@@ -108,11 +108,11 @@ O vínculo novo ocorreu em AL, para a proposta `2094121`: a linha oficial do Tra
 
 O defeito relatado na busca por UF foi reproduzido e corrigido. A implementação anterior procurava a sigla da UF como texto dentro do campo de localidade da emenda CGU. Essa aproximação textual podia associar uma consulta territorial a um registro sem relação territorial comprovada. O filtro agora retorna uma emenda apenas quando há: (a) objeto ou instrumento conciliado com `amendmentId` naquela UF; ou (b) código municipal IBGE ligado à emenda. Não há mais fallback por texto de localidade.
 
-| Cenário prático na tela `/busca` | Resultado observado | Verificação de conformidade |
-| --- | --- | --- |
-| `UF=AL` | 1 emenda: código `202529730007`, autoria PAULÃO, destino ALAGOAS (UF). | A proposta `2094121` e seus objeto/instrumento possuem `NR_EMENDA` `29730007`, igual aos oito dígitos finais do código CGU. |
-| `UF=SE` | 1 emenda: código `202543440009`, autoria DELEGADA KATARINA, destino SERGIPE (UF). | A proposta `2091824` e seus objeto/instrumento possuem `NR_EMENDA` `43440009`, igual aos oito dígitos finais do código CGU. |
-| `UF=MG` | 0 registros e estado vazio explícito. | MG não possui, no recorte atual, objeto/instrumento conciliado a uma emenda CGU; o sistema não exibe resultado de outra UF. |
+| Cenário prático na tela `/busca` | Resultado observado                                                               | Verificação de conformidade                                                                                                 |
+| -------------------------------- | --------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| `UF=AL`                          | 1 emenda: código `202529730007`, autoria PAULÃO, destino ALAGOAS (UF).            | A proposta `2094121` e seus objeto/instrumento possuem `NR_EMENDA` `29730007`, igual aos oito dígitos finais do código CGU. |
+| `UF=SE`                          | 1 emenda: código `202543440009`, autoria DELEGADA KATARINA, destino SERGIPE (UF). | A proposta `2091824` e seus objeto/instrumento possuem `NR_EMENDA` `43440009`, igual aos oito dígitos finais do código CGU. |
+| `UF=MG`                          | 0 registros e estado vazio explícito.                                             | MG não possui, no recorte atual, objeto/instrumento conciliado a uma emenda CGU; o sistema não exibe resultado de outra UF. |
 
 A página de detalhe das emendas AL e SE exibiu situação, etapas financeiras, fonte oficial clicável e a advertência de que execução financeira ou conciliação documental não comprova entrega física. A auditoria de interface submeteu o formulário da própria tela para AL, SE e MG e conferiu a UF na URL compartilhável e no contrato de consulta. Ela também verificou a tabela renderizada de AL/SE, a ausência de tabela, exportações e links de outra UF em MG, e o `href` correto do link de detalhe para cada emenda. Com os registros persistidos, a auditoria funcional validou CSV, JSON e XLSX para AL e SE: todos preservaram código, localidade, URL de origem e hash do único registro do recorte. Para MG, a busca e o JSON retornaram lista vazia; nenhum controle de exportação é exibido para um recorte sem vínculo. A auditoria de detalhe confirmou que o link “Abrir consulta oficial” aponta para a URL CGU registrada em AL e SE. A auditoria confirmou que há zero vínculos conciliados sem emenda, zero vínculos sem chave exata e zero entradas não conciliadas com `amendmentId`.
 
@@ -122,13 +122,13 @@ Para ampliar a conciliação, a carga CGU de 2025 passou de 75 para 150 registro
 
 A rota pública `/cobertura` passou a exibir a extensão real do banco persistido sem confundir volume de registros com confirmação de resultado. O resumo mostra as 27 UFs com municípios e população IBGE/2025, a carga financeira nacional CGU de 6.311 emendas, o catálogo territorial e o recorte de conciliação documental então processado. A tabela desktop e os cartões móveis mostram, por UF, municípios, população, beneficiários, objetos, instrumentos, vínculos documentais, data de atualização, fontes e quantidade de hashes de proveniência.
 
-| Salvaguarda apresentada | Regra aplicada |
-| --- | --- |
-| Cobertura territorial | UF carregada significa cadastro municipal e população IBGE persistidos; não afirma que a CGU tenha sido filtrada territorialmente. |
-| Catálogo Transferegov | Objetos, instrumentos e beneficiários permanecem separados das emendas até existir chave documental exata. |
-| Conciliação | A taxa informa chaves exatas entre bases e não é apresentada como prova de execução física ou entrega. |
-| Origem | Cada UF mantém links para a fonte IBGE e para a fonte territorial registrada, além da contagem de hashes distintos. |
-| Acessibilidade | A tabela é preservada em desktop; em celular, a mesma informação aparece em cartões equivalentes, com links e botões nomeados. |
+| Salvaguarda apresentada | Regra aplicada                                                                                                                     |
+| ----------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| Cobertura territorial   | UF carregada significa cadastro municipal e população IBGE persistidos; não afirma que a CGU tenha sido filtrada territorialmente. |
+| Catálogo Transferegov   | Objetos, instrumentos e beneficiários permanecem separados das emendas até existir chave documental exata.                         |
+| Conciliação             | A taxa informa chaves exatas entre bases e não é apresentada como prova de execução física ou entrega.                             |
+| Origem                  | Cada UF mantém links para a fonte IBGE e para a fonte territorial registrada, além da contagem de hashes distintos.                |
+| Acessibilidade          | A tabela é preservada em desktop; em celular, a mesma informação aparece em cartões equivalentes, com links e botões nomeados.     |
 
 A navegação pública recebeu o acesso “Cobertura”. A nova página foi testada com `axe-core`, ordenação A–Z e por volume de catálogo, links de fonte e rota de consulta por UF. A validação de dados confirmou o catálogo de MG e a presença das fontes CGU e Transferegov na síntese. O check-up final registrou 22 arquivos de teste aprovados, 44 testes aprovados e 1 teste de Resend pulado pelo remetente ainda não configurado.
 
@@ -144,11 +144,11 @@ As telas de busca, metodologia e detalhe de emenda foram revisadas em desktop de
 
 ## Três ciclos de auto check-up e refinamento — 26 de agosto de 2026
 
-| Ciclo | Diagnóstico | Refinamento aplicado | Evidência final |
-| --- | --- | --- | --- |
-| 1. Acessibilidade | As auditorias `axe-core` já cobriam as páginas críticas, mas o foco visível dependia de regras locais de cada componente. | Foi incluído um indicador global de foco para links, controles de formulário e elementos focáveis, além de regras para `prefers-contrast: more`. | Tipagem e 22 arquivos de teste passaram; as auditorias de acessibilidade continuaram sem violações nas regras executadas. |
-| 2. Desempenho | O pacote inicial de JavaScript tinha 1.085.230 bytes e incluía a biblioteca XLSX mesmo para quem não exportava planilhas. | O XLSX passou a ser carregado dinamicamente somente ao solicitar exportação `.xlsx`. | O pacote inicial caiu para 800.412 bytes: redução de 284.818 bytes (26,24%). O chunk XLSX separado permanece disponível sob demanda; CSV, JSON e XLSX foram retestados. |
-| 3. Qualidade de código | A verificação de estilo indicou inconsistências de formatação nos arquivos alterados nesta etapa. | A formatação Prettier foi aplicada seletivamente aos componentes, testes e serviços modificados, sem reformatar áreas não relacionadas. | `prettier --check`, `pnpm check`, `pnpm test` e `git diff --check` concluíram sem falhas. |
+| Ciclo                  | Diagnóstico                                                                                                               | Refinamento aplicado                                                                                                                             | Evidência final                                                                                                                                                         |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1. Acessibilidade      | As auditorias `axe-core` já cobriam as páginas críticas, mas o foco visível dependia de regras locais de cada componente. | Foi incluído um indicador global de foco para links, controles de formulário e elementos focáveis, além de regras para `prefers-contrast: more`. | Tipagem e 22 arquivos de teste passaram; as auditorias de acessibilidade continuaram sem violações nas regras executadas.                                               |
+| 2. Desempenho          | O pacote inicial de JavaScript tinha 1.085.230 bytes e incluía a biblioteca XLSX mesmo para quem não exportava planilhas. | O XLSX passou a ser carregado dinamicamente somente ao solicitar exportação `.xlsx`.                                                             | O pacote inicial caiu para 800.412 bytes: redução de 284.818 bytes (26,24%). O chunk XLSX separado permanece disponível sob demanda; CSV, JSON e XLSX foram retestados. |
+| 3. Qualidade de código | A verificação de estilo indicou inconsistências de formatação nos arquivos alterados nesta etapa.                         | A formatação Prettier foi aplicada seletivamente aos componentes, testes e serviços modificados, sem reformatar áreas não relacionadas.          | `prettier --check`, `pnpm check`, `pnpm test` e `git diff --check` concluíram sem falhas.                                                                               |
 
 Os três ciclos não modificaram os registros de emendas, suas fontes, hashes ou a regra de conciliação territorial. O resultado final registra 22 arquivos de teste aprovados, 44 testes aprovados e uma suíte de e-mail pulada porque o remetente verificado continua pendente.
 
@@ -156,13 +156,13 @@ Os três ciclos não modificaram os registros de emendas, suas fontes, hashes ou
 
 A aba `/cobertura` passou a apresentar uma trilha técnica de cinco compartimentos, explicitamente rotulada como recomendação de implementação. Ela fica após os dados e as fontes carregadas, para evitar que uma recomendação futura seja interpretada como indicador oficial já disponível.
 
-| Sequência | Função compartimentada | Dependência de aceite |
-| --- | --- | --- |
-| 01 | Cobertura financeira nacional | Carga idempotente, com recorte, URL, data e hash por registro. |
-| 02 | Conciliação por chave | `NR_EMENDA` e `ID_PROPOSTA` oficiais, sem aproximação textual. |
-| 03 | Métricas públicas comparáveis | Cobertura e taxa declaradas por exercício antes de agregar valores. |
-| 04 | Atualização auditável | Publicação e autorização específica antes de qualquer rotina recorrente. |
-| 05 | Evidência de execução física | Documento oficial finalístico, além de pagamento ou vínculo documental. |
+| Sequência | Função compartimentada        | Dependência de aceite                                                    |
+| --------- | ----------------------------- | ------------------------------------------------------------------------ |
+| 01        | Cobertura financeira nacional | Carga idempotente, com recorte, URL, data e hash por registro.           |
+| 02        | Conciliação por chave         | `NR_EMENDA` e `ID_PROPOSTA` oficiais, sem aproximação textual.           |
+| 03        | Métricas públicas comparáveis | Cobertura e taxa declaradas por exercício antes de agregar valores.      |
+| 04        | Atualização auditável         | Publicação e autorização específica antes de qualquer rotina recorrente. |
+| 05        | Evidência de execução física  | Documento oficial finalístico, além de pagamento ou vínculo documental.  |
 
 O texto informa em cada etapa o pré-requisito, a ação e o critério de aceite. A auditoria de cobertura confirma o rótulo de recomendação, as etapas 01 a 05 e a estrutura sem violações `axe-core` nas regras executadas. A página foi revisada em desktop e no viewport móvel de 375 × 812 px; a trilha mantém os compartimentos em sequência e os dados atuais continuam separados visual e semanticamente do plano técnico.
 
@@ -170,14 +170,14 @@ O texto informa em cada etapa o pré-requisito, a ação e o critério de aceite
 
 A carga financeira nacional foi executada a partir do **arquivo único oficial** de emendas da CGU, em vez de percorrer a API paginada. A página oficial recomenda dados abertos para conjuntos completos e a fonte oferece o arquivo `EmendasParlamentares.zip` com o CSV financeiro, convênios e favorecidos.[5] A execução leu somente `EmendasParlamentares.csv`, decodificou Windows-1252, filtrou `Ano da Emenda = 2025` e não enviou parâmetro `uf` à API.
 
-| Evidência | Resultado validado |
-| --- | ---: |
-| Linhas do CSV oficial | 78.475, incluindo cabeçalho |
-| Emendas do exercício 2025 | 6.311 |
-| Estágios financeiros persistidos | 37.866, seis etapas por emenda com valor publicado |
-| Emendas com município IBGE já associado | 759, distribuídas em 26 UFs |
-| Emendas duplicadas ou sem URL/hash | 0 |
-| Hash da execução | `90c1ed71444fa9b55b9173bbfdbbda8b860a458e5642f8584bf929094f21fafe` |
+| Evidência                               |                                                 Resultado validado |
+| --------------------------------------- | -----------------------------------------------------------------: |
+| Linhas do CSV oficial                   |                                        78.475, incluindo cabeçalho |
+| Emendas do exercício 2025               |                                                              6.311 |
+| Estágios financeiros persistidos        |                 37.866, seis etapas por emenda com valor publicado |
+| Emendas com município IBGE já associado |                                        759, distribuídas em 26 UFs |
+| Emendas duplicadas ou sem URL/hash      |                                                                  0 |
+| Hash da execução                        | `90c1ed71444fa9b55b9173bbfdbbda8b860a458e5642f8584bf929094f21fafe` |
 
 O importador é idempotente por código e exercício, atualiza os estágios financeiros do registro correspondente e registra uma execução `completed` em `ingestion_runs`. A fonte pública da CGU foi atualizada com a URL do arquivo único, licença, data e nota de cobertura. A página `/cobertura` agora mostra 6.311 **emendas CGU carregadas** como carga financeira nacional de 2025.
 
