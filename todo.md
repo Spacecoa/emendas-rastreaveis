@@ -137,3 +137,6 @@
 - [x] Verificar a disponibilidade persistida e a proveniência de autoria e partido para uso em filtros do resumo visual.
 - [x] Adicionar filtros acessíveis por autoria e partido ao painel financeiro anual, mantendo partido ausente como informação indisponível.
 - [x] Validar os recálculos filtrados, a URL compartilhável, a acessibilidade e a responsividade do painel.
+- [x] Definir e registrar o conteúdo, a proveniência e os limites das exportações CSV e PDF do resumo financeiro filtrado.
+- [x] Implementar botões acessíveis para exportar em CSV e PDF o recorte exibido no painel anual.
+- [x] Validar arquivos exportados, conteúdo do recorte, acessibilidade, responsividade e build.

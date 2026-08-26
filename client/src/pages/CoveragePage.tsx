@@ -3,12 +3,20 @@ import {
   ArrowUpRight,
   BookOpenCheck,
   Database,
+  Download,
   ExternalLink,
+  FileText,
+  Loader2,
   MapPinned,
   ShieldCheck,
 } from "lucide-react";
 import { Link, useLocation, useSearch } from "wouter";
 import PortalLayout from "@/components/PortalLayout";
+import {
+  buildFinancialSummaryCsv,
+  buildFinancialSummaryPdf,
+  downloadFinancialSummary,
+} from "@/lib/financialSummaryExport";
 import { formatDate } from "@/lib/format";
 import { trpc } from "@/lib/trpc";
 
@@ -187,6 +195,40 @@ export default function CoveragePage() {
     : activeParty
       ? `Partido selecionado: ${activeParty}. Os totais abaixo consideram somente as emendas com esta filiação registrada.`
       : "Sem filtro de autoria: os totais abaixo representam toda a carga financeira persistida.";
+  const [exportingFormat, setExportingFormat] = useState<"csv" | "pdf" | null>(
+    null
+  );
+  const exportFinancialSummary = async (format: "csv" | "pdf") => {
+    setExportingFormat(format);
+    const exportInput = {
+      rows: financialSeries.map(item => ({
+        year: item.year,
+        amendments: item.amendments,
+        financialStages: item.financialStages,
+        committedAmount: item.committedAmount,
+        settledAmount: item.settledAmount,
+        paidAmount: item.paidAmount,
+      })),
+      author: activeAuthor
+        ? { id: activeAuthor.id, name: activeAuthor.name }
+        : null,
+      party: activeParty,
+      partyAvailable,
+      sourceName: cguSource?.name ?? "Portal da Transparência (CGU)",
+      sourceUrl: cguSource?.baseUrl ?? null,
+    };
+    try {
+      const blob =
+        format === "csv"
+          ? new Blob([buildFinancialSummaryCsv(exportInput)], {
+              type: "text/csv;charset=utf-8",
+            })
+          : await buildFinancialSummaryPdf(exportInput);
+      downloadFinancialSummary(blob, format, activeAuthor?.id);
+    } finally {
+      setExportingFormat(null);
+    }
+  };
 
   return (
     <PortalLayout>
@@ -467,6 +509,49 @@ export default function CoveragePage() {
               >
                 {filterDescription}
               </p>
+
+              <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-y border-[#1e4a77]/15 py-3">
+                <p className="max-w-2xl text-xs leading-5 text-black/65">
+                  Exporte somente o recorte exibido. Os arquivos incluem fonte,
+                  URL, data de geração e o limite de que pagamento não comprova
+                  entrega física.
+                </p>
+                <div
+                  className="flex flex-wrap gap-2"
+                  aria-label="Exportar resumo financeiro filtrado"
+                >
+                  <button
+                    type="button"
+                    onClick={() => void exportFinancialSummary("csv")}
+                    disabled={
+                      exportingFormat !== null || !financialSeries.length
+                    }
+                    className="export-button disabled:cursor-not-allowed disabled:opacity-60"
+                  >
+                    {exportingFormat === "csv" ? (
+                      <Loader2 size={16} className="animate-spin" />
+                    ) : (
+                      <Download size={16} />
+                    )}
+                    CSV
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => void exportFinancialSummary("pdf")}
+                    disabled={
+                      exportingFormat !== null || !financialSeries.length
+                    }
+                    className="export-button disabled:cursor-not-allowed disabled:opacity-60"
+                  >
+                    {exportingFormat === "pdf" ? (
+                      <Loader2 size={16} className="animate-spin" />
+                    ) : (
+                      <FileText size={16} />
+                    )}
+                    PDF
+                  </button>
+                </div>
+              </div>
 
               {financialSeries.length ? (
                 <div className="mt-8 grid gap-4 lg:grid-cols-2">

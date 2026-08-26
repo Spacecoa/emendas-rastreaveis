@@ -178,6 +178,11 @@ describe("aba pública de cobertura", () => {
     expect(
       screen.getByText(/não traz partido preenchido para as autorias/i)
     ).toBeTruthy();
+    expect(screen.getByRole("button", { name: /CSV/i })).toBeTruthy();
+    expect(screen.getByRole("button", { name: /PDF/i })).toBeTruthy();
+    expect(
+      screen.getByLabelText("Exportar resumo financeiro filtrado")
+    ).toBeTruthy();
     expect(screen.getAllByText(/Total empenhado/).length).toBe(4);
     expect(
       screen.getByRole("img", {
