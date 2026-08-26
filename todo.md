@@ -122,3 +122,8 @@
 - [x] Criar a página pública acessível do chat e integrá-la à navegação sem expor segredos ou dados sensíveis.
 - [x] Cobrir o chat com testes de respostas fundamentadas, limites de interpretação, validação de entrada e acessibilidade.
 - [x] Substituir o renderizador pesado do chat por uma apresentação leve compatível com o orçamento de memória do build.
+- [x] Inventariar, confirmar e documentar os arquivos financeiros oficiais CGU compatíveis com os exercícios de 2022, 2023, 2024 e 2025.
+- [x] Adaptar a ingestão manual idempotente para processar cada exercício confirmado, preservando URL, hash, data, valores ausentes e estágios financeiros oficiais.
+- [x] Executar e validar as cargas financeiras de 2022 a 2025 sem inferir UF, execução física ou situação de regularidade.
+- [x] Atualizar cobertura, metodologia, API, documentação e chat para explicitar a série 2022–2025 e seus limites por exercício.
+- [x] Revalidar tipagem, testes, acessibilidade, API pública, build e proveniência após a ampliação histórica.

@@ -13,6 +13,7 @@ import React, { useState } from "react";
 import { trpc } from "@/lib/trpc";
 
 const suggestedPrompts = [
+  "Quantas emendas de 2022 estão carregadas?",
   "Quantas emendas de 2025 estão carregadas?",
   "O que significa a conciliação documental?",
   "O que há sobre a emenda 202529240019?",
@@ -198,7 +199,7 @@ export default function PublicChatPage() {
                   disabled={chat.isPending}
                   maxLength={600}
                   rows={2}
-                  placeholder="Ex.: Qual é a cobertura de 2025?"
+                  placeholder="Ex.: Quantas emendas de 2024 estão carregadas?"
                   className="min-h-11 flex-1 resize-none rounded-xl border border-black/15 bg-white px-3 py-2 text-sm leading-5 outline-none transition focus:border-[#1e4a77] focus:ring-4 focus:ring-[#1e4a77]/15 disabled:cursor-not-allowed disabled:opacity-60"
                 />
                 <Button
@@ -250,8 +251,9 @@ export default function PublicChatPage() {
                 O que ele consulta
               </h2>
               <p className="mt-2 text-sm leading-6 text-black/70">
-                Carga financeira CGU de 2025, conciliação documental do
-                Transferegov e metadados de cobertura já persistidos no projeto.
+                Carga financeira CGU de 2022 a 2025, metadados de cobertura e
+                conciliação documental Transferegov de 2025 já persistidos no
+                projeto.
               </p>
             </section>
             <section className="rounded-[1.4rem] border border-black/10 bg-white p-6">
@@ -275,7 +277,7 @@ export default function PublicChatPage() {
               </h2>
               <p className="mt-2 text-sm leading-6 text-black/70">
                 Consulte código de emenda, autoria, etapa financeira, cobertura
-                de 2025, fonte e significado da conciliação. Para filtros
+                de 2022 a 2025, fonte e significado da conciliação. Para filtros
                 precisos e exportação, use a busca pública.
               </p>
             </section>

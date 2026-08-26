@@ -13,8 +13,9 @@ vi.mock("@/lib/trpc", () => ({
           mutate: () =>
             options.onSuccess({
               answer:
-                "A carga financeira nacional de 2025 contém 6.311 emendas. Pagamento não comprova entrega física.",
-              dataScope: "Resposta limitada à carga financeira CGU/2025.",
+                "A carga financeira nacional de 2022 contém 6.108 emendas. Pagamento não comprova entrega física.",
+              dataScope:
+                "Resposta limitada à carga financeira CGU de 2022 a 2025; a conciliação documental disponível refere-se somente a 2025.",
               sources: [
                 {
                   label: "Portal da Transparência (CGU)",
@@ -41,11 +42,12 @@ describe("página pública de chat", () => {
     ).toBeTruthy();
     fireEvent.click(
       screen.getByRole("button", {
-        name: "Quantas emendas de 2025 estão carregadas?",
+        name: "Quantas emendas de 2022 estão carregadas?",
       })
     );
 
-    expect(screen.getByText(/6.311 emendas/)).toBeTruthy();
+    expect(screen.getByText(/6.108 emendas/)).toBeTruthy();
+    expect(screen.getAllByText(/2022 a 2025/).length).toBeGreaterThan(0);
     expect(
       screen
         .getAllByRole("link", { name: "Portal da Transparência (CGU)" })

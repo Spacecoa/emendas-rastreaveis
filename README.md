@@ -19,7 +19,7 @@
 
 ## Dados oficiais e licenças
 
-O Portal da Transparência da CGU documenta a consulta pontual de emendas e documentos relacionados [1], mas a rota não oferece filtro por UF. A carga financeira de 2025 usa, por isso, o arquivo único oficial de dados abertos em escopo nacional. A cobertura por UF continua condicionada a código municipal IBGE ou vínculo documental territorial verificável. A conciliação usa o arquivo oficial de emendas do Transferegov: **4.710 das 6.311 emendas CGU/2025** correspondem exatamente a `NR_EMENDA` (74,63%), com 61.402 linhas oficiais de proposta preservadas. Objetos e instrumentos só recebem vínculo após essa chave; o vínculo é documental e **não prova entrega física**. Os termos de uso e a licença de cada conjunto são preservados; a aplicação não reatribui licença aos dados públicos.
+O Portal da Transparência da CGU documenta a consulta pontual de emendas e documentos relacionados [1], mas a rota não oferece filtro por UF. A carga financeira usa, por isso, o arquivo único oficial de dados abertos em escopo nacional e abrange **2022 a 2025**. A cobertura por UF continua condicionada a código municipal IBGE ou vínculo documental territorial verificável. A conciliação usa o arquivo oficial de emendas do Transferegov somente para o recorte de **2025**: **4.710 das 6.311 emendas CGU/2025** correspondem exatamente a `NR_EMENDA` (74,63%), com 61.402 linhas oficiais de proposta preservadas. Objetos e instrumentos só recebem vínculo após essa chave; o vínculo é documental e **não prova entrega física**. Os termos de uso e a licença de cada conjunto são preservados; a aplicação não reatribui licença aos dados públicos.
 
 ## Executar localmente
 
@@ -38,10 +38,12 @@ Para conjunto completo, a orientação oficial da CGU é utilizar os dados abert
 ```bash
 curl -fL -o /tmp/EmendasParlamentares.zip \
   https://dadosabertos-download.cgu.gov.br/PortalDaTransparencia/saida/emendas-parlamentares/EmendasParlamentares.zip
-pnpm tsx scripts/import-cgu-national-financial.mjs /tmp/EmendasParlamentares.zip 2025
+for year in 2022 2023 2024 2025; do
+  pnpm tsx scripts/import-cgu-national-financial.mjs /tmp/EmendasParlamentares.zip "$year"
+done
 ```
 
-O arquivo único contém emendas, convênios e favorecidos; a rotina financeira lê somente `EmendasParlamentares.csv`. O código municipal é associado apenas quando corresponde a um cadastro IBGE já persistido. Não use o parâmetro `uf` na rota CGU para declarar cobertura estadual: ele não é documentado. A API paginada permanece útil para consultas pontuais e sanity checks, mas não substitui a carga nacional. A agenda recorrente continua desativada até publicação e autorização explícita.
+O arquivo único contém emendas, convênios e favorecidos; a rotina financeira lê somente `EmendasParlamentares.csv`. No arquivo analisado em 26 de agosto de 2026, foram identificadas 6.108 linhas de 2022, 6.110 de 2023, 6.990 de 2024 e 6.311 de 2025; a chave persistida é `código + exercício`, de modo que linhas repetidas do mesmo código não criam uma segunda emenda. O código municipal é associado apenas quando corresponde a um cadastro IBGE já persistido. Não use o parâmetro `uf` na rota CGU para declarar cobertura estadual: ele não é documentado. A API paginada permanece útil para consultas pontuais e sanity checks, mas não substitui a carga nacional. A agenda recorrente continua desativada até publicação e autorização explícita.
 
 ### Carga complementar do Transferegov e do IBGE
 

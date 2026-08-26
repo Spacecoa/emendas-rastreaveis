@@ -45,6 +45,11 @@ function officialSearchTerm(question: string) {
   return code ?? question;
 }
 
+function requestedFinancialYear(question: string) {
+  const year = Number(question.match(/\b20(?:22|23|24|25)\b/)?.[0]);
+  return [2022, 2023, 2024, 2025].includes(year) ? year : 2025;
+}
+
 function sourceList(
   coverage: Awaited<ReturnType<typeof getPublicCoverageSummary>>,
   records: Awaited<ReturnType<typeof searchStoredAmendments>>
@@ -79,11 +84,12 @@ export async function askPublicDataChat(input: PublicChatInput) {
       content: cleanText(message.content),
     }))
     .filter(message => message.content.length > 0);
+  const year = requestedFinancialYear(question);
   const [coverage, records] = await Promise.all([
     getPublicCoverageSummary(),
     searchStoredAmendments({
       query: officialSearchTerm(question),
-      year: 2025,
+      year,
       page: 1,
     }),
   ]);
@@ -101,20 +107,21 @@ export async function askPublicDataChat(input: PublicChatInput) {
     extraidoEm: record.extractedAt,
   }));
   const context = {
-    exercicio: 2025,
+    exercicioConsultado: year,
+    serieFinanceiraCarregada: coverage?.financialSeries ?? [],
     coberturaNacional: coverage
       ? {
-          emendas: coverage.totals.amendments,
-          estagiosFinanceiros: coverage.totals.financialStages,
+          emendasEm2025: coverage.totals.amendments,
+          estagiosFinanceirosEm2025: coverage.totals.financialStages,
           ufsComPopulacaoIbge: coverage.availableStates.length,
-          conciliacao: coverage.reconciliation,
+          conciliacaoDocumental2025: coverage.reconciliation,
         }
       : null,
     resultadosRelacionados: selectedRecords,
   };
   const modelResponse = await invokeLLM({
     model: "gpt-5-mini",
-    maxTokens: 700,
+    maxCompletionTokens: 700,
     messages: [
       {
         role: "system",
@@ -151,7 +158,7 @@ export async function askPublicDataChat(input: PublicChatInput) {
     answer: text,
     sources: sourceList(coverage, records),
     dataScope:
-      "Resposta limitada à carga financeira CGU/2025, à conciliação documental Transferegov disponível e às fontes exibidas abaixo.",
+      "Resposta limitada à carga financeira CGU de 2022 a 2025; a conciliação documental Transferegov disponível refere-se somente a 2025; as fontes aparecem abaixo.",
     matchedRecords: selectedRecords.length,
   };
 }

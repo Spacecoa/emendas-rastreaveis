@@ -29,36 +29,49 @@ const technicalRoadmap = [
     phase: "01",
     title: "Cobertura financeira nacional",
     dependency: "Definir exercício, escopo e paginação completa da CGU.",
-    action: "Persistir a carga nacional de forma idempotente, com URL, data e hash por registro.",
-    acceptance: "Os totais por autoria reproduzem a soma de códigos oficiais no mesmo recorte.",
+    action:
+      "Persistir a carga nacional de forma idempotente, com URL, data e hash por registro.",
+    acceptance:
+      "Os totais por autoria reproduzem a soma de códigos oficiais no mesmo recorte.",
   },
   {
     phase: "02",
     title: "Conciliação por chave",
-    dependency: "Carga financeira nacional e arquivo oficial de emendas Transferegov.",
-    action: "Relacionar `NR_EMENDA` e, depois, proposta, objeto e instrumento por `ID_PROPOSTA`.",
-    acceptance: "Todo vínculo tem cadeia documental; ausência continua como não conciliada.",
+    dependency:
+      "Carga financeira nacional e arquivo oficial de emendas Transferegov.",
+    action:
+      "Relacionar `NR_EMENDA` e, depois, proposta, objeto e instrumento por `ID_PROPOSTA`.",
+    acceptance:
+      "Todo vínculo tem cadeia documental; ausência continua como não conciliada.",
   },
   {
     phase: "03",
     title: "Métricas públicas comparáveis",
     dependency: "Taxa de conciliação e cobertura declaradas por exercício.",
-    action: "Publicar valores destinados, empenhados, liquidados e pagos por autoria, ano e modalidade.",
-    acceptance: "Cada número possui fonte, data e etapa orçamentária explicitadas.",
+    action:
+      "Publicar valores destinados, empenhados, liquidados e pagos por autoria, ano e modalidade.",
+    acceptance:
+      "Cada número possui fonte, data e etapa orçamentária explicitadas.",
   },
   {
     phase: "04",
     title: "Atualização auditável",
-    dependency: "Publicação da plataforma e autorização específica para rotina recorrente.",
-    action: "Executar cargas com limites de taxa, comparação de hashes, relatório e alerta de falha.",
-    acceptance: "Cada execução registra cobertura, alterações, erros e data de referência.",
+    dependency:
+      "Publicação da plataforma e autorização específica para rotina recorrente.",
+    action:
+      "Executar cargas com limites de taxa, comparação de hashes, relatório e alerta de falha.",
+    acceptance:
+      "Cada execução registra cobertura, alterações, erros e data de referência.",
   },
   {
     phase: "05",
     title: "Evidência de execução física",
-    dependency: "Fontes oficiais adicionais sobre instrumento, vigência, prestação de contas ou objeto.",
-    action: "Associar evidências finalísticas somente quando a documentação permitir confirmação.",
-    acceptance: "“Executada e comprovada” exige evidência oficial; pagamento isolado não basta.",
+    dependency:
+      "Fontes oficiais adicionais sobre instrumento, vigência, prestação de contas ou objeto.",
+    action:
+      "Associar evidências finalísticas somente quando a documentação permitir confirmação.",
+    acceptance:
+      "“Executada e comprovada” exige evidência oficial; pagamento isolado não basta.",
   },
 ] as const;
 
@@ -112,6 +125,7 @@ export default function CoveragePage() {
   }, [coverage.data?.availableStates, order]);
   const reconciliation = coverage.data?.reconciliation;
   const year = coverage.data?.referenceYear ?? 2025;
+  const financialSeries = coverage.data?.financialSeries ?? [];
 
   return (
     <PortalLayout>
@@ -179,6 +193,87 @@ export default function CoveragePage() {
                 }
                 tone="caution"
               />
+            </section>
+
+            <section
+              className="mt-12"
+              aria-labelledby="serie-financeira-historica"
+            >
+              <p className="eyebrow">SÉRIE FINANCEIRA NACIONAL</p>
+              <h2
+                id="serie-financeira-historica"
+                className="mt-2 text-3xl font-black tracking-[-.055em]"
+              >
+                Emendas CGU carregadas de 2022 a 2025.
+              </h2>
+              <p className="mt-3 max-w-3xl text-sm leading-6 text-black/65">
+                Cada linha reflete somente registros financeiros persistidos do
+                arquivo nacional da CGU. A presença de código municipal IBGE não
+                é uma prova de entrega; a conciliação documental exibida nesta
+                página permanece restrita ao exercício de 2025.
+              </p>
+              {financialSeries.length ? (
+                <div className="mt-6 overflow-x-auto rounded-[1.4rem] bg-white shadow-[0_8px_30px_rgba(18,25,32,.05)]">
+                  <table className="min-w-[720px] w-full text-left">
+                    <caption className="sr-only">
+                      Série financeira nacional de emendas CGU por exercício
+                    </caption>
+                    <thead className="border-b border-black/10 bg-[#edf4fb] text-xs uppercase tracking-[.08em] text-black/60">
+                      <tr>
+                        <th className="px-5 py-4">Exercício</th>
+                        <th className="px-5 py-4">Emendas</th>
+                        <th className="px-5 py-4">Estágios financeiros</th>
+                        <th className="px-5 py-4">Com código IBGE</th>
+                        <th className="px-5 py-4">Carga</th>
+                        <th className="px-5 py-4">
+                          <span className="sr-only">Consulta</span>
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {financialSeries.map(item => (
+                        <tr
+                          key={item.year}
+                          className="border-b border-black/5 last:border-0"
+                        >
+                          <th
+                            scope="row"
+                            className="px-5 py-5 text-lg font-black"
+                          >
+                            {item.year}
+                          </th>
+                          <td className="px-5 py-5 font-bold tabular-nums">
+                            {number(item.amendments)}
+                          </td>
+                          <td className="px-5 py-5 tabular-nums">
+                            {number(item.financialStages)}
+                          </td>
+                          <td className="px-5 py-5 tabular-nums">
+                            {number(item.municipalizedAmendments)}
+                          </td>
+                          <td className="px-5 py-5 text-sm text-black/65">
+                            {formatDate(item.updatedAt)}
+                          </td>
+                          <td className="px-5 py-5">
+                            <Link
+                              href={`/busca?ano=${item.year}`}
+                              className="inline-flex size-9 items-center justify-center rounded-full border border-black/15 hover:bg-[#edf4fb] focus:outline-none focus-visible:ring-4 focus-visible:ring-[#1e4a77]/35"
+                              aria-label={`Consultar emendas do exercício ${item.year}`}
+                            >
+                              <ArrowUpRight size={17} />
+                            </Link>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              ) : (
+                <p className="mt-6 rounded-[1.4rem] bg-white p-6 text-sm text-black/65">
+                  A série financeira por exercício não está disponível neste
+                  momento.
+                </p>
+              )}
             </section>
 
             <section

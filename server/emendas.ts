@@ -1,5 +1,15 @@
 import { createHash } from "node:crypto";
-import { and, desc, eq, inArray, isNotNull, like, or, sql } from "drizzle-orm";
+import {
+  and,
+  asc,
+  desc,
+  eq,
+  inArray,
+  isNotNull,
+  like,
+  or,
+  sql,
+} from "drizzle-orm";
 import {
   amendments,
   authors,
@@ -267,12 +277,17 @@ export async function getPublicCoverageSummary() {
     reconciliationRows,
     catalogStateRows,
     sourceRows,
+    financialSeriesRows,
   ] = await Promise.all([
     db
       .select({ total: sql<number>`COUNT(*)` })
       .from(amendments)
       .where(eq(amendments.year, 2025)),
-    db.select({ total: sql<number>`COUNT(*)` }).from(executionStages),
+    db
+      .select({ total: sql<number>`COUNT(*)` })
+      .from(executionStages)
+      .innerJoin(amendments, eq(executionStages.amendmentId, amendments.id))
+      .where(eq(amendments.year, 2025)),
     db.select({ total: sql<number>`COUNT(*)` }).from(beneficiaries),
     db
       .select({ total: sql<number>`COUNT(*)` })
@@ -342,6 +357,19 @@ export async function getPublicCoverageSummary() {
       })
       .from(dataSources)
       .orderBy(dataSources.name),
+    db
+      .select({
+        year: amendments.year,
+        amendments: sql<number>`COUNT(DISTINCT ${amendments.id})`,
+        financialStages: sql<number>`COUNT(${executionStages.id})`,
+        municipalizedAmendments: sql<number>`COUNT(DISTINCT CASE WHEN ${amendments.municipalityId} IS NOT NULL THEN ${amendments.id} END)`,
+        updatedAt: sql<Date | null>`MAX(${amendments.extractedAt})`,
+      })
+      .from(amendments)
+      .leftJoin(executionStages, eq(executionStages.amendmentId, amendments.id))
+      .where(inArray(amendments.year, [2022, 2023, 2024, 2025]))
+      .groupBy(amendments.year)
+      .orderBy(asc(amendments.year)),
   ]);
   const reconciliation = reconciliationRows[0] ?? null;
   const catalogByState = new Map<
@@ -402,6 +430,13 @@ export async function getPublicCoverageSummary() {
   }
   return {
     referenceYear: 2025,
+    financialSeries: financialSeriesRows.map(row => ({
+      year: countValue(row.year),
+      amendments: countValue(row.amendments),
+      financialStages: countValue(row.financialStages),
+      municipalizedAmendments: countValue(row.municipalizedAmendments),
+      updatedAt: row.updatedAt,
+    })),
     totals: {
       amendments: countValue(amendmentRows[0]?.total),
       financialStages: countValue(stageRows[0]?.total),

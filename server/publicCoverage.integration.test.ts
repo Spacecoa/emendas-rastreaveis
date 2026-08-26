@@ -13,6 +13,32 @@ describe("síntese pública de cobertura", () => {
 
     expect(coverage).toMatchObject({
       referenceYear: 2025,
+      financialSeries: [
+        {
+          year: 2022,
+          amendments: 6108,
+          financialStages: 36648,
+          municipalizedAmendments: 1458,
+        },
+        {
+          year: 2023,
+          amendments: 6059,
+          financialStages: 36354,
+          municipalizedAmendments: 1401,
+        },
+        {
+          year: 2024,
+          amendments: 6986,
+          financialStages: 41916,
+          municipalizedAmendments: 1168,
+        },
+        {
+          year: 2025,
+          amendments: 6311,
+          financialStages: 37866,
+          municipalizedAmendments: 759,
+        },
+      ],
       totals: {
         amendments: 6311,
         financialStages: 37866,

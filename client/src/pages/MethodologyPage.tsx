@@ -71,10 +71,11 @@ export default function MethodologyPage() {
             <BookOpenCheck className="text-[#1e4a77]" />
             <h2>Conciliação declarada</h2>
             <p>
-              A carga financeira nacional de 2025 contém 6.311 emendas. Deste
-              universo, 4.710 (74,63%) correspondem exatamente ao campo oficial
-              <code>NR_EMENDA</code> do Transferegov. Esse vínculo documental
-              não é uma prova de entrega física.
+              A carga financeira nacional abrange os exercícios de 2022 a 2025.
+              A conciliação documental nacional atualmente publicada é a de
+              2025: 4.710 das 6.311 emendas (74,63%) correspondem exatamente ao
+              campo oficial <code>NR_EMENDA</code> do Transferegov. Esse vínculo
+              documental não é uma prova de entrega física.
             </p>
           </article>
           <article className="method-card">
@@ -139,16 +140,18 @@ export default function MethodologyPage() {
             LIMITAÇÕES ATUAIS
           </p>
           <p className="mt-3 max-w-3xl text-lg leading-8 text-white/80">
-            A plataforma reúne a carga financeira nacional de emendas da CGU em
-            2025, catálogo complementar do Transferegov e população municipal do
-            IBGE para as 27 UFs. A rota CGU de emendas não documenta filtro
-            territorial por UF; portanto, a busca por UF só exibe emendas quando
-            existe vínculo documental no catálogo conciliado ou código municipal
-            IBGE. A conciliação nacional do Transferegov alcança 4.710 de 6.311
-            chaves CGU por igualdade exata de <code>NR_EMENDA</code>. Também não
-            afirmamos a situação física do objeto, a aprovação de contas ou
-            valores per capita sem vínculo municipal e evidência oficial
-            adicional.
+            A plataforma reúne a carga financeira nacional de emendas da CGU de
+            2022 a 2025, catálogo complementar do Transferegov e população
+            municipal do IBGE para as 27 UFs. A rota CGU de emendas não
+            documenta filtro territorial por UF; portanto, a busca por UF só
+            exibe emendas quando existe vínculo documental no catálogo
+            conciliado ou código municipal IBGE. A conciliação nacional do
+            Transferegov publicada alcança 4.710 de 6.311 chaves CGU de 2025 por
+            igualdade exata de
+            <code>NR_EMENDA</code>; ela não foi estendida aos exercícios
+            históricos nesta etapa. Também não afirmamos a situação física do
+            objeto, a aprovação de contas ou valores per capita sem vínculo
+            municipal e evidência oficial adicional.
           </p>
         </section>
       </div>

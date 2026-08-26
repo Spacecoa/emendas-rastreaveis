@@ -185,6 +185,21 @@ O importador é idempotente por código e exercício, atualiza os estágios fina
 
 Após atualizar as auditorias que tinham contagens rígidas da amostra anterior, `pnpm check && pnpm test && git diff --check` passou com 23 arquivos de teste aprovados, 45 testes aprovados e 1 teste de Resend pulado pelo remetente ainda pendente. A validação final da conciliação nacional será registrada após atualizar as telas e testes para os novos totais.
 
+## Ampliação histórica da carga financeira CGU/2022–2025 — 26 de agosto de 2026
+
+A mesma cópia oficial do arquivo nacional `EmendasParlamentares.zip` foi baixada por HTTP 200 e processada uma vez por exercício. A cópia possui 30.378.827 bytes, `Last-Modified` de 26 de agosto de 2026 00:29:48 UTC, ETag `5e0117bad74a4ae5374eb78b8ac758f6-4` e SHA-256 `3352c67150012d369b2afee1007d221f0cf42f0bea78f0a8057ebc896086b85e`. O importador preservou URL, data, hash de registro e hash de execução; não usou parâmetro de UF, aproximação textual, CNPJ ou status físico.
+
+| Exercício | Linhas do CSV oficial | Emendas persistidas por `código + exercício` | Estágios financeiros persistidos | Emendas com código municipal IBGE | Hash da execução                                                   |
+| --------- | --------------------: | -------------------------------------------: | -------------------------------: | --------------------------------: | ------------------------------------------------------------------ |
+| 2022      |                 6.108 |                                        6.108 |                           36.648 |                             1.458 | `3b96baa5718513fa416c5cc5082c7625532f12888c97dfb20cc1b9d02c41484d` |
+| 2023      |                 6.110 |                                        6.059 |                           36.354 |                             1.401 | `2bc8b37cb5e94168527b03ed36c400f090573444c93714b2bd02fc2ec0935a84` |
+| 2024      |                 6.990 |                                        6.986 |                           41.916 |                             1.168 | `c7cfe1de1ec4fb94f1b554aab750364524ccdf21fe625b20c6a6d7b3211c48b7` |
+| 2025      |                 6.311 |                                        6.311 |                           37.866 |                               759 | `90c1ed71444fa9b55b9173bbfdbbda8b860a458e5642f8584bf929094f21fafe` |
+
+As quatro execuções foram concluídas com status `completed`. A diferença entre as linhas brutas e o número de emendas de 2023 e 2024 decorre de registros com o mesmo código no arquivo oficial; a chave pública persistida continua sendo `código + exercício` e não há duplicidade dessa chave no banco. A interface de cobertura passou a exibir a série por exercício, a busca já aceita o parâmetro `ano` e o chat pode reconhecer perguntas que contenham 2022, 2023, 2024 ou 2025.
+
+> A conciliação CGU–Transferegov não foi extrapolada a partir desta carga. O indicador de 4.710/6.311 e todos os vínculos de objetos e instrumentos permanecem restritos a 2025, até existir arquivo, chave e validação documental equivalente para outros exercícios.
+
 ## Pendências condicionadas e entregas suspensas — 26 de agosto de 2026
 
 | Entrega                                     | Estado atual                  | Pré-requisito para avançar                                                                                                                                  |
@@ -232,7 +247,7 @@ A página municipal agora consulta emendas pelo município IBGE exato, e não pe
 
 ## Chat público fundamentado — 26 de agosto de 2026
 
-A rota pública `/chat` oferece perguntas em linguagem simples sobre a carga persistida. O servidor limita cada mensagem a 600 caracteres, preserva no máximo seis mensagens de histórico e aplica limite temporário de oito consultas por origem a cada minuto. O modelo `gpt-5-mini` recebe um objeto estruturado com a cobertura nacional de 2025 e até oito emendas relacionadas à pergunta; não recebe segredo, credencial ou instrução do cliente como regra de sistema.
+A rota pública `/chat` oferece perguntas em linguagem simples sobre a carga persistida. O servidor limita cada mensagem a 600 caracteres, preserva no máximo seis mensagens de histórico e aplica limite temporário de oito consultas por origem a cada minuto. O modelo `gpt-5-mini` recebe a série financeira de 2022 a 2025, o exercício reconhecido na pergunta, a conciliação documental de 2025 e até oito emendas relacionadas à pergunta; não recebe segredo, credencial ou instrução do cliente como regra de sistema.
 
 | Salvaguarda   | Implementação verificável                                                                                                              |
 | ------------- | -------------------------------------------------------------------------------------------------------------------------------------- |

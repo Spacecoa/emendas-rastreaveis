@@ -12,6 +12,36 @@ vi.mock("@/lib/trpc", () => ({
           isLoading: false,
           data: {
             referenceYear: 2025,
+            financialSeries: [
+              {
+                year: 2022,
+                amendments: 6108,
+                financialStages: 36648,
+                municipalizedAmendments: 1458,
+                updatedAt: new Date("2026-08-26T17:25:02.000Z"),
+              },
+              {
+                year: 2023,
+                amendments: 6059,
+                financialStages: 36354,
+                municipalizedAmendments: 1401,
+                updatedAt: new Date("2026-08-26T17:25:02.000Z"),
+              },
+              {
+                year: 2024,
+                amendments: 6986,
+                financialStages: 41916,
+                municipalizedAmendments: 1168,
+                updatedAt: new Date("2026-08-26T17:25:02.000Z"),
+              },
+              {
+                year: 2025,
+                amendments: 6311,
+                financialStages: 37866,
+                municipalizedAmendments: 759,
+                updatedAt: new Date("2026-08-26T17:25:02.000Z"),
+              },
+            ],
             totals: {
               amendments: 6311,
               financialStages: 37866,
@@ -100,6 +130,18 @@ describe("aba pública de cobertura", () => {
       screen.getByRole("heading", { name: /O que está carregado/i })
     ).toBeTruthy();
     expect(screen.getByText("4.710/6.311")).toBeTruthy();
+    expect(
+      screen.getByRole("heading", {
+        name: /Emendas CGU carregadas de 2022 a 2025/i,
+      })
+    ).toBeTruthy();
+    expect(
+      screen
+        .getByRole("link", {
+          name: /Consultar emendas do exercício 2022/i,
+        })
+        .getAttribute("href")
+    ).toBe("/busca?ano=2022");
     expect(
       screen.getByRole("heading", {
         name: /Expandir a cobertura sem pular etapas de verificação/i,

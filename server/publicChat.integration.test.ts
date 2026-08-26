@@ -40,6 +40,7 @@ describe("chat público fundamentado", () => {
     expect(invokeLLM).toHaveBeenCalledTimes(1);
     const invocation = invokeLLM.mock.calls[0][0];
     expect(invocation.model).toBe("gpt-5-mini");
+    expect(invocation.maxCompletionTokens).toBe(700);
     expect(invocation.messages[0].content).toContain(
       "exclusivamente com base no objeto DADOS_OFICIAIS"
     );
@@ -79,6 +80,32 @@ describe("chat público fundamentado", () => {
         requestKey: "test-limit",
       })
     ).rejects.toThrow("Limite temporário de consultas");
+  });
+
+  it("inclui o exercício histórico solicitado no contexto oficial", async () => {
+    invokeLLM.mockResolvedValue({
+      choices: [
+        {
+          message: {
+            content:
+              "Há dados financeiros oficiais para 2022 no recorte carregado.",
+          },
+        },
+      ],
+    });
+
+    const result = await askPublicDataChat({
+      question: "Quantas emendas de 2022 estão carregadas?",
+      history: [],
+      requestKey: "test-historical-year",
+    });
+
+    const invocation = invokeLLM.mock.calls[0][0];
+    expect(invocation.messages.at(-1)?.content).toContain(
+      '"exercicioConsultado":2022'
+    );
+    expect(invocation.messages.at(-1)?.content).toContain('"year":2022');
+    expect(result.dataScope).toContain("2022 a 2025");
   });
 
   it("mantém as salvaguardas fixas diante de uma instrução adversarial do usuário", async () => {
