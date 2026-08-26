@@ -35,5 +35,14 @@ describe("síntese pública de cobertura", () => {
       populationReferenceYear: 2025,
     });
     expect(rioDeJaneiro?.populationSourceUrl).toContain("POP2025_20260113.ods");
+    expect(minasGerais?.catalog).toMatchObject({
+      beneficiaries: 200,
+      objects: 200,
+      instruments: 45,
+      reconciledObjects: 0,
+      reconciledInstruments: 0,
+    });
+    expect(coverage?.sources.some(source => source.name === "Portal da Transparência (CGU)")).toBe(true);
+    expect(coverage?.sources.some(source => source.name === "Transferegov — Propostas")).toBe(true);
   });
 });

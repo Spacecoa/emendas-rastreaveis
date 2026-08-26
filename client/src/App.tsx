@@ -5,6 +5,7 @@ import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import AmendmentPage from "./pages/AmendmentPage";
+import CoveragePage from "./pages/CoveragePage";
 import EntityPage from "./pages/EntityPage";
 import Home from "./pages/Home";
 import MethodologyPage from "./pages/MethodologyPage";
@@ -16,6 +17,7 @@ function Router() {
     <Switch>
       <Route path={"/"} component={Home} />
       <Route path={"/busca"} component={SearchPage} />
+      <Route path={"/cobertura"} component={CoveragePage} />
       <Route path={"/emendas/:code"} component={AmendmentPage} />
       <Route path={"/municipios/:name"} component={() => <EntityPage type="municipio" />} />
       <Route path={"/parlamentares/:name"} component={() => <EntityPage type="parlamentar" />} />

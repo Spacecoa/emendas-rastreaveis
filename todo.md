@@ -67,6 +67,15 @@
 - [x] Validar na prática os três formatos de exportação, a navegação ao detalhe e a fonte oficial nos recortes AL, SE e MG, registrando evidências auditáveis.
 - [x] Verificar em teste de interface o conteúdo renderizado de AL, SE e MG após a submissão do formulário, incluindo estado vazio sem UF indevida.
 - [x] Validar por interação de interface a navegação ao detalhe de AL e SE, os links de fonte oficial e a ausência de controles em MG vazio.
+- [x] Criar uma aba pública de cobertura dos dados oficiais com indicadores por UF, fontes, atualização, conciliação e limites verificáveis.
+- [x] Refinar a navegação e o design da interface pública para uma linguagem minimalista e humanista, preservando acessibilidade WCAG.
+- [x] Validar a nova aba de cobertura em desktop e celular com testes de dados, interface e acessibilidade.
+- [x] Corrigir a contenção responsiva da tabela de cobertura para que a rolagem horizontal permaneça dentro da aba em celulares.
+- [x] Aplicar linguagem visual minimalista e humanista coerente nas páginas públicas principais, preservando semântica e WCAG.
+- [x] Validar e documentar a equivalência acessível dos cartões móveis de cobertura em substituição à tabela horizontal em telas estreitas.
+- [x] Refinar de forma coerente a linguagem editorial nas páginas públicas restantes de busca, metodologia, emenda e entidade, com revalidação WCAG.
+- [x] Adicionar auditoria específica da equivalência de campos entre a tabela desktop e os cartões móveis de cobertura.
+- [x] Comparar em teste os mesmos campos essenciais da UF AL na tabela desktop e no cartão móvel de cobertura.
 - [x] Corrigir o extrator de instrumentos para propagar UF e ano a partir das propostas territoriais, depois regenerar o catálogo MG/2025 sem vínculos de emenda.
 - [x] Manter a publicação e o agendamento recorrente suspensos até a conclusão das etapas de expansão por UF autorizadas pelo usuário.
 - [x] Remover ou reclassificar a carga rotulada como SP/2025, pois a documentação oficial da rota CGU de emendas não expõe o parâmetro `uf`.

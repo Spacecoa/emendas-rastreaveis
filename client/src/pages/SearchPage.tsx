@@ -52,7 +52,7 @@ export default function SearchPage() {
   const records = query.data?.records ?? [];
 
   return <PortalLayout><div className="container py-12 sm:py-16">
-    <p className="eyebrow">CONSULTA PÚBLICA</p><h1 className="mt-3 text-4xl font-black tracking-[-0.06em] sm:text-5xl">Encontre uma emenda, um lugar ou uma autoria.</h1><p className="mt-4 max-w-3xl leading-7 text-black/65">Os filtros ficam na URL para que o mesmo recorte possa ser compartilhado. A exportação leva exatamente os registros visíveis, incluindo proveniência.</p>
+    <p className="eyebrow">CONSULTA PÚBLICA</p><h1 className="mt-3 text-4xl font-black tracking-[-0.06em] sm:text-5xl">Encontre uma emenda, um lugar ou uma autoria.</h1><p className="mt-4 max-w-3xl border-l-2 border-[#1e4a77]/35 pl-5 leading-7 text-black/65">Os filtros ficam na URL para que o mesmo recorte possa ser compartilhado. A exportação leva exatamente os registros visíveis, incluindo proveniência.</p>
     <div className="mt-8"><SearchPanel compact initialValues={input} /></div>
     <section className="mt-10" aria-live="polite">
       {query.isLoading ? <div className="flex items-center gap-3 rounded-2xl bg-white p-8"><Loader2 className="animate-spin text-[#1e4a77]" /> Consultando a fonte oficial…</div> : query.error ? <div className="rounded-2xl border border-[#b85b6f]/30 bg-[#f9e9ed] p-7"><h2 className="font-bold">Não foi possível consultar a fonte neste momento.</h2><p className="mt-2 text-sm leading-6">A chave foi validada, mas a resposta pode estar temporariamente indisponível. Tente novamente em alguns instantes.</p></div> : <>

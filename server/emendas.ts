@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { and, desc, eq, isNotNull, like, or, sql } from "drizzle-orm";
+import { and, desc, eq, inArray, isNotNull, like, or, sql } from "drizzle-orm";
 import { amendments, authors, beneficiaries, dataSources, executionStages, ingestionRuns, municipalities, sourceCatalogEntries } from "../drizzle/schema";
 import { getDb } from "./db";
 import { fetchPortalAmendments, type OfficialAmendment } from "./portalTransparency";
@@ -49,7 +49,7 @@ export async function getPublicCoverageSummary() {
   const db = await getDb();
   if (!db) return null;
   const countValue = (value: unknown) => Number(value ?? 0);
-  const [amendmentRows, stageRows, beneficiaryRows, objectRows, instrumentRows, stateRows, reconciliationRows] = await Promise.all([
+  const [amendmentRows, stageRows, beneficiaryRows, objectRows, instrumentRows, stateRows, reconciliationRows, catalogStateRows, sourceRows] = await Promise.all([
     db.select({ total: sql<number>`COUNT(*)` }).from(amendments).where(eq(amendments.year, 2025)),
     db.select({ total: sql<number>`COUNT(*)` }).from(executionStages),
     db.select({ total: sql<number>`COUNT(*)` }).from(beneficiaries),
@@ -69,8 +69,51 @@ export async function getPublicCoverageSummary() {
       matchRate: ingestionRuns.matchRate,
       updatedAt: ingestionRuns.finishedAt,
     }).from(ingestionRuns).innerJoin(dataSources, eq(ingestionRuns.sourceId, dataSources.id)).where(eq(dataSources.name, "Transferegov — Emendas")).orderBy(desc(ingestionRuns.id)).limit(1),
+    db.select({
+      uf: sourceCatalogEntries.uf,
+      recordKind: sourceCatalogEntries.recordKind,
+      total: sql<number>`COUNT(*)`,
+      reconciled: sql<number>`SUM(CASE WHEN ${sourceCatalogEntries.reconciliationStatus} = 'conciliado' THEN 1 ELSE 0 END)`,
+      latestUpdate: sql<Date | null>`MAX(${sourceCatalogEntries.extractedAt})`,
+      sourceUrl: sql<string | null>`MAX(${sourceCatalogEntries.sourceUrl})`,
+      hashes: sql<number>`COUNT(DISTINCT ${sourceCatalogEntries.recordHash})`,
+    }).from(sourceCatalogEntries).where(and(
+      isNotNull(sourceCatalogEntries.uf),
+      inArray(sourceCatalogEntries.recordKind, ["beneficiario", "objeto", "instrumento"]),
+    )).groupBy(sourceCatalogEntries.uf, sourceCatalogEntries.recordKind),
+    db.select({
+      name: dataSources.name,
+      baseUrl: dataSources.baseUrl,
+      status: dataSources.status,
+      latestSuccessfulLoadAt: dataSources.latestSuccessfulLoadAt,
+      coverageNote: dataSources.coverageNote,
+    }).from(dataSources).orderBy(dataSources.name),
   ]);
   const reconciliation = reconciliationRows[0] ?? null;
+  const catalogByState = new Map<string, {
+    beneficiaries: number;
+    objects: number;
+    instruments: number;
+    reconciledObjects: number;
+    reconciledInstruments: number;
+    catalogUpdatedAt: Date | null;
+    provenance: Array<{ kind: "beneficiario" | "objeto" | "instrumento"; sourceUrl: string | null; hashes: number }>;
+  }>();
+  for (const row of catalogStateRows) {
+    if (!row.uf) continue;
+    if (row.recordKind !== "beneficiario" && row.recordKind !== "objeto" && row.recordKind !== "instrumento") continue;
+    const current = catalogByState.get(row.uf) ?? {
+      beneficiaries: 0, objects: 0, instruments: 0, reconciledObjects: 0, reconciledInstruments: 0, catalogUpdatedAt: null, provenance: [],
+    };
+    const total = countValue(row.total);
+    const reconciled = countValue(row.reconciled);
+    if (row.recordKind === "beneficiario") current.beneficiaries = total;
+    if (row.recordKind === "objeto") { current.objects = total; current.reconciledObjects = reconciled; }
+    if (row.recordKind === "instrumento") { current.instruments = total; current.reconciledInstruments = reconciled; }
+    if (!current.catalogUpdatedAt || (row.latestUpdate && row.latestUpdate > current.catalogUpdatedAt)) current.catalogUpdatedAt = row.latestUpdate;
+    current.provenance.push({ kind: row.recordKind, sourceUrl: row.sourceUrl, hashes: countValue(row.hashes) });
+    catalogByState.set(row.uf, current);
+  }
   return {
     referenceYear: 2025,
     totals: {
@@ -88,6 +131,9 @@ export async function getPublicCoverageSummary() {
       populationReferenceYear: state.populationReferenceYear === null ? null : countValue(state.populationReferenceYear),
       populationSourceUrl: state.populationSourceUrl,
       updatedAt: state.updatedAt,
+      catalog: catalogByState.get(state.uf) ?? {
+        beneficiaries: 0, objects: 0, instruments: 0, reconciledObjects: 0, reconciledInstruments: 0, catalogUpdatedAt: null, provenance: [],
+      },
     })),
     reconciliation: reconciliation ? {
       evaluated: countValue(reconciliation.evaluated),
@@ -95,6 +141,13 @@ export async function getPublicCoverageSummary() {
       matchRate: reconciliation.matchRate === null ? null : Number(reconciliation.matchRate),
       updatedAt: reconciliation.updatedAt,
     } : null,
+    sources: sourceRows.map(source => ({
+      name: source.name,
+      baseUrl: source.baseUrl,
+      status: source.status,
+      latestSuccessfulLoadAt: source.latestSuccessfulLoadAt,
+      coverageNote: source.coverageNote,
+    })),
   };
 }
 
