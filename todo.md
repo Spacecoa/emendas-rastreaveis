@@ -33,7 +33,7 @@
 - [x] Corrigir o estado vazio da busca para não afirmar ausência de conciliação quando o recorte de filtros apenas não retorna registros.
 - [x] Testar a paginação REST com páginas distintas da carga persistida, confirmando que os registros não se repetem.
 - [x] Integrar população municipal oficial do IBGE com ano de referência e proveniência no banco, sem preencher ausências.
-- [ ] Exibir indicador per capita somente em municípios com vínculo de emenda ao código IBGE e cobertura de conciliação publicada.
+- [x] Exibir indicador per capita somente em municípios com vínculo de emenda ao código IBGE e cobertura de conciliação publicada.
 - [x] Conciliar objetos e instrumentos Transferegov com emendas CGU quando o código CGU de 2025 terminar exatamente no `NR_EMENDA` oficial, publicando a taxa resultante.
 - [x] Atualizar metadados e documentação de Propostas e Convênios para refletir a conciliação parcial real, sem manter taxa fixa de 0,0000.
 - [x] Expor de forma consistente a taxa de 55/75 e o escopo da regra exata por `NR_EMENDA` nas superfícies públicas relevantes.
@@ -112,3 +112,7 @@
 - [x] Garantir o encerramento determinístico das conexões dos scripts de exportação e conciliação após a execução nacional.
 - [x] Tornar a chave externa de cada linha nacional do Transferegov única por hash, preservando múltiplas linhas oficiais da mesma combinação emenda/proposta.
 - [x] Atualizar o relatório de não conciliação para consultar a chave de proposta na estrutura nacional e reportar o universo de 6.311 emendas.
+- [x] Definir e documentar o indicador per capita apenas para emendas CGU/2025 com código municipal IBGE e população IBGE/2025 verificáveis.
+- [x] Expor o resumo municipal e o valor per capita na página pública, usando `null` quando faltar vínculo ou população.
+- [x] Cobrir a elegibilidade, a fórmula, a fonte e o estado indisponível em testes de integração e acessibilidade.
+- [x] Fazer a página municipal consultar emendas pelo município IBGE exato, sem depender do texto de localidade da emenda.

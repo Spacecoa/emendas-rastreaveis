@@ -87,6 +87,172 @@ export async function getRecentSourceStatus() {
     .orderBy(desc(dataSources.latestAttemptAt));
 }
 
+export async function getMunicipalityPerCapitaSummary(input: {
+  municipality: string;
+  year: number;
+}) {
+  const db = await getDb();
+  if (!db) return null;
+  const name = input.municipality.trim();
+  const candidates = await db
+    .select({
+      id: municipalities.id,
+      name: municipalities.name,
+      uf: municipalities.uf,
+      ibgeCode: municipalities.ibgeCode,
+      population: municipalities.population,
+      populationReferenceYear: municipalities.populationReferenceYear,
+      populationSource: municipalities.populationSource,
+      populationSourceUrl: municipalities.populationSourceUrl,
+      populationExtractedAt: municipalities.populationExtractedAt,
+      populationRecordHash: municipalities.populationRecordHash,
+    })
+    .from(municipalities)
+    .where(sql`LOWER(${municipalities.name}) = LOWER(${name})`)
+    .limit(2);
+
+  if (candidates.length !== 1) {
+    return {
+      status: candidates.length ? "ambiguous_municipality" : "not_found",
+      municipality: null,
+      year: input.year,
+      linkedAmendments: 0,
+      paymentsWithValue: 0,
+      paid: null,
+      population: null,
+      populationReferenceYear: null,
+      perCapitaPaid: null,
+      financialSourceUrl: null,
+      financialExtractedAt: null,
+      populationSource: null,
+      populationSourceUrl: null,
+      populationExtractedAt: null,
+      populationRecordHash: null,
+      reason:
+        candidates.length > 1
+          ? "Há mais de um município com este nome; informe a UF na busca pública."
+          : "Município não encontrado no cadastro oficial persistido.",
+    } as const;
+  }
+
+  const municipality = candidates[0];
+  const linkedAmendments = await db
+    .select({
+      id: amendments.id,
+      sourceUrl: amendments.sourceUrl,
+      extractedAt: amendments.extractedAt,
+    })
+    .from(amendments)
+    .where(
+      and(
+        eq(amendments.year, input.year),
+        eq(amendments.municipalityId, municipality.id)
+      )
+    );
+  const amendmentIds = linkedAmendments.map(item => item.id);
+  const paymentRows = amendmentIds.length
+    ? await db
+        .select({
+          amendmentId: executionStages.amendmentId,
+          amount: executionStages.amount,
+        })
+        .from(executionStages)
+        .where(
+          and(
+            inArray(executionStages.amendmentId, amendmentIds),
+            eq(executionStages.stage, "pagamento")
+          )
+        )
+    : [];
+  const paymentsWithValue = paymentRows.filter(item => item.amount !== null);
+  const paymentComplete =
+    linkedAmendments.length > 0 &&
+    paymentsWithValue.length === linkedAmendments.length;
+  const populationEligible =
+    municipality.population !== null &&
+    municipality.population > 0 &&
+    municipality.populationReferenceYear === input.year;
+  const paid = paymentComplete
+    ? paymentsWithValue.reduce((sum, item) => sum + Number(item.amount), 0)
+    : null;
+  const status =
+    linkedAmendments.length === 0
+      ? "no_linked_amendments"
+      : !populationEligible
+        ? "missing_population"
+        : !paymentComplete
+          ? "missing_payment"
+          : "eligible";
+
+  return {
+    status,
+    municipality: {
+      name: municipality.name,
+      uf: municipality.uf,
+      ibgeCode: municipality.ibgeCode,
+    },
+    year: input.year,
+    linkedAmendments: linkedAmendments.length,
+    paymentsWithValue: paymentsWithValue.length,
+    paid,
+    population: municipality.population,
+    populationReferenceYear: municipality.populationReferenceYear,
+    perCapitaPaid:
+      status === "eligible" && paid !== null && municipality.population !== null
+        ? paid / municipality.population
+        : null,
+    financialSourceUrl: linkedAmendments[0]?.sourceUrl ?? null,
+    financialExtractedAt:
+      linkedAmendments[0]?.extractedAt?.toISOString() ?? null,
+    populationSource: municipality.populationSource,
+    populationSourceUrl: municipality.populationSourceUrl,
+    populationExtractedAt:
+      municipality.populationExtractedAt?.toISOString() ?? null,
+    populationRecordHash: municipality.populationRecordHash,
+    reason:
+      status === "eligible"
+        ? "Pagamento oficial somado somente para emendas com código municipal IBGE e dividido pela população oficial do mesmo exercício. O indicador não comprova entrega física."
+        : status === "no_linked_amendments"
+          ? "Não há emenda CGU do exercício vinculada a este código municipal IBGE."
+          : status === "missing_population"
+            ? "Não há população oficial do IBGE para o mesmo exercício neste município."
+            : "Há emendas municipalizadas, mas falta valor oficial de pagamento para pelo menos uma delas.",
+  } as const;
+}
+
+export async function getStoredMunicipalityAmendments(input: {
+  municipality: string;
+  year: number;
+}) {
+  const db = await getDb();
+  if (!db) return [];
+  const matches = await db
+    .select({ id: municipalities.id })
+    .from(municipalities)
+    .where(
+      sql`LOWER(${municipalities.name}) = LOWER(${input.municipality.trim()})`
+    )
+    .limit(2);
+  if (matches.length !== 1) return [];
+  const rows = await db
+    .select({ code: amendments.code })
+    .from(amendments)
+    .where(
+      and(
+        eq(amendments.year, input.year),
+        eq(amendments.municipalityId, matches[0].id)
+      )
+    )
+    .orderBy(amendments.code)
+    .limit(100);
+  const records = await Promise.all(
+    rows.map(row => getStoredAmendment(row.code, input.year))
+  );
+  return records.filter(
+    (record): record is OfficialAmendment => record !== null
+  );
+}
+
 export async function getPublicCoverageSummary() {
   const db = await getDb();
   if (!db) return null;

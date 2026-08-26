@@ -24,13 +24,23 @@ export default function EntityPage({
     { query: term, year, page: 1 },
     { retry: false }
   );
-  const records = search.data?.records ?? [];
-  const filtered = records.filter(record =>
-    (type === "municipio" ? record.locality : record.author)
-      ?.toLocaleLowerCase("pt-BR")
-      .includes(term.toLocaleLowerCase("pt-BR"))
+  const perCapita = trpc.emendas.municipalityPerCapita.useQuery(
+    { municipality: term, year },
+    { enabled: type === "municipio", retry: false }
   );
-  const shown = filtered;
+  const municipalityRecords = trpc.emendas.municipalityAmendments.useQuery(
+    { municipality: term, year },
+    { enabled: type === "municipio", retry: false }
+  );
+  const records = search.data?.records ?? [];
+  const shown =
+    type === "municipio"
+      ? (municipalityRecords.data ?? [])
+      : records.filter(record =>
+          record.author
+            ?.toLocaleLowerCase("pt-BR")
+            .includes(term.toLocaleLowerCase("pt-BR"))
+        );
   const committed = shown.reduce(
     (sum, record) => sum + (record.committed ?? 0),
     0
@@ -51,15 +61,15 @@ export default function EntityPage({
             </h1>
             <p className="mt-4 max-w-3xl border-l-2 border-[#1e4a77]/35 pl-5 leading-7 text-black/65">
               Esta página reúne os registros retornados pela consulta oficial
-              atual. A população municipal do IBGE já está carregada para as 27
-              UFs em 2025, mas o cálculo per capita só será exibido quando cada
-              emenda tiver código municipal verificável e cobertura de
-              conciliação publicada.
+              atual. Para municípios, o valor por pessoa só aparece quando há
+              código municipal IBGE, população oficial do mesmo exercício e
+              valor de pagamento publicado para todas as emendas do recorte.
             </p>
           </div>
           <CompactSearchLink />
         </div>
-        {search.isLoading ? (
+        {search.isLoading ||
+        (type === "municipio" && municipalityRecords.isLoading) ? (
           <div className="mt-10 flex items-center gap-3 rounded-2xl bg-white p-8">
             <Loader2 className="animate-spin text-[#1e4a77]" /> Consultando
             registros oficiais…
@@ -98,7 +108,9 @@ export default function EntityPage({
                     </a>
                   </div>
                 )}
-                <section className="mt-10 grid gap-4 md:grid-cols-3">
+                <section
+                  className={`mt-10 grid gap-4 ${type === "municipio" ? "md:grid-cols-4" : "md:grid-cols-3"}`}
+                >
                   <article className="metric-card">
                     <p>Registros no recorte</p>
                     <strong>{shown.length}</strong>
@@ -116,6 +128,23 @@ export default function EntityPage({
                       {formatPercent(paid, committed)} do empenhado conhecido
                     </span>
                   </article>
+                  {type === "municipio" && (
+                    <article className="metric-card">
+                      <p>Pago por habitante</p>
+                      <strong>
+                        {perCapita.data?.perCapitaPaid === null ||
+                        perCapita.data?.perCapitaPaid === undefined
+                          ? "Informação não disponível"
+                          : formatCurrency(perCapita.data.perCapitaPaid)}
+                      </strong>
+                      <span>
+                        {perCapita.data?.status === "eligible"
+                          ? `${perCapita.data.linkedAmendments} emendas com código IBGE e população 2025.`
+                          : (perCapita.data?.reason ??
+                            "Verificando vínculo municipal e população oficial.")}
+                      </span>
+                    </article>
+                  )}
                 </section>
                 <div className="mt-6 grid gap-6 lg:grid-cols-[1.2fr_.8fr]">
                   <ExecutionBars
@@ -131,14 +160,38 @@ export default function EntityPage({
                   <section className="rounded-[1.4rem] border border-dashed border-black/20 bg-[#f8f9fa] p-6">
                     <MapPinned className="text-[#1e4a77]" />
                     <h2 className="mt-5 font-bold tracking-[-.03em]">
-                      Mapa e valor por pessoa ainda não publicados
+                      {perCapita.data?.status === "eligible"
+                        ? "Pagamento por pessoa no recorte municipal"
+                        : "Valor por pessoa não disponível para este recorte"}
                     </h2>
                     <p className="mt-2 text-sm leading-6 text-black/65">
-                      Não exibimos estimativas. O mapa e o contexto per capita
-                      serão incluídos quando a conciliação com os códigos
-                      municipais e a população oficial do IBGE tiverem cobertura
-                      e taxa de casamento publicadas.
+                      {perCapita.data?.status === "eligible"
+                        ? `A soma de ${formatCurrency(perCapita.data.paid)} em pagamentos oficiais de ${perCapita.data.linkedAmendments} emendas com código IBGE foi dividida pela população de ${perCapita.data.population?.toLocaleString("pt-BR")} habitantes em ${perCapita.data.populationReferenceYear}. Pagamento não comprova entrega física.`
+                        : (perCapita.data?.reason ??
+                          "Não exibimos estimativas. Sem vínculo municipal, população oficial do mesmo exercício ou pagamento publicado, o indicador permanece indisponível.")}
                     </p>
+                    {perCapita.data?.status === "eligible" && (
+                      <p className="mt-4 text-xs leading-5 text-black/60">
+                        <a
+                          className="font-bold underline underline-offset-4"
+                          href={perCapita.data.financialSourceUrl ?? undefined}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          Fonte financeira CGU
+                        </a>{" "}
+                        ·{" "}
+                        <a
+                          className="font-bold underline underline-offset-4"
+                          href={perCapita.data.populationSourceUrl ?? undefined}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          População IBGE/
+                          {perCapita.data.populationReferenceYear}
+                        </a>
+                      </p>
+                    )}
                   </section>
                 </div>
                 <section className="mt-6 rounded-[1.4rem] bg-white p-6 shadow-[0_8px_30px_rgba(18,25,32,.05)]">

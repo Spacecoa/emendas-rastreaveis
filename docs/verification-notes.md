@@ -216,4 +216,17 @@ A rotina nacional usou o arquivo oficial `siconv_emenda.csv.zip` do Transferegov
 
 O processo foi repetido após a execução inicial e preservou a mesma taxa e o mesmo hash de execução. Para evitar atribuição indevida, 842 propostas que apareceram ligadas a mais de uma emenda CGU confirmada foram mantidas sem `amendmentId`. Os 1.601 casos sem correspondência continuam como ausência documental no recorte nacional: não implicam ausência de recurso, falha de execução, irregularidade ou inexistência de dados em outras fontes.
 
+## Indicador municipal de pagamento por habitante — 26 de agosto de 2026
+
+O indicador foi liberado somente quando a emenda CGU/2025 possui `municipalityId` ligado ao código IBGE, a população municipal do IBGE tem referência em 2025 e todas as emendas do recorte têm estágio oficial de `pagamento` com valor publicado. A fórmula é: **soma dos pagamentos oficiais do recorte municipal ÷ população IBGE/2025**. Ela informa valor financeiro por habitante, não entrega física, efetividade ou regularidade.
+
+| Elegibilidade persistida                                           |                                        Resultado |
+| ------------------------------------------------------------------ | -----------------------------------------------: |
+| Emendas com código municipal IBGE                                  |                                              759 |
+| Municípios com emendas e população IBGE/2025                       |                                              474 |
+| Municípios elegíveis com pagamento publicado para todas as emendas |                                              474 |
+| Municípios sem emenda municipalizada                               | Indicador exibido como informação não disponível |
+
+A página municipal agora consulta emendas pelo município IBGE exato, e não pelo texto de localidade. Em **Abre Campo/MG**, por exemplo, uma emenda com pagamento oficial de R$ 2.500.000,00 e população IBGE de 14.354 habitantes resulta em R$ 174,17 por habitante; as duas fontes são apresentadas separadamente na interface.
+
 [5] [Emendas Parlamentares — Dados abertos do Portal da Transparência](https://portaldatransparencia.gov.br/download-de-dados/emendas-parlamentares)
