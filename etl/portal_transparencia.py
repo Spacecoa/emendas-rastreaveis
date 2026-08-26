@@ -1,6 +1,6 @@
 """Extrai e normaliza emendas da API do Portal da Transparência.
 
-Uso: PORTAL_TRANSPARENCIA_API_KEY=... python3 etl/portal_transparencia.py --ano 2025 --uf RJ --saida /tmp/emendas.jsonl
+Uso: PORTAL_TRANSPARENCIA_API_KEY=... python3 etl/portal_transparencia.py --ano 2025 --saida /tmp/emendas.jsonl
 O script não preenche ausências e não grava credenciais ou dados em logs.
 """
 from __future__ import annotations
@@ -51,7 +51,6 @@ def normalize(record: dict, source_url: str, extracted_at: str) -> dict:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--ano", type=int, required=True)
-    parser.add_argument("--uf")
     parser.add_argument("--pagina", type=int, default=1)
     parser.add_argument("--saida", type=Path, required=True)
     args = parser.parse_args()
@@ -60,8 +59,6 @@ def main() -> None:
         raise SystemExit("PORTAL_TRANSPARENCIA_API_KEY não configurada.")
 
     params = {"ano": args.ano, "pagina": args.pagina}
-    if args.uf:
-        params["uf"] = args.uf.upper()
     response = requests.get(BASE_URL, params=params, headers={"chave-api-dados": key, "Accept": "application/json"}, timeout=30)
     response.raise_for_status()
     extracted_at = datetime.now(timezone.utc).isoformat()

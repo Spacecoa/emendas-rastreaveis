@@ -45,3 +45,14 @@
 - [x] Validar a planilha XLSX exportada para o mesmo recorte combinado, confirmando que não inclui registros fora da URL.
 - [x] Impedir que páginas de município ou parlamentar exibam resultados de fallback sem correspondência explícita ao termo consultado.
 - [x] Corrigir a página 404 para português, navegação pública consistente e compatibilidade explícita de React nos componentes restantes.
+- [x] Executar checagem geral documentada de funcionalidades, integrações, dados persistidos, segurança de segredos e regressões antes da publicação.
+- [x] Corrigir links aninhados na lista de entidade para eliminar o erro de semântica HTML detectado no console.
+- [x] Corrigir landmarks duplicados na página de entidade e isolar cada auditoria de interface para evitar falsos positivos entre renderizações.
+- [x] Documentar o check-up geral, incluindo comandos, integridade, endpoints, segredo ausente do cliente e separação entre erros históricos e logs atuais.
+- [x] Validar uma etapa adicional da API CGU e interromper a expansão por UF ao comprovar que a rota de emendas não documenta esse recorte territorial.
+- [ ] Carregar uma próxima UF somente por fonte ou chave territorial oficialmente documentada, validar proveniência e limites, e aguardar autorização explícita antes de avançar.
+- [ ] Manter a publicação e o agendamento recorrente suspensos até a conclusão das etapas de expansão por UF autorizadas pelo usuário.
+- [x] Remover ou reclassificar a carga rotulada como SP/2025, pois a documentação oficial da rota CGU de emendas não expõe o parâmetro `uf`.
+- [x] Documentar que a expansão territorial por UF exige fonte ou chave oficial territorial explícita, em vez de inferir cobertura pelo parâmetro não documentado.
+- [x] Remover o envio do parâmetro `uf` não documentado nas consultas CGU e impedir que futuras cargas o apresentem como recorte territorial.
+- [x] Remover o rótulo SP do histórico de ingestão e canonicalizar a proveniência pública da amostra preservada sem o parâmetro não documentado.

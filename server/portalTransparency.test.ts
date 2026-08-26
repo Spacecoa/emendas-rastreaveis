@@ -1,7 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { complianceFromOfficialFields, parseBrazilianAmount } from "./portalTransparency";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { complianceFromOfficialFields, fetchPortalAmendments, parseBrazilianAmount } from "./portalTransparency";
 
 describe("normalização do Portal da Transparência", () => {
+  afterEach(() => vi.unstubAllGlobals());
+
   it("converte valores brasileiros sem confundir ausência com zero", () => {
     expect(parseBrazilianAmount("1.234.567,89")).toBe(1234567.89);
     expect(parseBrazilianAmount("0,00")).toBe(0);
@@ -24,5 +27,17 @@ describe("normalização do Portal da Transparência", () => {
     expect(complianceFromOfficialFields(financial, { hasPhysicalEvidence: true })).toBe("executada_comprovada");
     expect(complianceFromOfficialFields(financial, { hasPendingAccountability: true })).toBe("pendencia");
     expect(complianceFromOfficialFields(financial, { hasExpiredWithoutDelivery: true })).toBe("nao_cumprida");
+  });
+
+  it("envia somente os parâmetros documentados pela rota de emendas", async () => {
+    const fetchMock = vi.fn().mockResolvedValue({ ok: true, json: async () => [] });
+    vi.stubGlobal("fetch", fetchMock);
+
+    await fetchPortalAmendments({ year: 2025, page: 2 });
+
+    const url = String(fetchMock.mock.calls[0]?.[0]);
+    expect(url).toContain("ano=2025");
+    expect(url).toContain("pagina=2");
+    expect(url).not.toContain("uf=");
   });
 });

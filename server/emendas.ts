@@ -22,14 +22,14 @@ export async function upsertPortalSource(status: "available" | "failed", now = n
   return (await db.select().from(dataSources).where(eq(dataSources.name, "Portal da Transparência (CGU)")).limit(1))[0] ?? null;
 }
 
-export async function recordPortalLoad(input: { year: number; uf?: string; status: "completed" | "partial" | "failed"; recordsExtracted: number; recordsMatched: number; errorSummary?: string }) {
+export async function recordPortalLoad(input: { year: number; status: "completed" | "partial" | "failed"; recordsExtracted: number; recordsMatched: number; errorSummary?: string }) {
   const source = await upsertPortalSource(input.status === "failed" ? "failed" : "available");
   const db = await getDb();
   if (!db || !source) return;
   await db.insert(ingestionRuns).values({
     sourceId: source.id,
     requestedYear: input.year,
-    requestedUf: input.uf?.toUpperCase(),
+    requestedUf: null,
     status: input.status,
     recordsExtracted: input.recordsExtracted,
     recordsMatched: input.recordsMatched,
@@ -247,14 +247,14 @@ async function persistPortalRecord(record: OfficialAmendment) {
   return true;
 }
 
-export async function runInitialPortalLoad(year: number, uf?: string, maxPages = 5) {
+export async function runInitialPortalLoad(year: number, maxPages = 5) {
   try {
     const pageLimit = Math.min(Math.max(Math.floor(maxPages), 1), 10);
     let recordsExtracted = 0;
     let recordsPersisted = 0;
     let reachedEnd = false;
     for (let page = 1; page <= pageLimit; page += 1) {
-      const records = await fetchPortalAmendments({ year, uf, page });
+      const records = await fetchPortalAmendments({ year, page });
       recordsExtracted += records.length;
       for (const record of records) {
         if (await persistPortalRecord(record)) recordsPersisted += 1;
@@ -265,10 +265,10 @@ export async function runInitialPortalLoad(year: number, uf?: string, maxPages =
       }
     }
     const status = reachedEnd ? "completed" : "partial";
-    await recordPortalLoad({ year, uf, status, recordsExtracted, recordsMatched: 0 });
+    await recordPortalLoad({ year, status, recordsExtracted, recordsMatched: 0 });
     return { recordsExtracted, recordsPersisted, recordsMatched: 0, pagesAttempted: pageLimit, completed: reachedEnd };
   } catch (error) {
-    await recordPortalLoad({ year, uf, status: "failed", recordsExtracted: 0, recordsMatched: 0, errorSummary: error instanceof Error ? error.message : "Erro desconhecido" });
+    await recordPortalLoad({ year, status: "failed", recordsExtracted: 0, recordsMatched: 0, errorSummary: error instanceof Error ? error.message : "Erro desconhecido" });
     throw error;
   }
 }

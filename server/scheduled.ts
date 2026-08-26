@@ -16,7 +16,7 @@ export function registerScheduledHandlers(app: Express) {
       const config = (await db.select().from(sourceRefreshConfigs).where(eq(sourceRefreshConfigs.scheduleCronTaskUid, user.taskUid)).limit(1))[0];
       if (!config || !config.enabled) return res.json({ ok: true, skipped: "configuração ausente ou desativada" });
 
-      const result = await runInitialPortalLoad(config.targetYear, config.targetUf ?? undefined, 5);
+      const result = await runInitialPortalLoad(config.targetYear, 5);
       await db.update(sourceRefreshConfigs).set({ lastRunAt: new Date() }).where(eq(sourceRefreshConfigs.id, config.id));
       return res.json({ ok: true, ...result });
     } catch (error) {

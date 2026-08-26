@@ -54,15 +54,17 @@ export const appRouter = router({
   emendas: router({
     search: publicProcedure.input(queryInput).query(async ({ input }) => {
       const [storedRecords, storedYearAvailable] = await Promise.all([searchStoredAmendments(input), hasStoredAmendments(input.year)]);
-      const records = storedYearAvailable ? storedRecords : await fetchPortalAmendments(input);
+      const records = storedYearAvailable ? storedRecords : input.uf ? [] : await fetchPortalAmendments({ year: input.year, page: input.page });
       const filtered = records.filter(record => matches(record, input.query) && matchesFilter(record.author, input.author) && matchesFilter(record.budgetFunction, input.budgetFunction) && (!input.status || record.complianceStatus === input.status) && (input.minPaid === undefined || (record.paid !== null && record.paid >= input.minPaid))).slice(0, 40);
       return {
         records: filtered,
         count: filtered.length,
         query: input.query,
         sourceCoverage: storedYearAvailable
-          ? "Resultados da carga oficial persistida. O recorte atual é RJ/2025, com cobertura e taxa de conciliação descritas na metodologia."
-          : "Resultados da página consultada na fonte oficial. A ampliação nacional depende das cargas persistidas e conciliadas.",
+          ? "Resultados das cargas oficiais persistidas. Há dados complementares territorialmente comprovados para RJ/2025; a rota CGU de emendas não documenta parâmetro de UF, por isso não inferimos cobertura territorial da amostra adicional de 2025."
+          : input.uf
+            ? "O filtro UF exige carga persistida: a rota CGU de emendas não documenta consulta territorial por UF."
+            : "Resultados da página consultada na fonte oficial. A ampliação nacional depende das cargas persistidas e conciliadas.",
       };
     }),
     suggestions: publicProcedure.input(z.object({ query: z.string().trim().min(2).max(120) })).query(async ({ input }) => {

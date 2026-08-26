@@ -37,6 +37,13 @@ describe("API pública de emendas", () => {
     expect(response.status).toBe(400);
   });
 
+  it("não encaminha UF à CGU quando não existe carga persistida para o ano", async () => {
+    const response = await fetch(`${baseUrl}/api/v1/emendas?ano=2019&uf=SP`);
+    const payload = await response.json();
+    expect(response.status).toBe(400);
+    expect(payload.error).toContain("carga persistida");
+  });
+
   it("aplica autoria e função orçamentária aos registros oficiais persistidos", async () => {
     const response = await fetch(`${baseUrl}/api/v1/emendas?ano=2025&autor=GENERAL%20GIRAO&funcao=Defesa%20nacional`);
     const payload = await response.json();

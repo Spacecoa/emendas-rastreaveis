@@ -98,14 +98,13 @@ export function toOfficialAmendment(raw: PortalRawAmendment, sourceUrl: string, 
   };
 }
 
-export async function fetchPortalAmendments(input: { year: number; page?: number; uf?: string }): Promise<OfficialAmendment[]> {
+export async function fetchPortalAmendments(input: { year: number; page?: number }): Promise<OfficialAmendment[]> {
   const apiKey = process.env.PORTAL_TRANSPARENCIA_API_KEY;
   if (!apiKey) throw new Error("A fonte Portal da Transparência ainda não foi configurada.");
 
   const url = new URL(PORTAL_BASE_URL);
   url.searchParams.set("ano", String(input.year));
   url.searchParams.set("pagina", String(input.page ?? 1));
-  if (input.uf) url.searchParams.set("uf", input.uf.toUpperCase());
 
   const response = await fetch(url, {
     headers: {
