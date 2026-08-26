@@ -2,18 +2,18 @@
 
 - [x] Modelar as entidades de autoria, emenda, programação, estágios financeiros, beneficiário, instrumento, objeto, execução física, prestação de contas, município, alerta e proveniência.
 - [x] Criar migrações do banco e consultas públicas com dados ausentes representados por `null`.
-- [ ] Implementar regras auditáveis do semáforo de cumprimento e taxa de conciliação entre fontes.
+- [x] Implementar regras auditáveis do semáforo de cumprimento e taxa de conciliação entre fontes.
 - [x] Construir navegação pública, página inicial, busca unificada acessível e autocompletar agrupado.
-- [ ] Construir páginas públicas de município, parlamentar e emenda com fontes oficiais, linha do tempo e alternativas tabulares.
-- [ ] Implementar filtros combináveis, URLs compartilháveis e exportação em CSV, JSON e XLSX.
+- [x] Construir páginas públicas de município, parlamentar e emenda com fontes oficiais, linha do tempo e alternativas tabulares.
+- [x] Implementar filtros combináveis, URLs compartilháveis e exportação em CSV, JSON e XLSX.
 - [x] Publicar metodologia, glossário e limitações em português claro.
 - [ ] Implementar estrutura de ingestão das fontes oficiais, registro de cargas e atualização recorrente.
 - [ ] Implementar assinaturas e alertas por e-mail para mudanças de execução.
 - [x] Documentar API pública e arquitetura, incluindo dicionário de dados, licenças, limitações e configuração de ambiente.
-- [ ] Aplicar os requisitos WCAG 2.2 AA e adicionar validação automatizada de acessibilidade.
-- [ ] Escrever e executar testes unitários, de integração e de interface crítica.
+- [x] Aplicar os requisitos WCAG 2.2 AA e adicionar validação automatizada de acessibilidade.
+- [x] Escrever e executar testes unitários, de integração e de interface crítica.
 - [x] Solicitar a chave da API do Portal da Transparência somente quando a carga real estiver pronta para ser ativada.
-- [ ] Verificar a aplicação em visualização responsiva e salvar o checkpoint final.
+- [x] Verificar a aplicação em visualização responsiva e salvar o checkpoint final.
 - [ ] Produzir vídeo curto vertical para Bilibili apresentando as funcionalidades e o uso da plataforma.
 - [x] Retomar a conclusão das integrações, automações e alertas da plataforma sem incluir a produção de vídeo nesta etapa.
 - [ ] Configurar remetente verificado e ativar o envio externo de alertas por e-mail quando o usuário fornecer essa configuração.

@@ -185,4 +185,17 @@ O importador é idempotente por código e exercício, atualiza os estágios fina
 
 Após atualizar as auditorias que tinham contagens rígidas da amostra anterior, `pnpm check && pnpm test && git diff --check` passou com 23 arquivos de teste aprovados, 45 testes aprovados e 1 teste de Resend pulado pelo remetente ainda pendente. A consulta visual em `/cobertura` confirmou o total nacional e a separação entre carga financeira e conciliação parcial.
 
+## Pendências condicionadas e entregas suspensas — 26 de agosto de 2026
+
+| Entrega                                     | Estado atual                       | Pré-requisito para avançar                                                                                                                                                    |
+| ------------------------------------------- | ---------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Conciliação nacional Transferegov           | Pendente                           | Extrair e comparar `NR_EMENDA` para as 6.311 chaves nacionais, preservando somente igualdade exata antes de divulgar uma taxa nacional.                                       |
+| Indicador per capita                        | Bloqueado por cautela metodológica | Vínculo municipal verificável e escopo de conciliação adequado para a métrica; a mera população IBGE não habilita o cálculo.                                                  |
+| Status físico, pendência ou não cumprimento | Bloqueado por evidência            | Fonte oficial adicional que registre entrega, vigência, prestação de contas, rejeição ou outro sinal finalístico aplicável.                                                   |
+| Alertas por e-mail                          | Suspenso                           | Remetente externo verificado e decisão explícita para ativar o envio.                                                                                                         |
+| Atualização recorrente                      | Suspensa                           | Publicação, autorização explícita e redesenho da ingestão nacional em lotes idempotentes; a transação manual atual não deve ser agendada no ambiente de execução sob demanda. |
+| Publicação e vídeo para Bilibili            | Suspensos                          | Nova solicitação explícita do responsável pelo projeto.                                                                                                                       |
+
+> Nenhuma dessas pendências foi preenchida por inferência. A carga nacional concluída não ativa cron, publicação ou correio eletrônico externo.
+
 [5] [Emendas Parlamentares — Dados abertos do Portal da Transparência](https://portaldatransparencia.gov.br/download-de-dados/emendas-parlamentares)
