@@ -43,3 +43,19 @@ Ao validar a documentação OpenAPI oficial da rota `/api-de-dados/emendas`, for
 Os registros foram preservados como **amostra oficial parcial de 2025**, e o histórico de ingestão e a nota de cobertura da CGU foram atualizados para explicitar a limitação. Nenhuma página pública deve chamar essa amostra de "dados de SP". A expansão de UFs deverá usar uma fonte ou chave territorial oficialmente documentada, antes de nova carga.
 
 **Fonte:** [documentação OpenAPI oficial da API de Dados do Portal da Transparência](https://api.portaldatransparencia.gov.br/swagger-ui/index.html) e [página oficial da API de Dados da CGU](https://portaldatransparencia.gov.br/api-de-dados).
+
+## Etapa territorial MG/2025 — 26 de agosto de 2026
+
+Após autorização explícita, a cobertura de Minas Gerais foi carregada exclusivamente a partir de chaves territoriais documentadas no Transferegov e de cadastros/estimativas oficiais do IBGE. Foram persistidos 200 beneficiários, 200 objetos de propostas, 45 instrumentos, 853 municípios e 853 estimativas de população municipal com referência em 2025. Cada estimativa de população de MG possui ano, URL de origem e hash; nenhuma ficou sem proveniência.
+
+| Evidência | Resultado validado |
+| --- | --- |
+| Catálogo territorial | 200 beneficiários, 200 objetos e 45 instrumentos de MG; os objetos e instrumentos foram mantidos como `nao_conciliado`, com `amendmentId` ausente. Portanto, eles não são apresentados como prova de execução física nem como vínculo com uma emenda CGU. |
+| Cobertura IBGE | 853 municípios de MG e 853 populações de referência 2025, totalizando 21.393.441 habitantes na soma dos municípios persistidos. |
+| Integridade da execução | As quatro execuções MG foram concluídas e registraram hash: Proponentes (200), Propostas (200), Convênios (45) e Estimativas da População 2025 (853). |
+| Correção de proveniência | O extrator de instrumentos passou a receber UF e ano do registro de proposta que documenta o recorte. A reimportação confirmou 45/45 instrumentos em MG/2025, sem associação a emenda. |
+| Qualidade e interface | `pnpm check && pnpm test && git diff --check` concluiu sem falhas: 19 arquivos de teste aprovados, 30 testes aprovados e 1 teste de Resend pulado pelo remetente ainda pendente. A página inicial foi conferida em desktop e em 375 × 812 px: MG aparece antes de RJ na ordenação A–Z, com 853 municípios e a população oficial exibida. |
+
+> A taxa pública de 55/75 (73,33%) continua sendo a conciliação documental específica já publicada para a amostra financeira CGU/Transferegov. Ela não foi estendida a MG e não confirma entrega física, execução municipal ou aplicação de recursos.
+
+**Fontes da etapa:** dados abertos de [Proponentes do Transferegov](https://repositorio.dados.gov.br/seges/detru/siconv_proponente.csv.zip), [Propostas do Transferegov](https://repositorio.dados.gov.br/seges/detru/siconv_proposta.csv.zip) e [Convênios do Transferegov](https://repositorio.dados.gov.br/seges/detru/siconv_convenio.csv.zip); [municípios do IBGE](https://servicodados.ibge.gov.br/api/v1/localidades/estados/MG/municipios) e [Estimativas da População 2025 do IBGE](https://ftp.ibge.gov.br/Estimativas_de_Populacao/Estimativas_2025/POP2025_20260113.ods).

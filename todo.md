@@ -51,6 +51,9 @@
 - [x] Documentar o check-up geral, incluindo comandos, integridade, endpoints, segredo ausente do cliente e separação entre erros históricos e logs atuais.
 - [x] Validar uma etapa adicional da API CGU e interromper a expansão por UF ao comprovar que a rota de emendas não documenta esse recorte territorial.
 - [ ] Carregar uma próxima UF somente por fonte ou chave territorial oficialmente documentada, validar proveniência e limites, e aguardar autorização explícita antes de avançar.
+- [x] Carregar o recorte MG/2025 do Transferegov com chave territorial documentada e validar a persistência.
+- [ ] Apresentar a etapa MG/2025 validada e pedir autorização explícita antes de iniciar qualquer outra UF.
+- [x] Corrigir o extrator de instrumentos para propagar UF e ano a partir das propostas territoriais, depois regenerar o catálogo MG/2025 sem vínculos de emenda.
 - [ ] Manter a publicação e o agendamento recorrente suspensos até a conclusão das etapas de expansão por UF autorizadas pelo usuário.
 - [x] Remover ou reclassificar a carga rotulada como SP/2025, pois a documentação oficial da rota CGU de emendas não expõe o parâmetro `uf`.
 - [x] Documentar que a expansão territorial por UF exige fonte ou chave oficial territorial explícita, em vez de inferir cobertura pelo parâmetro não documentado.

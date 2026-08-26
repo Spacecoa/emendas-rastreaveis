@@ -1,6 +1,6 @@
 """Extrai beneficiários oficiais do arquivo diário de proponentes do Transferegov.
 
-Uso: python3 etl/transferegov_proponentes.py --uf RJ --limite 200 --saida /tmp/beneficiarios-rj.jsonl
+Uso: python3 etl/transferegov_proponentes.py --uf RJ --limite 200 --saida /tmp/beneficiarios-rj.jsonl [--arquivo /tmp/proponentes.zip]
 O script baixa somente uma fonte oficial pública, não registra credenciais e mantém o hash da linha de origem.
 """
 from __future__ import annotations
@@ -35,15 +35,22 @@ def main() -> None:
     parser.add_argument("--uf", required=True, help="UF do proponente, por exemplo RJ")
     parser.add_argument("--limite", type=int, default=200)
     parser.add_argument("--saida", type=Path, required=True)
+    parser.add_argument("--arquivo", type=Path, help="Arquivo ZIP oficial previamente obtido; evita novo download em caso de indisponibilidade temporária.")
     args = parser.parse_args()
     if args.limite < 1 or args.limite > 10_000:
         raise SystemExit("O limite deve estar entre 1 e 10000.")
 
-    response = requests.get(SOURCE_URL, timeout=120)
-    response.raise_for_status()
+    if args.arquivo:
+        if not args.arquivo.is_file():
+            raise SystemExit(f"Arquivo oficial não encontrado: {args.arquivo}")
+        archive_input = args.arquivo
+    else:
+        response = requests.get(SOURCE_URL, timeout=120)
+        response.raise_for_status()
+        archive_input = io.BytesIO(response.content)
     extracted_at = datetime.now(timezone.utc).isoformat()
     records: list[dict] = []
-    with zipfile.ZipFile(io.BytesIO(response.content)) as archive:
+    with zipfile.ZipFile(archive_input) as archive:
         csv_name = next(name for name in archive.namelist() if name.lower().endswith(".csv"))
         with archive.open(csv_name) as binary_file:
             reader = csv.DictReader(io.TextIOWrapper(binary_file, encoding="utf-8-sig"), delimiter=";")

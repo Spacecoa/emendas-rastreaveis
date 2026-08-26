@@ -28,7 +28,17 @@ def main() -> None:
     if args.limite < 1 or args.limite > 10_000:
         raise SystemExit("O limite deve estar entre 1 e 10000.")
 
-    proposal_ids = {str(json.loads(line).get("external_key")) for line in args.objetos.read_text(encoding="utf-8").splitlines() if line.strip()}
+    proposal_metadata = {
+        str(record.get("external_key")): {
+            "uf": record.get("uf"),
+            "reference_year": record.get("reference_year"),
+        }
+        for line in args.objetos.read_text(encoding="utf-8").splitlines()
+        if line.strip()
+        for record in [json.loads(line)]
+        if record.get("external_key")
+    }
+    proposal_ids = set(proposal_metadata)
     extracted_at = datetime.now(timezone.utc).isoformat()
     records: list[dict] = []
     with zipfile.ZipFile(args.arquivo) as archive:
@@ -43,14 +53,19 @@ def main() -> None:
                 status = (row.get("SIT_CONVENIO") or "Situação não informada").strip()
                 if not number:
                     continue
+                proposal = proposal_metadata[proposal_id]
+                uf = proposal.get("uf")
+                reference_year = proposal.get("reference_year")
+                if not uf or not reference_year:
+                    raise SystemExit(f"A proposta {proposal_id} não possui UF e ano territoriais documentados.")
                 raw = json.dumps(row, ensure_ascii=False, sort_keys=True).encode("utf-8")
                 records.append({
                     "record_kind": "instrumento",
                     "external_key": proposal_id,
                     "cnpj": None,
                     "label": f"Convênio {number} · {status}",
-                    "uf": "RJ",
-                    "reference_year": 2025,
+                    "uf": uf,
+                    "reference_year": reference_year,
                     "source": "Transferegov — Convênios",
                     "source_url": SOURCE_URL,
                     "extracted_at": extracted_at,

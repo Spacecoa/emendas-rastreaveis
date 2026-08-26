@@ -24,7 +24,7 @@ try {
     await connection.execute(
       `INSERT INTO source_catalog_entries (recordKind, externalKey, cnpj, label, uf, referenceYear, reconciliationStatus, amendmentId, source, sourceUrl, extractedAt, recordHash)
        VALUES (?, ?, ?, ?, ?, ?, 'nao_conciliado', NULL, ?, ?, ?, ?)
-       ON DUPLICATE KEY UPDATE label = VALUES(label), extractedAt = VALUES(extractedAt), sourceUrl = VALUES(sourceUrl)`,
+       ON DUPLICATE KEY UPDATE label = VALUES(label), uf = VALUES(uf), referenceYear = VALUES(referenceYear), extractedAt = VALUES(extractedAt), sourceUrl = VALUES(sourceUrl)`,
       [record.record_kind, record.external_key ?? null, record.cnpj, record.label, record.uf, record.reference_year, record.source, record.source_url, new Date(record.extracted_at), record.record_hash],
     );
   }
