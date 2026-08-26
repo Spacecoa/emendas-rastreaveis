@@ -86,6 +86,13 @@
 - [x] Inventariar e explicar todas as funcionalidades implementadas, dados carregados, limites e itens pendentes do aplicativo.
 - [x] Executar testes práticos de busca, filtros, UF, páginas de detalhe, fontes, exportações, cobertura e API pública.
 - [x] Executar check-up final de tipagem, testes, acessibilidade, desempenho, segurança e logs para a revisão funcional.
+- [x] Carregar a base financeira nacional de emendas CGU para 2025 com paginação, proveniência, idempotência e sem filtro UF não documentado.
+- [x] Validar a carga financeira nacional, atualizar métricas de cobertura e documentar escopo, limites e taxa de conciliação resultante.
+- [x] Atualizar a interface de cobertura para distinguir carga financeira nacional completa de escopo de conciliação ainda parcial.
+- [x] Conferir README e notas de verificação da carga nacional, incluindo fonte única, totais e limite de conciliação parcial.
+- [x] Procurar e eliminar referências residuais à antiga amostra de 150 emendas quando se referirem à cobertura financeira nacional atual.
+- [x] Atualizar as notas de verificação que ainda descrevem a aba de cobertura com a amostra anterior de 150 emendas.
+- [x] Reexecutar a busca documental abrangente após a correção para confirmar consistência entre 6.311 emendas financeiras e o recorte de conciliação 112/150.
 - [x] Corrigir o extrator de instrumentos para propagar UF e ano a partir das propostas territoriais, depois regenerar o catálogo MG/2025 sem vínculos de emenda.
 - [x] Manter a publicação e o agendamento recorrente suspensos até a conclusão das etapas de expansão por UF autorizadas pelo usuário.
 - [x] Remover ou reclassificar a carga rotulada como SP/2025, pois a documentação oficial da rota CGU de emendas não expõe o parâmetro `uf`.

@@ -30,16 +30,17 @@ docker compose up --build
 
 Para executar sem contêiner, use `pnpm install`, `pnpm check` e `pnpm dev`. A migração do banco é gerada por `pnpm drizzle-kit generate`; revise o SQL e aplique a alteração por uma migração controlada.
 
-## ETL inicial
+## Carga financeira nacional
 
-O script Python extrai uma página oficial, normaliza somente os campos publicados e produz JSONL com proveniência. A carga TypeScript persiste autoria, emenda e estágios financeiros no banco.
+Para conjunto completo, a orientação oficial da CGU é utilizar os dados abertos em vez de percorrer a API paginada. O importador abaixo lê o arquivo único oficial, filtra o exercício solicitado, persiste autoria, emenda e estágios financeiros em transação e registra URL, data, hash por registro e hash da execução.
 
 ```bash
-python3 etl/portal_transparencia.py --ano 2025 --saida /tmp/emendas-cgu-2025.jsonl
-pnpm exec tsx scripts/initial-load.mjs 2025
+curl -fL -o /tmp/EmendasParlamentares.zip \
+  https://dadosabertos-download.cgu.gov.br/PortalDaTransparencia/saida/emendas-parlamentares/EmendasParlamentares.zip
+pnpm tsx scripts/import-cgu-national-financial.mjs /tmp/EmendasParlamentares.zip 2025
 ```
 
-O segundo comando percorre até cinco páginas por execução (o limite seguro é dez), persiste somente os campos oficiais recebidos e registra em `ingestion_runs` os registros extraídos, registros conciliados e taxa de casamento. Não use um parâmetro `uf` nessa rota para declarar cobertura estadual: ele não é listado pela documentação OpenAPI oficial. A agenda recorrente deve ser ativada apenas após a publicação da aplicação: ela chama `/api/scheduled/sync-official-sources` e valida a tarefa pelo identificador persistido, não por campos enviados na requisição.
+O arquivo único contém emendas, convênios e favorecidos; a rotina financeira lê somente `EmendasParlamentares.csv`. O código municipal é associado apenas quando corresponde a um cadastro IBGE já persistido. Não use o parâmetro `uf` na rota CGU para declarar cobertura estadual: ele não é documentado. A API paginada permanece útil para consultas pontuais e sanity checks, mas não substitui a carga nacional. A agenda recorrente continua desativada até publicação e autorização explícita.
 
 ### Carga complementar do Transferegov e do IBGE
 

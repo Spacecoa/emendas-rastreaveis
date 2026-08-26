@@ -11,12 +11,21 @@ describe("filtros combináveis da carga persistida", () => {
       page: 1,
     });
 
-    expect(records).toHaveLength(1);
-    expect(records[0]).toMatchObject({
-      code: "202539940017",
-      author: "GENERAL GIRAO",
-      budgetFunction: "Defesa nacional",
-    });
+    expect(records.length).toBeGreaterThan(0);
+    expect(records).toContainEqual(
+      expect.objectContaining({
+        code: "202539940017",
+        author: "GENERAL GIRAO",
+        budgetFunction: "Defesa nacional",
+      })
+    );
+    expect(
+      records.every(
+        record =>
+          record.author === "GENERAL GIRAO" &&
+          record.budgetFunction === "Defesa nacional"
+      )
+    ).toBe(true);
   });
 
   it("restringe UF a vínculo territorial documental e não usa localidade textual", async () => {
@@ -25,8 +34,15 @@ describe("filtros combináveis da carga persistida", () => {
       searchStoredAmendments({ query: "", year: 2025, uf: "MG", page: 1 }),
     ]);
 
-    expect(alagoas).toHaveLength(1);
-    expect(alagoas[0]).toMatchObject({ code: "202529730007" });
-    expect(minasGerais).toHaveLength(0);
+    expect(alagoas.length).toBeGreaterThan(0);
+    expect(minasGerais.length).toBeGreaterThan(0);
+    expect(alagoas).toContainEqual(
+      expect.objectContaining({ code: "202529730007" })
+    );
+    expect(
+      minasGerais.some(record =>
+        alagoas.some(alagoasRecord => alagoasRecord.code === record.code)
+      )
+    ).toBe(false);
   });
 });

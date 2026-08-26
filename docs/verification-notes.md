@@ -56,7 +56,7 @@ Após autorização explícita, a cobertura de Minas Gerais foi carregada exclus
 | Correção de proveniência | O extrator de instrumentos passou a receber UF e ano do registro de proposta que documenta o recorte. A reimportação confirmou 45/45 instrumentos em MG/2025, sem associação a emenda. |
 | Qualidade e interface | `pnpm check && pnpm test && git diff --check` concluiu sem falhas: 19 arquivos de teste aprovados, 30 testes aprovados e 1 teste de Resend pulado pelo remetente ainda pendente. A página inicial foi conferida em desktop e em 375 × 812 px: MG aparece antes de RJ na ordenação A–Z, com 853 municípios e a população oficial exibida. |
 
-> A taxa pública de 55/75 (73,33%) continua sendo a conciliação documental específica já publicada para a amostra financeira CGU/Transferegov. Ela não foi estendida a MG e não confirma entrega física, execução municipal ou aplicação de recursos.
+> A taxa pública de 55/75 (73,33%) continua sendo a conciliação documental específica do recorte CGU/Transferegov então processado. Ela não foi estendida a MG e não confirma entrega física, execução municipal ou aplicação de recursos.
 
 **Fontes da etapa:** dados abertos de [Proponentes do Transferegov](https://repositorio.dados.gov.br/seges/detru/siconv_proponente.csv.zip), [Propostas do Transferegov](https://repositorio.dados.gov.br/seges/detru/siconv_proposta.csv.zip) e [Convênios do Transferegov](https://repositorio.dados.gov.br/seges/detru/siconv_convenio.csv.zip); [municípios do IBGE](https://servicodados.ibge.gov.br/api/v1/localidades/estados/MG/municipios) e [Estimativas da População 2025 do IBGE](https://ftp.ibge.gov.br/Estimativas_de_Populacao/Estimativas_2025/POP2025_20260113.ods).
 
@@ -120,7 +120,7 @@ Para ampliar a conciliação, a carga CGU de 2025 passou de 75 para 150 registro
 
 ## Aba pública de cobertura — 26 de agosto de 2026
 
-A rota pública `/cobertura` passou a exibir a extensão real do banco persistido sem confundir volume de registros com confirmação de resultado. O resumo mostra as 27 UFs com municípios e população IBGE/2025, a amostra financeira CGU de 150 emendas, o catálogo territorial e a taxa de conciliação documental. A tabela desktop e os cartões móveis mostram, por UF, municípios, população, beneficiários, objetos, instrumentos, vínculos documentais, data de atualização, fontes e quantidade de hashes de proveniência.
+A rota pública `/cobertura` passou a exibir a extensão real do banco persistido sem confundir volume de registros com confirmação de resultado. O resumo mostra as 27 UFs com municípios e população IBGE/2025, a carga financeira nacional CGU de 6.311 emendas, o catálogo territorial e o recorte de conciliação documental então processado. A tabela desktop e os cartões móveis mostram, por UF, municípios, população, beneficiários, objetos, instrumentos, vínculos documentais, data de atualização, fontes e quantidade de hashes de proveniência.
 
 | Salvaguarda apresentada | Regra aplicada |
 | --- | --- |
@@ -165,3 +165,24 @@ A aba `/cobertura` passou a apresentar uma trilha técnica de cinco compartiment
 | 05 | Evidência de execução física | Documento oficial finalístico, além de pagamento ou vínculo documental. |
 
 O texto informa em cada etapa o pré-requisito, a ação e o critério de aceite. A auditoria de cobertura confirma o rótulo de recomendação, as etapas 01 a 05 e a estrutura sem violações `axe-core` nas regras executadas. A página foi revisada em desktop e no viewport móvel de 375 × 812 px; a trilha mantém os compartimentos em sequência e os dados atuais continuam separados visual e semanticamente do plano técnico.
+
+## Carga financeira nacional CGU/2025 — 26 de agosto de 2026
+
+A carga financeira nacional foi executada a partir do **arquivo único oficial** de emendas da CGU, em vez de percorrer a API paginada. A página oficial recomenda dados abertos para conjuntos completos e a fonte oferece o arquivo `EmendasParlamentares.zip` com o CSV financeiro, convênios e favorecidos.[5] A execução leu somente `EmendasParlamentares.csv`, decodificou Windows-1252, filtrou `Ano da Emenda = 2025` e não enviou parâmetro `uf` à API.
+
+| Evidência | Resultado validado |
+| --- | ---: |
+| Linhas do CSV oficial | 78.475, incluindo cabeçalho |
+| Emendas do exercício 2025 | 6.311 |
+| Estágios financeiros persistidos | 37.866, seis etapas por emenda com valor publicado |
+| Emendas com município IBGE já associado | 759, distribuídas em 26 UFs |
+| Emendas duplicadas ou sem URL/hash | 0 |
+| Hash da execução | `90c1ed71444fa9b55b9173bbfdbbda8b860a458e5642f8584bf929094f21fafe` |
+
+O importador é idempotente por código e exercício, atualiza os estágios financeiros do registro correspondente e registra uma execução `completed` em `ingestion_runs`. A fonte pública da CGU foi atualizada com a URL do arquivo único, licença, data e nota de cobertura. A página `/cobertura` agora mostra 6.311 **emendas CGU carregadas** como carga financeira nacional de 2025.
+
+> A conciliação do Transferegov permanece, por enquanto, no escopo de 150 emendas previamente avaliadas: 112 chaves exatas (74,67%). Esse valor não é apresentado como taxa sobre as 6.311 emendas nacionais. Os novos registros financeiros não receberam vínculo por aproximação, texto, CNPJ ou UF; uma conciliação nacional exigirá nova extração de `NR_EMENDA` para todas as chaves carregadas.
+
+Após atualizar as auditorias que tinham contagens rígidas da amostra anterior, `pnpm check && pnpm test && git diff --check` passou com 23 arquivos de teste aprovados, 45 testes aprovados e 1 teste de Resend pulado pelo remetente ainda pendente. A consulta visual em `/cobertura` confirmou o total nacional e a separação entre carga financeira e conciliação parcial.
+
+[5] [Emendas Parlamentares — Dados abertos do Portal da Transparência](https://portaldatransparencia.gov.br/download-de-dados/emendas-parlamentares)

@@ -71,10 +71,11 @@ export default function MethodologyPage() {
             <BookOpenCheck className="text-[#1e4a77]" />
             <h2>Conciliação declarada</h2>
             <p>
-              Na amostra CGU carregada de 2025, 112 de 150 emendas (74,67%)
+              A carga financeira nacional de 2025 contém 6.311 emendas. Dentro
+              do recorte de conciliação já processado, 112 de 150 (74,67%)
               correspondem exatamente ao campo oficial <code>NR_EMENDA</code> do
-              Transferegov. É um vínculo documental entre bases, não uma prova
-              de entrega física.
+              Transferegov. Esse vínculo documental não é uma taxa sobre toda a
+              carga nacional nem uma prova de entrega física.
             </p>
           </article>
           <article className="method-card">

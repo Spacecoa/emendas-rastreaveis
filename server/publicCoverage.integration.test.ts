@@ -14,8 +14,8 @@ describe("síntese pública de cobertura", () => {
     expect(coverage).toMatchObject({
       referenceYear: 2025,
       totals: {
-        amendments: 150,
-        financialStages: 900,
+        amendments: 6311,
+        financialStages: 37866,
         beneficiaries: 5400,
         objects: 5400,
         instruments: 1812,

@@ -155,7 +155,7 @@ export default function CoveragePage() {
                 icon={Database}
                 label="Emendas CGU carregadas"
                 value={number(coverage.data.totals.amendments)}
-                text={`Amostra financeira oficial do exercício ${year}.`}
+                text={`Carga financeira nacional do exercício ${year}.`}
               />
               <MetricCard
                 icon={BookOpenCheck}
@@ -165,7 +165,7 @@ export default function CoveragePage() {
               />
               <MetricCard
                 icon={ShieldCheck}
-                label="Chaves conciliadas"
+                label="Conciliação no recorte avaliado"
                 value={
                   reconciliation
                     ? `${number(reconciliation.matched)}/${number(reconciliation.evaluated)}`
@@ -175,7 +175,7 @@ export default function CoveragePage() {
                   reconciliation?.matchRate !== null &&
                   reconciliation?.matchRate !== undefined
                     ? `${(reconciliation.matchRate * 100).toLocaleString("pt-BR", { maximumFractionDigits: 2 })}% por chave exata; não comprova entrega.`
-                    : "Taxa ainda não disponível."
+                    : "Taxa ainda não disponível. O escopo avaliado pode ser menor que a carga financeira."
                 }
                 tone="caution"
               />

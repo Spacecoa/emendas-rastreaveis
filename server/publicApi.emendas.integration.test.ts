@@ -40,11 +40,20 @@ describe("API pública de emendas", () => {
     const [alagoas, minasGerais] = await Promise.all([alagoasResponse.json(), minasGeraisResponse.json()]);
 
     expect(alagoasResponse.status).toBe(200);
-    expect(alagoas.data).toHaveLength(1);
-    expect(alagoas.data[0]).toMatchObject({ code: "202529730007" });
+    expect(alagoas.data.length).toBeGreaterThan(0);
+    expect(alagoas.data).toContainEqual(
+      expect.objectContaining({ code: "202529730007" })
+    );
     expect(alagoas.meta.coverage).toContain("vínculo territorial documental");
     expect(minasGeraisResponse.status).toBe(200);
-    expect(minasGerais.data).toHaveLength(0);
+    expect(minasGerais.data.length).toBeGreaterThan(0);
+    expect(
+      minasGerais.data.some((record: { code: string }) =>
+        alagoas.data.some((alagoasRecord: { code: string }) =>
+          alagoasRecord.code === record.code
+        )
+      )
+    ).toBe(false);
   });
 
   it("recusa parâmetros de filtro inválidos", async () => {
@@ -64,8 +73,9 @@ describe("API pública de emendas", () => {
     const payload = await response.json();
     expect(response.status).toBe(200);
     expect(payload.meta).toMatchObject({ author: "GENERAL GIRAO", budgetFunction: "Defesa nacional" });
-    expect(payload.data).toHaveLength(1);
-    expect(payload.data[0]).toMatchObject({ code: "202539940017", author: "GENERAL GIRAO", budgetFunction: "Defesa nacional" });
+    expect(payload.data.length).toBeGreaterThan(0);
+    expect(payload.data).toContainEqual(expect.objectContaining({ code: "202539940017", author: "GENERAL GIRAO", budgetFunction: "Defesa nacional" }));
+    expect(payload.data.every((record: { author: string | null; budgetFunction: string | null }) => record.author === "GENERAL GIRAO" && record.budgetFunction === "Defesa nacional")).toBe(true);
   });
 
   it("pagina a carga oficial persistida sem repetir os registros da primeira página", async () => {
