@@ -1,0 +1,1 @@
+ALTER TABLE `source_catalog_entries` MODIFY COLUMN `recordKind` enum('beneficiario','objeto','instrumento','emenda_transferegov') NOT NULL;

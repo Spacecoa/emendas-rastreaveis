@@ -1,6 +1,6 @@
 import { createHash } from "node:crypto";
-import { and, desc, eq, like, or } from "drizzle-orm";
-import { amendments, authors, dataSources, executionStages, ingestionRuns } from "../drizzle/schema";
+import { and, desc, eq, isNotNull, like, or, sql } from "drizzle-orm";
+import { amendments, authors, beneficiaries, dataSources, executionStages, ingestionRuns, municipalities, sourceCatalogEntries } from "../drizzle/schema";
 import { getDb } from "./db";
 import { fetchPortalAmendments, type OfficialAmendment } from "./portalTransparency";
 
@@ -43,6 +43,59 @@ export async function getRecentSourceStatus() {
   const db = await getDb();
   if (!db) return [];
   return db.select().from(dataSources).orderBy(desc(dataSources.latestAttemptAt));
+}
+
+export async function getPublicCoverageSummary() {
+  const db = await getDb();
+  if (!db) return null;
+  const countValue = (value: unknown) => Number(value ?? 0);
+  const [amendmentRows, stageRows, beneficiaryRows, objectRows, instrumentRows, stateRows, reconciliationRows] = await Promise.all([
+    db.select({ total: sql<number>`COUNT(*)` }).from(amendments).where(eq(amendments.year, 2025)),
+    db.select({ total: sql<number>`COUNT(*)` }).from(executionStages),
+    db.select({ total: sql<number>`COUNT(*)` }).from(beneficiaries),
+    db.select({ total: sql<number>`COUNT(*)` }).from(sourceCatalogEntries).where(eq(sourceCatalogEntries.recordKind, "objeto")),
+    db.select({ total: sql<number>`COUNT(*)` }).from(sourceCatalogEntries).where(eq(sourceCatalogEntries.recordKind, "instrumento")),
+    db.select({
+      uf: municipalities.uf,
+      municipalityCount: sql<number>`COUNT(*)`,
+      population: sql<number | null>`SUM(${municipalities.population})`,
+      populationReferenceYear: sql<number | null>`MAX(${municipalities.populationReferenceYear})`,
+      populationSourceUrl: sql<string | null>`MAX(${municipalities.populationSourceUrl})`,
+      updatedAt: sql<Date | null>`MAX(${municipalities.populationExtractedAt})`,
+    }).from(municipalities).where(isNotNull(municipalities.population)).groupBy(municipalities.uf),
+    db.select({
+      evaluated: ingestionRuns.recordsExtracted,
+      matched: ingestionRuns.recordsMatched,
+      matchRate: ingestionRuns.matchRate,
+      updatedAt: ingestionRuns.finishedAt,
+    }).from(ingestionRuns).innerJoin(dataSources, eq(ingestionRuns.sourceId, dataSources.id)).where(eq(dataSources.name, "Transferegov — Emendas")).orderBy(desc(ingestionRuns.id)).limit(1),
+  ]);
+  const reconciliation = reconciliationRows[0] ?? null;
+  return {
+    referenceYear: 2025,
+    totals: {
+      amendments: countValue(amendmentRows[0]?.total),
+      financialStages: countValue(stageRows[0]?.total),
+      beneficiaries: countValue(beneficiaryRows[0]?.total),
+      objects: countValue(objectRows[0]?.total),
+      instruments: countValue(instrumentRows[0]?.total),
+      municipalities: stateRows.reduce((total, state) => total + countValue(state.municipalityCount), 0),
+    },
+    availableStates: stateRows.map(state => ({
+      uf: state.uf,
+      municipalityCount: countValue(state.municipalityCount),
+      population: state.population === null ? null : countValue(state.population),
+      populationReferenceYear: state.populationReferenceYear === null ? null : countValue(state.populationReferenceYear),
+      populationSourceUrl: state.populationSourceUrl,
+      updatedAt: state.updatedAt,
+    })),
+    reconciliation: reconciliation ? {
+      evaluated: countValue(reconciliation.evaluated),
+      matched: countValue(reconciliation.matched),
+      matchRate: reconciliation.matchRate === null ? null : Number(reconciliation.matchRate),
+      updatedAt: reconciliation.updatedAt,
+    } : null,
+  };
 }
 
 export async function getStoredAmendment(code: string, year: number): Promise<OfficialAmendment | null> {

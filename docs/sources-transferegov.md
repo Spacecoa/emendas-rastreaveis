@@ -9,7 +9,7 @@ A documentação oficial da API de dados abertos do Transferegov informa uma bas
 | Execução física | `meta_especial`, `plano_trabalho_especial`, `finalidade_especial` | Permitir estado comprovado somente diante de evidência oficial suficientemente vinculada. |
 | Prestação de contas e pendências | `relatorio_gestao_especial`, `relatorio_gestao_novo_especial`, `plano_trabalho_analise_especial`, `orgao_analise_pendente_especial` | Permitir pendência ou não cumprimento apenas quando a fonte trouxer sinal expresso aplicável. |
 
-> Enquanto não houver chave de conciliação confirmada entre uma emenda da CGU e o registro de Transferência Especial, a plataforma mantém o estado **informação insuficiente**. O pagamento isolado não é usado como prova de entrega.
+> No recorte RJ/2025, a plataforma confirmou documentalmente 55 de 75 emendas CGU por igualdade exata entre os oito dígitos finais do código CGU e `NR_EMENDA` no arquivo oficial de emendas do Transferegov. O estado continua **informação insuficiente** enquanto não houver evidência finalística aplicável. O pagamento isolado e a conciliação documental não são usados como prova de entrega.
 
 As regras do semáforo são deliberadamente condicionais: evidência física vinculada a pagamento conhecido permite **executada e comprovada**; sinal oficial de prestação de contas pendente ou vigência em atraso permite **pendência**; rejeição oficial ou vigência vencida sem entrega permite **não cumprida**. Sem uma dessas evidências, a plataforma não promove o status financeiro a conclusão finalística.
 

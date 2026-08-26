@@ -11,14 +11,14 @@
 | Busca pública | Busca por autoria, localidade, código, número, função e subfunção em consulta oficial | Retorna uma página por vez até a expansão da carga persistida |
 | Execução financeira | Empenho, liquidação, pagamento e restos a pagar da API CGU | Dotação e autorizado aguardam integração SIOP |
 | Página da emenda | Linha do tempo, valores, situação, documento e link da fonte | A entrega física não é inferida da execução financeira |
-| Município e parlamentar | Resumo do recorte, lista de emendas e escada financeira | Per capita e mapa aguardam população integrada por município |
+| Município e parlamentar | Resumo do recorte, lista de emendas e escada financeira | A população IBGE RJ/2025 está carregada; per capita e mapa aguardam vínculo verificável da emenda ao código municipal |
 | Exportação | CSV, JSON e XLSX do recorte visível | Reflete os registros retornados pela consulta atual |
 | Transparência técnica | OpenAPI em `/api/v1/openapi.json`; REST em `/api/v1/emendas` e `/api/v1/sugestoes` | Cobertura nacional será declarada por carga |
 | Acessibilidade | HTML semântico, skip link, foco visível, teclado, tabela equivalente, redução de movimento e teste axe | A auditoria deve seguir sendo ampliada por página |
 
 ## Dados oficiais e licenças
 
-O primeiro conector usa a API do Portal da Transparência da CGU, que documenta a consulta de emendas e de documentos relacionados [1]. A carga complementar já utiliza os arquivos diários de proponentes, propostas e convênios do Transferegov, além da API de localidades do IBGE [3] [4]. Objetos, CNPJs e instrumentos do Transferegov permanecem no catálogo público como **não conciliados** até haver uma chave verificável de vínculo com a emenda. Os termos de uso e a licença de cada conjunto são preservados; a aplicação não reatribui licença aos dados públicos.
+O primeiro conector usa a API do Portal da Transparência da CGU, que documenta a consulta de emendas e de documentos relacionados [1]. A carga complementar usa arquivos diários de proponentes, propostas, convênios e emendas do Transferegov, além de localidades e estimativas de população do IBGE [3] [4]. No recorte RJ/2025, 55 das 75 emendas CGU têm correspondência exata pelo `NR_EMENDA` do Transferegov. Objetos e instrumentos só recebem vínculo após essa chave; o vínculo é documental e **não prova entrega física**. Os termos de uso e a licença de cada conjunto são preservados; a aplicação não reatribui licença aos dados públicos.
 
 ## Executar localmente
 
@@ -43,7 +43,7 @@ O segundo comando percorre até cinco páginas por execução (o limite seguro �
 
 ### Carga complementar do Transferegov e do IBGE
 
-As cargas abaixo extraem somente um recorte controlado. Beneficiários, objetos e instrumentos são guardados com URL, data e hash, mas não recebem vínculo com uma emenda enquanto a taxa de casamento não tiver base suficiente para publicação.
+As cargas abaixo extraem somente um recorte controlado. Beneficiários, objetos e instrumentos são guardados com URL, data e hash. Para RJ/2025, a conciliação compara os oito últimos dígitos do código CGU com `NR_EMENDA`: 55 de 75 emendas foram vinculadas documentalmente. Registros sem essa chave permanecem não conciliados, e nenhum vínculo é apresentado como evidência de entrega física.
 
 ```bash
 python3 etl/transferegov_proponentes.py --uf RJ --limite 200 --saida /tmp/beneficiarios-rj.jsonl
@@ -54,6 +54,10 @@ python3 etl/transferegov_convenios.py --arquivo /tmp/convenios.zip --objetos /tm
 node scripts/import-transferegov-catalog.mjs /tmp/instrumentos-rj-2025.jsonl
 python3 etl/ibge_municipios.py --uf RJ --saida /tmp/municipios-rj.jsonl
 node scripts/import-ibge-municipalities.mjs /tmp/municipios-rj.jsonl
+python3 etl/ibge_populacao.py --arquivo /tmp/POP2025_20260113.ods --uf RJ --ano 2025 --saida /tmp/populacao-rj-2025.jsonl
+node scripts/import-ibge-municipalities.mjs /tmp/populacao-rj-2025.jsonl
+python3 etl/transferegov_emendas.py --arquivo /tmp/emendas.zip --chaves "NUMEROS_NR_EMENDA" --saida /tmp/emendas-transferegov.jsonl
+node scripts/reconcile-transferegov-amendments.mjs /tmp/emendas-transferegov.jsonl 2025
 ```
 
 ## Qualidade e segurança

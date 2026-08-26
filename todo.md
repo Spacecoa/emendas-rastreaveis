@@ -34,3 +34,9 @@
 - [x] Testar a paginação REST com páginas distintas da carga persistida, confirmando que os registros não se repetem.
 - [x] Integrar população municipal oficial do IBGE com ano de referência e proveniência no banco, sem preencher ausências.
 - [ ] Exibir indicador per capita somente em municípios com vínculo de emenda ao código IBGE e cobertura de conciliação publicada.
+- [x] Conciliar objetos e instrumentos Transferegov com emendas CGU quando o código CGU de 2025 terminar exatamente no `NR_EMENDA` oficial, publicando a taxa resultante.
+- [x] Atualizar metadados e documentação de Propostas e Convênios para refletir a conciliação parcial real, sem manter taxa fixa de 0,0000.
+- [x] Expor de forma consistente a taxa de 55/75 e o escopo da regra exata por `NR_EMENDA` nas superfícies públicas relevantes.
+- [x] Exibir, em área pública visível, a cobertura concreta de dados e as UFs disponíveis com data de atualização e limites de interpretação.
+- [x] Criar acesso rápido na página inicial às UFs disponíveis, ordenável por nome e por população oficial conhecida.
+- [x] Incluir no rodapé fontes, tratamento de dados, segurança e enquadramento jurídico informativo adequado ao uso de interesse público e análise.

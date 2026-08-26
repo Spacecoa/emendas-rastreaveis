@@ -16,7 +16,7 @@ try {
     `INSERT INTO data_sources (name, baseUrl, licence, latestSuccessfulLoadAt, latestAttemptAt, status, coverageNote)
      VALUES (?, ?, ?, ?, ?, ?, ?)
      ON DUPLICATE KEY UPDATE latestSuccessfulLoadAt = VALUES(latestSuccessfulLoadAt), latestAttemptAt = VALUES(latestAttemptAt), status = VALUES(status), coverageNote = VALUES(coverageNote)`,
-    [first.source, first.source_url, "Dados Abertos Transferegov.br", now, now, "available", "Registros complementares ainda não conciliados com emendas da CGU; taxa de casamento publicada como 0,0000."],
+    [first.source, first.source_url, "Dados Abertos Transferegov.br", now, now, "available", "Catálogo complementar oficial. Itens sem chave confirmada permanecem não conciliados; a taxa de conciliação por emenda é publicada separadamente pela fonte Transferegov — Emendas."],
   );
   const [sources] = await connection.execute("SELECT id FROM data_sources WHERE name = ? LIMIT 1", [first.source]);
   const sourceId = sources[0]?.id;

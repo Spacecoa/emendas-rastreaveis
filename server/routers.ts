@@ -3,7 +3,7 @@ import { and, eq } from "drizzle-orm";
 import { z } from "zod";
 import { alertSubscriptions } from "../drizzle/schema";
 import { getDb } from "./db";
-import { getRecentSourceStatus, getStoredAmendment, hasStoredAmendments, searchStoredAmendments } from "./emendas";
+import { getPublicCoverageSummary, getRecentSourceStatus, getStoredAmendment, hasStoredAmendments, searchStoredAmendments } from "./emendas";
 import { fetchPortalAmendments, fetchPortalDocuments, type OfficialAmendment } from "./portalTransparency";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
@@ -91,6 +91,7 @@ export const appRouter = router({
     }),
     documents: publicProcedure.input(z.object({ code: z.string().trim().min(1).max(32) })).query(async ({ input }) => fetchPortalDocuments(input.code)),
     sources: publicProcedure.query(async () => getRecentSourceStatus()),
+    coverage: publicProcedure.query(async () => getPublicCoverageSummary()),
   }),
   subscriptions: router({
     create: protectedProcedure.input(z.object({

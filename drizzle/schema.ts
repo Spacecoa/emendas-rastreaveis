@@ -213,7 +213,7 @@ export const sourceCatalogEntries = mysqlTable(
   "source_catalog_entries",
   {
     id: int("id").autoincrement().primaryKey(),
-    recordKind: mysqlEnum("recordKind", ["beneficiario", "objeto", "instrumento"]).notNull(),
+    recordKind: mysqlEnum("recordKind", ["beneficiario", "objeto", "instrumento", "emenda_transferegov"]).notNull(),
     externalKey: varchar("externalKey", { length: 120 }),
     cnpj: varchar("cnpj", { length: 14 }),
     label: text("label").notNull(),

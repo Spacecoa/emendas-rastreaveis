@@ -14,10 +14,14 @@ Cada registro de domínio preserva **fonte**, **URL de origem**, **data de extra
 | `physical_milestones` | Execução física ou finalística | Instrumento + marco | Fonte, URL, data e hash |
 | `accountabilities` | Situação da prestação de contas | Instrumento | Fonte, URL, data e hash |
 | `municipalities` | Código IBGE, UF, população e geografia | Código IBGE | Fonte, URL, data e hash |
-| `source_catalog_entries` | Beneficiário, objeto ou instrumento oficial que ainda não tem vínculo auditável com uma emenda | Tipo + chave externa + hash; `amendmentId` só após conciliação | Fonte, URL, data e hash |
+| `source_catalog_entries` | Beneficiário, objeto, instrumento ou chave de emenda oficial do Transferegov | Tipo + chave externa + hash; `amendmentId` só após conciliação | Fonte, URL, data e hash |
 | `compliance_alerts` | Fatos que podem disparar aviso | Emenda + tipo de alteração | Fonte, URL, data e hash |
 | `ingestion_runs` | Auditoria de cada carga | Fonte + início da execução | Ano, UF, registros extraídos, registros conciliados e taxa de casamento |
 
-## Taxa de casamento
+## Taxa de casamento e conciliação
 
-A taxa de casamento é calculada como `registros conciliados / registros extraídos`. A conciliação planejada usa **código da emenda + ano + órgão + CNPJ do beneficiário**. Registros complementares que não possuem todas essas chaves — como propostas, instrumentos e objetos do Transferegov — permanecem com `reconciliationStatus = nao_conciliado`; eles nunca são apresentados como evidência de execução de uma emenda específica. Enquanto o primeiro recorte não tiver chaves suficientes para casamento, a taxa publicada continua **0,0000**, sem representar falha nem cobertura nacional.
+A taxa de casamento é calculada sobre a unidade de análise publicada. Para a conciliação entre CGU e Transferegov em RJ/2025, a unidade é a **emenda CGU avaliada**: `emendas CGU com chave confirmada / emendas CGU avaliadas`.
+
+O `code` da CGU para o exercício de 2025 contém um prefixo de exercício seguido pelo número de emenda. A plataforma compara **exatamente os oito últimos dígitos** desse código com o campo oficial `NR_EMENDA` do arquivo de emendas do Transferegov. Em 26 de agosto de 2026, **55 das 75 emendas CGU avaliadas** tiveram a chave confirmada, uma taxa de **73,33%**. As 662 linhas de proposta correspondentes foram preservadas com hash e URL de origem.
+
+Somente objetos e instrumentos cujo `ID_PROPOSTA` aparece em uma linha já confirmada por essa regra recebem `amendmentId` e `reconciliationStatus = conciliado`. O vínculo comprova a correspondência documental entre as bases. **Ele não comprova entrega física, regularidade ou efetividade** e não altera o semáforo de cumprimento sem evidência oficial adicional.

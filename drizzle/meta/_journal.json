@@ -43,6 +43,13 @@
       "when": 1787710258137,
       "tag": "0005_secret_captain_flint",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1787710895002,
+      "tag": "0006_mysterious_wolverine",
+      "breakpoints": true
     }
   ]
 }
