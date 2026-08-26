@@ -8,15 +8,15 @@
 - [x] Implementar filtros combináveis, URLs compartilháveis e exportação em CSV, JSON e XLSX.
 - [x] Publicar metodologia, glossário e limitações em português claro.
 - [ ] Implementar estrutura de ingestão das fontes oficiais, registro de cargas e atualização recorrente.
-- [ ] Implementar assinaturas e alertas por e-mail para mudanças de execução.
+- [x] Não implementar assinaturas e alertas por e-mail para mudanças de execução; item eliminado por solicitação do usuário.
 - [x] Documentar API pública e arquitetura, incluindo dicionário de dados, licenças, limitações e configuração de ambiente.
 - [x] Aplicar os requisitos WCAG 2.2 AA e adicionar validação automatizada de acessibilidade.
 - [x] Escrever e executar testes unitários, de integração e de interface crítica.
 - [x] Solicitar a chave da API do Portal da Transparência somente quando a carga real estiver pronta para ser ativada.
 - [x] Verificar a aplicação em visualização responsiva e salvar o checkpoint final.
-- [ ] Produzir vídeo curto vertical para Bilibili apresentando as funcionalidades e o uso da plataforma.
+- [x] Não produzir vídeo curto vertical para Bilibili; item eliminado por solicitação do usuário.
 - [x] Retomar a conclusão das integrações, automações e alertas da plataforma sem incluir a produção de vídeo nesta etapa.
-- [ ] Configurar remetente verificado e ativar o envio externo de alertas por e-mail quando o usuário fornecer essa configuração.
+- [x] Não configurar remetente verificado nem ativar envio externo de alertas; item eliminado por solicitação do usuário.
 - [ ] Publicar a versão e ativar a agenda recorrente da carga oficial no ambiente de produção.
 - [ ] Implementar regras conservadoras para os estados executada, pendência e não cumprida quando fontes oficiais adicionais forem integradas.
 - [x] Adicionar autocompletar agrupado por parlamentar, município, CNPJ, emenda e objeto, sem inventar resultados ausentes.
@@ -116,3 +116,4 @@
 - [x] Expor o resumo municipal e o valor per capita na página pública, usando `null` quando faltar vínculo ou população.
 - [x] Cobrir a elegibilidade, a fórmula, a fonte e o estado indisponível em testes de integração e acessibilidade.
 - [x] Fazer a página municipal consultar emendas pelo município IBGE exato, sem depender do texto de localidade da emenda.
+- [x] Verificar a prontidão da base persistida e os limites de atualização para explicar o que aparecerá após a publicação, alinhando a documentação às pendências eliminadas.

@@ -187,14 +187,15 @@ Após atualizar as auditorias que tinham contagens rígidas da amostra anterior,
 
 ## Pendências condicionadas e entregas suspensas — 26 de agosto de 2026
 
-| Entrega                                     | Estado atual                       | Pré-requisito para avançar                                                                                                                                  |
-| ------------------------------------------- | ---------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Conciliação nacional Transferegov           | Concluída                          | Reexecutar somente com novo arquivo oficial, preservando igualdade exata de `NR_EMENDA`, URL, data e hash antes de comparar uma nova taxa.                  |
-| Indicador per capita                        | Bloqueado por cautela metodológica | Vínculo municipal verificável e escopo de conciliação adequado para a métrica; a mera população IBGE não habilita o cálculo.                                |
-| Status físico, pendência ou não cumprimento | Bloqueado por evidência            | Fonte oficial adicional que registre entrega, vigência, prestação de contas, rejeição ou outro sinal finalístico aplicável.                                 |
-| Alertas por e-mail                          | Suspenso                           | Remetente externo verificado e decisão explícita para ativar o envio.                                                                                       |
-| Atualização recorrente                      | Suspensa                           | Publicação e autorização explícita; qualquer rotina deverá manter lotes idempotentes, limites operacionais e relatório de alterações antes de ser agendada. |
-| Publicação e vídeo para Bilibili            | Suspensos                          | Nova solicitação explícita do responsável pelo projeto.                                                                                                     |
+| Entrega                                     | Estado atual                  | Pré-requisito para avançar                                                                                                                                  |
+| ------------------------------------------- | ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Conciliação nacional Transferegov           | Concluída                     | Reexecutar somente com novo arquivo oficial, preservando igualdade exata de `NR_EMENDA`, URL, data e hash antes de comparar uma nova taxa.                  |
+| Indicador per capita                        | Publicado no recorte elegível | Requer código municipal IBGE, população IBGE/2025 e pagamento oficial para todas as emendas municipalizadas; os demais casos ficam indisponíveis.           |
+| Status físico, pendência ou não cumprimento | Bloqueado por evidência       | Fonte oficial adicional que registre entrega, vigência, prestação de contas, rejeição ou outro sinal finalístico aplicável.                                 |
+| Alertas por e-mail                          | Eliminado por solicitação     | Não há envio externo configurado ou previsto nesta etapa.                                                                                                   |
+| Atualização recorrente                      | Suspensa                      | Publicação e autorização explícita; qualquer rotina deverá manter lotes idempotentes, limites operacionais e relatório de alterações antes de ser agendada. |
+| Publicação                                  | Suspensa                      | Decisão explícita do responsável; dados já persistidos não exigem nova carga para serem exibidos.                                                           |
+| Vídeo para Bilibili                         | Eliminado por solicitação     | Não há produção ou envio de vídeo previsto nesta etapa.                                                                                                     |
 
 > Nenhuma dessas pendências foi preenchida por inferência. A carga nacional concluída não ativa cron, publicação ou correio eletrônico externo.
 
