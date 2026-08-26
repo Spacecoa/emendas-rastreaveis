@@ -130,3 +130,4 @@
 - [x] Expor e validar os totais financeiros oficiais de emendas por exercício de 2022 a 2025.
 - [x] Adicionar painel visual acessível de valores totais anuais na cobertura pública, com fonte e limite de interpretação.
 - [x] Cobrir o painel anual com testes de precisão, acessibilidade, responsividade e build.
+- [ ] Avaliar e selecionar uma direção estética alternativa para futura evolução visual, sem alterar a interface sem autorização explícita.
