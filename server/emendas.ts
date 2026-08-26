@@ -267,6 +267,8 @@ export async function getPublicCoverageSummary() {
   const db = await getDb();
   if (!db) return null;
   const countValue = (value: unknown) => Number(value ?? 0);
+  const monetaryValue = (value: unknown) =>
+    value === null || value === undefined ? null : Number(value);
   const [
     amendmentRows,
     stageRows,
@@ -363,6 +365,15 @@ export async function getPublicCoverageSummary() {
         amendments: sql<number>`COUNT(DISTINCT ${amendments.id})`,
         financialStages: sql<number>`COUNT(${executionStages.id})`,
         municipalizedAmendments: sql<number>`COUNT(DISTINCT CASE WHEN ${amendments.municipalityId} IS NOT NULL THEN ${amendments.id} END)`,
+        committedAmount: sql<
+          string | null
+        >`SUM(CASE WHEN ${executionStages.stage} = 'empenho' THEN ${executionStages.amount} ELSE NULL END)`,
+        settledAmount: sql<
+          string | null
+        >`SUM(CASE WHEN ${executionStages.stage} = 'liquidacao' THEN ${executionStages.amount} ELSE NULL END)`,
+        paidAmount: sql<
+          string | null
+        >`SUM(CASE WHEN ${executionStages.stage} = 'pagamento' THEN ${executionStages.amount} ELSE NULL END)`,
         updatedAt: sql<Date | null>`MAX(${amendments.extractedAt})`,
       })
       .from(amendments)
@@ -435,6 +446,9 @@ export async function getPublicCoverageSummary() {
       amendments: countValue(row.amendments),
       financialStages: countValue(row.financialStages),
       municipalizedAmendments: countValue(row.municipalizedAmendments),
+      committedAmount: monetaryValue(row.committedAmount),
+      settledAmount: monetaryValue(row.settledAmount),
+      paidAmount: monetaryValue(row.paidAmount),
       updatedAt: row.updatedAt,
     })),
     totals: {

@@ -18,6 +18,9 @@ vi.mock("@/lib/trpc", () => ({
                 amendments: 6108,
                 financialStages: 36648,
                 municipalizedAmendments: 1458,
+                committedAmount: 25458155910.19,
+                settledAmount: 17230607388.21,
+                paidAmount: 17032527467.49,
                 updatedAt: new Date("2026-08-26T17:25:02.000Z"),
               },
               {
@@ -25,6 +28,9 @@ vi.mock("@/lib/trpc", () => ({
                 amendments: 6059,
                 financialStages: 36354,
                 municipalizedAmendments: 1401,
+                committedAmount: 35247659122.58,
+                settledAmount: 21937884356.29,
+                paidAmount: 21794682215.75,
                 updatedAt: new Date("2026-08-26T17:25:02.000Z"),
               },
               {
@@ -32,6 +38,9 @@ vi.mock("@/lib/trpc", () => ({
                 amendments: 6986,
                 financialStages: 41916,
                 municipalizedAmendments: 1168,
+                committedAmount: 44780175550.47,
+                settledAmount: 31480063935.01,
+                paidAmount: 31366486593.43,
                 updatedAt: new Date("2026-08-26T17:25:02.000Z"),
               },
               {
@@ -39,6 +48,9 @@ vi.mock("@/lib/trpc", () => ({
                 amendments: 6311,
                 financialStages: 37866,
                 municipalizedAmendments: 759,
+                committedAmount: 50905200171.13,
+                settledAmount: 32819782336.69,
+                paidAmount: 32479836877.66,
                 updatedAt: new Date("2026-08-26T17:25:02.000Z"),
               },
             ],
@@ -136,12 +148,26 @@ describe("aba pública de cobertura", () => {
       })
     ).toBeTruthy();
     expect(
+      screen.getByRole("heading", {
+        name: /Quanto foi registrado em cada ano/i,
+      })
+    ).toBeTruthy();
+    expect(screen.getAllByText(/Total empenhado/).length).toBe(4);
+    expect(
+      screen.getByRole("img", {
+        name: /O empenho de 2025 equivale a 100%/i,
+      })
+    ).toBeTruthy();
+    expect(
+      screen.getAllByText(/Pagamento não comprova entrega física/i).length
+    ).toBeGreaterThan(0);
+    expect(
       screen
-        .getByRole("link", {
+        .getAllByRole("link", {
           name: /Consultar emendas do exercício 2022/i,
         })
-        .getAttribute("href")
-    ).toBe("/busca?ano=2022");
+        .every(link => link.getAttribute("href") === "/busca?ano=2022")
+    ).toBe(true);
     expect(
       screen.getByRole("heading", {
         name: /Expandir a cobertura sem pular etapas de verificação/i,

@@ -16,6 +16,25 @@ function number(value: number | null | undefined) {
   return new Intl.NumberFormat("pt-BR").format(value ?? 0);
 }
 
+function currency(value: number | null | undefined) {
+  if (value === null || value === undefined) return "Informação não disponível";
+  return new Intl.NumberFormat("pt-BR", {
+    style: "currency",
+    currency: "BRL",
+    maximumFractionDigits: 0,
+  }).format(value);
+}
+
+function compactCurrency(value: number | null | undefined) {
+  if (value === null || value === undefined) return "Informação não disponível";
+  return new Intl.NumberFormat("pt-BR", {
+    style: "currency",
+    currency: "BRL",
+    notation: "compact",
+    maximumFractionDigits: 1,
+  }).format(value);
+}
+
 function sourceLabel(url: string | null | undefined) {
   if (!url) return "Fonte não informada";
   if (url.includes("ibge")) return "IBGE";
@@ -126,6 +145,13 @@ export default function CoveragePage() {
   const reconciliation = coverage.data?.reconciliation;
   const year = coverage.data?.referenceYear ?? 2025;
   const financialSeries = coverage.data?.financialSeries ?? [];
+  const cguSource = coverage.data?.sources.find(
+    source => source.name === "Portal da Transparência (CGU)"
+  );
+  const largestCommittedAmount = Math.max(
+    1,
+    ...financialSeries.map(item => item.committedAmount ?? 0)
+  );
 
   return (
     <PortalLayout>
@@ -274,6 +300,132 @@ export default function CoveragePage() {
                   momento.
                 </p>
               )}
+            </section>
+
+            <section
+              className="mt-12 rounded-[1.6rem] border border-[#b6d6f0] bg-[#edf4fb] p-6 sm:p-8"
+              aria-labelledby="valores-financeiros-anuais"
+            >
+              <div className="max-w-3xl">
+                <p className="eyebrow">VALORES FINANCEIROS POR EXERCÍCIO</p>
+                <h2
+                  id="valores-financeiros-anuais"
+                  className="mt-2 text-3xl font-black tracking-[-.055em]"
+                >
+                  Quanto foi registrado em cada ano.
+                </h2>
+                <p className="mt-3 text-sm leading-6 text-black/65">
+                  O arquivo nacional carregado não traz um valor de indicação
+                  preenchido para todos os exercícios. Por isso, o painel mostra
+                  os totais oficiais de <strong>empenho</strong>,
+                  <strong> liquidação</strong> e <strong>pagamento</strong>. São
+                  etapas diferentes e, portanto, não são somadas entre si.
+                  Pagamento não comprova entrega física.
+                </p>
+              </div>
+
+              {financialSeries.length ? (
+                <div className="mt-8 grid gap-4 lg:grid-cols-2">
+                  {financialSeries.map(item => {
+                    const percentage = Math.max(
+                      2,
+                      Math.round(
+                        ((item.committedAmount ?? 0) / largestCommittedAmount) *
+                          100
+                      )
+                    );
+                    return (
+                      <article
+                        key={item.year}
+                        className="rounded-[1.35rem] bg-white p-5 shadow-[0_8px_30px_rgba(18,25,32,.05)]"
+                      >
+                        <div className="flex items-start justify-between gap-4">
+                          <div>
+                            <p className="text-xs font-black tracking-[.14em] text-[#1e4a77]">
+                              EXERCÍCIO {item.year}
+                            </p>
+                            <p className="mt-2 text-sm text-black/60">
+                              Total empenhado
+                            </p>
+                            <strong className="mt-1 block text-2xl font-black tracking-[-.05em]">
+                              {compactCurrency(item.committedAmount)}
+                            </strong>
+                          </div>
+                          <Link
+                            href={`/busca?ano=${item.year}`}
+                            className="inline-flex size-9 shrink-0 items-center justify-center rounded-full border border-black/15 hover:bg-[#edf4fb] focus:outline-none focus-visible:ring-4 focus-visible:ring-[#1e4a77]/35"
+                            aria-label={`Consultar emendas do exercício ${item.year}`}
+                          >
+                            <ArrowUpRight size={17} />
+                          </Link>
+                        </div>
+
+                        <div className="mt-5">
+                          <div
+                            className="h-3 overflow-hidden rounded-full bg-[#d7e6f4]"
+                            role="img"
+                            aria-label={`O empenho de ${item.year} equivale a ${percentage}% do maior valor empenhado entre os exercícios carregados.`}
+                          >
+                            <div
+                              className="h-full rounded-full bg-[#1e4a77]"
+                              style={{ width: `${percentage}%` }}
+                            />
+                          </div>
+                          <p className="mt-2 text-xs text-black/55">
+                            Escala proporcional ao maior empenho no recorte.
+                          </p>
+                        </div>
+
+                        <dl className="mt-5 grid gap-3 border-t border-black/8 pt-4 text-sm sm:grid-cols-3">
+                          <div>
+                            <dt className="text-black/55">Empenhado</dt>
+                            <dd className="mt-1 font-bold tabular-nums">
+                              {currency(item.committedAmount)}
+                            </dd>
+                          </div>
+                          <div>
+                            <dt className="text-black/55">Liquidado</dt>
+                            <dd className="mt-1 font-bold tabular-nums">
+                              {currency(item.settledAmount)}
+                            </dd>
+                          </div>
+                          <div>
+                            <dt className="text-black/55">Pago</dt>
+                            <dd className="mt-1 font-bold tabular-nums">
+                              {currency(item.paidAmount)}
+                            </dd>
+                          </div>
+                        </dl>
+                      </article>
+                    );
+                  })}
+                </div>
+              ) : (
+                <p className="mt-6 rounded-[1.35rem] bg-white p-6 text-sm text-black/65">
+                  Os totais financeiros anuais não estão disponíveis neste
+                  momento.
+                </p>
+              )}
+
+              <p className="mt-6 text-xs leading-5 text-black/60">
+                Fonte:{" "}
+                {cguSource?.baseUrl ? (
+                  <a
+                    href={cguSource.baseUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="font-semibold underline decoration-[#1e4a77]/45 underline-offset-4 hover:text-[#1e4a77]"
+                  >
+                    arquivo nacional de emendas do Portal da Transparência (CGU){" "}
+                    <ExternalLink className="inline" size={13} />
+                  </a>
+                ) : (
+                  "arquivo nacional de emendas do Portal da Transparência (CGU)"
+                )}{" "}
+                carregado com URL, data e hash de proveniência. A escala visual
+                usa somente o valor empenhado; os valores completos de cada
+                etapa aparecem abaixo de cada barra.
+              </p>
             </section>
 
             <section

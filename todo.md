@@ -127,3 +127,6 @@
 - [x] Executar e validar as cargas financeiras de 2022 a 2025 sem inferir UF, execução física ou situação de regularidade.
 - [x] Atualizar cobertura, metodologia, API, documentação e chat para explicitar a série 2022–2025 e seus limites por exercício.
 - [x] Revalidar tipagem, testes, acessibilidade, API pública, build e proveniência após a ampliação histórica.
+- [x] Expor e validar os totais financeiros oficiais de emendas por exercício de 2022 a 2025.
+- [x] Adicionar painel visual acessível de valores totais anuais na cobertura pública, com fonte e limite de interpretação.
+- [x] Cobrir o painel anual com testes de precisão, acessibilidade, responsividade e build.
