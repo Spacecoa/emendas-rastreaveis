@@ -4,8 +4,12 @@ import { getPublicCoverageSummary } from "./emendas";
 describe("síntese pública de cobertura", () => {
   it("expõe somente totais persistidos, a UF disponível e a taxa de conciliação documentada", async () => {
     const coverage = await getPublicCoverageSummary();
-    const minasGerais = coverage?.availableStates.find(state => state.uf === "MG");
-    const rioDeJaneiro = coverage?.availableStates.find(state => state.uf === "RJ");
+    const minasGerais = coverage?.availableStates.find(
+      state => state.uf === "MG"
+    );
+    const rioDeJaneiro = coverage?.availableStates.find(
+      state => state.uf === "RJ"
+    );
 
     expect(coverage).toMatchObject({
       referenceYear: 2025,
@@ -20,9 +24,9 @@ describe("síntese pública de cobertura", () => {
       reconciliation: { evaluated: 150, matched: 112, matchRate: 0.7467 },
     });
     expect(coverage?.availableStates).toHaveLength(27);
-    expect(coverage?.availableStates.map(state => state.uf)).toEqual(expect.arrayContaining([
-      "AC", "DF", "MG", "RJ", "SP", "TO",
-    ]));
+    expect(coverage?.availableStates.map(state => state.uf)).toEqual(
+      expect.arrayContaining(["AC", "DF", "MG", "RJ", "SP", "TO"])
+    );
     expect(minasGerais).toMatchObject({
       municipalityCount: 853,
       population: 21393441,
@@ -42,7 +46,15 @@ describe("síntese pública de cobertura", () => {
       reconciledObjects: 0,
       reconciledInstruments: 0,
     });
-    expect(coverage?.sources.some(source => source.name === "Portal da Transparência (CGU)")).toBe(true);
-    expect(coverage?.sources.some(source => source.name === "Transferegov — Propostas")).toBe(true);
+    expect(
+      coverage?.sources.some(
+        source => source.name === "Portal da Transparência (CGU)"
+      )
+    ).toBe(true);
+    expect(
+      coverage?.sources.some(
+        source => source.name === "Transferegov — Propostas"
+      )
+    ).toBe(true);
   });
 });

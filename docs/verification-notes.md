@@ -141,3 +141,13 @@ A auditoria de equivalência tornou essa regra verificável: para AL, o cartão 
 A comparação direta usa a mesma resposta pública de cobertura nas duas apresentações. Para AL, a linha desktop e o cartão móvel validam 102 municípios, população e ano de 2025, 200 objetos, 50 instrumentos, dois vínculos documentais, URL do IBGE e a rota `/busca?ano=2025&uf=AL`. Dessa forma, a equivalência não depende apenas de captura visual: é verificada campo a campo em teste automatizado.
 
 As telas de busca, metodologia e detalhe de emenda foram revisadas em desktop depois da aplicação da hierarquia editorial. Todas usam a mesma sequência visual de rótulo institucional, título objetivo e contexto lateralizado; preservam tabelas, fontes, ações por teclado e avisos de limite de interpretação. O check-up final dessa etapa passou com 22 arquivos de teste, 44 testes aprovados e 1 teste de e-mail corretamente pulado porque o remetente ainda não foi configurado.
+
+## Três ciclos de auto check-up e refinamento — 26 de agosto de 2026
+
+| Ciclo | Diagnóstico | Refinamento aplicado | Evidência final |
+| --- | --- | --- | --- |
+| 1. Acessibilidade | As auditorias `axe-core` já cobriam as páginas críticas, mas o foco visível dependia de regras locais de cada componente. | Foi incluído um indicador global de foco para links, controles de formulário e elementos focáveis, além de regras para `prefers-contrast: more`. | Tipagem e 22 arquivos de teste passaram; as auditorias de acessibilidade continuaram sem violações nas regras executadas. |
+| 2. Desempenho | O pacote inicial de JavaScript tinha 1.085.230 bytes e incluía a biblioteca XLSX mesmo para quem não exportava planilhas. | O XLSX passou a ser carregado dinamicamente somente ao solicitar exportação `.xlsx`. | O pacote inicial caiu para 800.412 bytes: redução de 284.818 bytes (26,24%). O chunk XLSX separado permanece disponível sob demanda; CSV, JSON e XLSX foram retestados. |
+| 3. Qualidade de código | A verificação de estilo indicou inconsistências de formatação nos arquivos alterados nesta etapa. | A formatação Prettier foi aplicada seletivamente aos componentes, testes e serviços modificados, sem reformatar áreas não relacionadas. | `prettier --check`, `pnpm check`, `pnpm test` e `git diff --check` concluíram sem falhas. |
+
+Os três ciclos não modificaram os registros de emendas, suas fontes, hashes ou a regra de conciliação territorial. O resultado final registra 22 arquivos de teste aprovados, 44 testes aprovados e uma suíte de e-mail pulada porque o remetente verificado continua pendente.

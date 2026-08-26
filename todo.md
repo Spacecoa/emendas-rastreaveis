@@ -76,6 +76,11 @@
 - [x] Refinar de forma coerente a linguagem editorial nas páginas públicas restantes de busca, metodologia, emenda e entidade, com revalidação WCAG.
 - [x] Adicionar auditoria específica da equivalência de campos entre a tabela desktop e os cartões móveis de cobertura.
 - [x] Comparar em teste os mesmos campos essenciais da UF AL na tabela desktop e no cartão móvel de cobertura.
+- [x] Executar o primeiro ciclo de auto check-up, priorizando melhorias de acessibilidade e impacto imediato.
+- [x] Executar o segundo ciclo de auto check-up, priorizando desempenho percebido e eficiência de carregamento.
+- [x] Executar o terceiro ciclo de auto check-up, priorizando qualidade de código, manutenção e regressões.
+- [x] Consolidar evidências e validação final dos três ciclos de refinamento.
+- [x] Confirmar o registro consolidado dos três ciclos e repetir a validação completa antes do checkpoint.
 - [x] Corrigir o extrator de instrumentos para propagar UF e ano a partir das propostas territoriais, depois regenerar o catálogo MG/2025 sem vínculos de emenda.
 - [x] Manter a publicação e o agendamento recorrente suspensos até a conclusão das etapas de expansão por UF autorizadas pelo usuário.
 - [x] Remover ou reclassificar a carga rotulada como SP/2025, pois a documentação oficial da rota CGU de emendas não expõe o parâmetro `uf`.

@@ -3,19 +3,153 @@ import { BookOpenCheck, CircleHelp, FileWarning, Scale } from "lucide-react";
 import PortalLayout from "@/components/PortalLayout";
 
 const statuses = [
-  ["Executada e comprovada", "Exige informação financeira e evidência oficial de execução física ou finalística; não é atribuída apenas porque houve pagamento."],
-  ["Em execução dentro do prazo", "Há andamento financeiro ou instrumental sem sinal oficial de prazo vencido. Não confirma que o objeto esteja pronto."],
-  ["Atraso ou pendência", "Há sinal oficial de vigência vencida, prestação de contas pendente ou outro atraso aplicável à fonte integrada."],
-  ["Vigência vencida sem entrega", "Exige informação oficial de obra paralisada, contas rejeitadas ou vigência vencida sem entrega registrada."],
-  ["Informação insuficiente", "É usada quando os dados não bastam para avaliar a entrega; é comum mesmo quando há vínculo documental, se ainda faltar evidência finalística suficiente."],
+  [
+    "Executada e comprovada",
+    "Exige informação financeira e evidência oficial de execução física ou finalística; não é atribuída apenas porque houve pagamento.",
+  ],
+  [
+    "Em execução dentro do prazo",
+    "Há andamento financeiro ou instrumental sem sinal oficial de prazo vencido. Não confirma que o objeto esteja pronto.",
+  ],
+  [
+    "Atraso ou pendência",
+    "Há sinal oficial de vigência vencida, prestação de contas pendente ou outro atraso aplicável à fonte integrada.",
+  ],
+  [
+    "Vigência vencida sem entrega",
+    "Exige informação oficial de obra paralisada, contas rejeitadas ou vigência vencida sem entrega registrada.",
+  ],
+  [
+    "Informação insuficiente",
+    "É usada quando os dados não bastam para avaliar a entrega; é comum mesmo quando há vínculo documental, se ainda faltar evidência finalística suficiente.",
+  ],
 ];
-const glossary = [["Empenho", "Reserva do dinheiro e compromisso formal de pagamento pelo governo."], ["Liquidação", "Reconhecimento de que uma entrega ou etapa permite o pagamento."], ["Restos a pagar", "Conta de anos anteriores que ficou para pagar depois."], ["Transferência especial", "Modalidade em que o recurso é transferido diretamente ao ente, com rastreabilidade do objeto mais limitada."], ["Taxa de casamento", "Percentual de emendas que conseguimos relacionar entre fontes usando uma chave estável declarada."]];
+const glossary = [
+  [
+    "Empenho",
+    "Reserva do dinheiro e compromisso formal de pagamento pelo governo.",
+  ],
+  [
+    "Liquidação",
+    "Reconhecimento de que uma entrega ou etapa permite o pagamento.",
+  ],
+  ["Restos a pagar", "Conta de anos anteriores que ficou para pagar depois."],
+  [
+    "Transferência especial",
+    "Modalidade em que o recurso é transferido diretamente ao ente, com rastreabilidade do objeto mais limitada.",
+  ],
+  [
+    "Taxa de casamento",
+    "Percentual de emendas que conseguimos relacionar entre fontes usando uma chave estável declarada.",
+  ],
+];
 
 export default function MethodologyPage() {
-  return <PortalLayout><div className="container py-12 sm:py-16"><p className="eyebrow">METODOLOGIA E LIMITES</p><h1 className="mt-3 max-w-4xl text-4xl font-black tracking-[-.06em] sm:text-5xl">Como transformamos registros em informação verificável.</h1><p className="mt-5 max-w-3xl border-l-2 border-[#1e4a77]/35 pl-5 text-lg leading-8 text-black/68">Esta plataforma não atribui culpa, nem transforma ausência de dados em certeza. Ela separa o que a fonte financeira mostra do que as fontes de execução física podem demonstrar.</p>
-    <section className="mt-12 grid gap-5 lg:grid-cols-3"><article className="method-card"><Scale className="text-[#1e4a77]" /><h2>Princípio de proveniência</h2><p>Cada entidade guarda fonte, URL de origem, data de extração e hash do registro. Assim, cada informação pode ser conferida e comparada em futuras cargas.</p></article><article className="method-card"><BookOpenCheck className="text-[#1e4a77]" /><h2>Conciliação declarada</h2><p>Na amostra CGU carregada de 2025, 112 de 150 emendas (74,67%) correspondem exatamente ao campo oficial <code>NR_EMENDA</code> do Transferegov. É um vínculo documental entre bases, não uma prova de entrega física.</p></article><article className="method-card"><FileWarning className="text-[#1e4a77]" /><h2>Nunca estimar ausência</h2><p>Campo que não existe na fonte aparece como “informação não disponível”. Não usamos zero ou estimativa para preencher o que ainda não foi publicado oficialmente.</p></article></section>
-    <section id="semaforo" className="mt-14 scroll-mt-10"><div className="flex items-start gap-3"><CircleHelp className="mt-1 text-[#1e4a77]" /><div><p className="eyebrow">SEMÁFORO DE CUMPRIMENTO</p><h2 className="mt-2 text-3xl font-black tracking-[-.05em]">A cor não é o dado. A regra é o dado.</h2></div></div><div className="mt-7 overflow-hidden rounded-[1.4rem] bg-white shadow-[0_8px_30px_rgba(18,25,32,.05)]"><table className="w-full text-left"><thead className="bg-[#edf4fb] text-sm"><tr><th className="p-5">Situação</th><th className="p-5">Regra em linguagem simples</th></tr></thead><tbody>{statuses.map(([title, text]) => <tr key={title} className="border-t border-black/7"><th className="p-5 align-top text-sm font-bold">{title}</th><td className="p-5 text-sm leading-6 text-black/68">{text}</td></tr>)}</tbody></table></div></section>
-    <section id="glossario" className="mt-14 scroll-mt-10"><p className="eyebrow">GLOSSÁRIO</p><h2 className="mt-2 text-3xl font-black tracking-[-.05em]">Orçamento em palavras comuns.</h2><dl className="mt-7 grid gap-x-10 gap-y-6 md:grid-cols-2">{glossary.map(([term, definition]) => <div key={term} className="border-t border-black/15 pt-4"><dt className="font-bold">{term}</dt><dd className="mt-2 text-sm leading-6 text-black/68">{definition}</dd></div>)}</dl></section>
-    <section className="mt-14 rounded-[1.5rem] bg-[#171c21] p-7 text-white sm:p-9"><p className="text-xs font-bold tracking-[.12em] text-[#b6d6f0]">LIMITAÇÕES ATUAIS</p><p className="mt-3 max-w-3xl text-lg leading-8 text-white/80">A plataforma reúne amostra parcial de execução financeira da CGU em 2025, catálogo complementar do Transferegov e população municipal do IBGE para as 27 UFs. A rota CGU de emendas não documenta filtro territorial por UF; portanto, a busca por UF só exibe emendas quando existe vínculo documental no catálogo conciliado ou código municipal IBGE. Também não afirmamos a situação física do objeto, a aprovação de contas ou valores per capita sem vínculo municipal e evidência oficial adicional.</p></section>
-  </div></PortalLayout>;
+  return (
+    <PortalLayout>
+      <div className="container py-12 sm:py-16">
+        <p className="eyebrow">METODOLOGIA E LIMITES</p>
+        <h1 className="mt-3 max-w-4xl text-4xl font-black tracking-[-.06em] sm:text-5xl">
+          Como transformamos registros em informação verificável.
+        </h1>
+        <p className="mt-5 max-w-3xl border-l-2 border-[#1e4a77]/35 pl-5 text-lg leading-8 text-black/68">
+          Esta plataforma não atribui culpa, nem transforma ausência de dados em
+          certeza. Ela separa o que a fonte financeira mostra do que as fontes
+          de execução física podem demonstrar.
+        </p>
+        <section className="mt-12 grid gap-5 lg:grid-cols-3">
+          <article className="method-card">
+            <Scale className="text-[#1e4a77]" />
+            <h2>Princípio de proveniência</h2>
+            <p>
+              Cada entidade guarda fonte, URL de origem, data de extração e hash
+              do registro. Assim, cada informação pode ser conferida e comparada
+              em futuras cargas.
+            </p>
+          </article>
+          <article className="method-card">
+            <BookOpenCheck className="text-[#1e4a77]" />
+            <h2>Conciliação declarada</h2>
+            <p>
+              Na amostra CGU carregada de 2025, 112 de 150 emendas (74,67%)
+              correspondem exatamente ao campo oficial <code>NR_EMENDA</code> do
+              Transferegov. É um vínculo documental entre bases, não uma prova
+              de entrega física.
+            </p>
+          </article>
+          <article className="method-card">
+            <FileWarning className="text-[#1e4a77]" />
+            <h2>Nunca estimar ausência</h2>
+            <p>
+              Campo que não existe na fonte aparece como “informação não
+              disponível”. Não usamos zero ou estimativa para preencher o que
+              ainda não foi publicado oficialmente.
+            </p>
+          </article>
+        </section>
+        <section id="semaforo" className="mt-14 scroll-mt-10">
+          <div className="flex items-start gap-3">
+            <CircleHelp className="mt-1 text-[#1e4a77]" />
+            <div>
+              <p className="eyebrow">SEMÁFORO DE CUMPRIMENTO</p>
+              <h2 className="mt-2 text-3xl font-black tracking-[-.05em]">
+                A cor não é o dado. A regra é o dado.
+              </h2>
+            </div>
+          </div>
+          <div className="mt-7 overflow-hidden rounded-[1.4rem] bg-white shadow-[0_8px_30px_rgba(18,25,32,.05)]">
+            <table className="w-full text-left">
+              <thead className="bg-[#edf4fb] text-sm">
+                <tr>
+                  <th className="p-5">Situação</th>
+                  <th className="p-5">Regra em linguagem simples</th>
+                </tr>
+              </thead>
+              <tbody>
+                {statuses.map(([title, text]) => (
+                  <tr key={title} className="border-t border-black/7">
+                    <th className="p-5 align-top text-sm font-bold">{title}</th>
+                    <td className="p-5 text-sm leading-6 text-black/68">
+                      {text}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+        <section id="glossario" className="mt-14 scroll-mt-10">
+          <p className="eyebrow">GLOSSÁRIO</p>
+          <h2 className="mt-2 text-3xl font-black tracking-[-.05em]">
+            Orçamento em palavras comuns.
+          </h2>
+          <dl className="mt-7 grid gap-x-10 gap-y-6 md:grid-cols-2">
+            {glossary.map(([term, definition]) => (
+              <div key={term} className="border-t border-black/15 pt-4">
+                <dt className="font-bold">{term}</dt>
+                <dd className="mt-2 text-sm leading-6 text-black/68">
+                  {definition}
+                </dd>
+              </div>
+            ))}
+          </dl>
+        </section>
+        <section className="mt-14 rounded-[1.5rem] bg-[#171c21] p-7 text-white sm:p-9">
+          <p className="text-xs font-bold tracking-[.12em] text-[#b6d6f0]">
+            LIMITAÇÕES ATUAIS
+          </p>
+          <p className="mt-3 max-w-3xl text-lg leading-8 text-white/80">
+            A plataforma reúne amostra parcial de execução financeira da CGU em
+            2025, catálogo complementar do Transferegov e população municipal do
+            IBGE para as 27 UFs. A rota CGU de emendas não documenta filtro
+            territorial por UF; portanto, a busca por UF só exibe emendas quando
+            existe vínculo documental no catálogo conciliado ou código municipal
+            IBGE. Também não afirmamos a situação física do objeto, a aprovação
+            de contas ou valores per capita sem vínculo municipal e evidência
+            oficial adicional.
+          </p>
+        </section>
+      </div>
+    </PortalLayout>
+  );
 }
