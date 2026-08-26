@@ -24,6 +24,44 @@ function sourceLabel(url: string | null | undefined) {
   return "Fonte oficial";
 }
 
+const technicalRoadmap = [
+  {
+    phase: "01",
+    title: "Cobertura financeira nacional",
+    dependency: "Definir exercício, escopo e paginação completa da CGU.",
+    action: "Persistir a carga nacional de forma idempotente, com URL, data e hash por registro.",
+    acceptance: "Os totais por autoria reproduzem a soma de códigos oficiais no mesmo recorte.",
+  },
+  {
+    phase: "02",
+    title: "Conciliação por chave",
+    dependency: "Carga financeira nacional e arquivo oficial de emendas Transferegov.",
+    action: "Relacionar `NR_EMENDA` e, depois, proposta, objeto e instrumento por `ID_PROPOSTA`.",
+    acceptance: "Todo vínculo tem cadeia documental; ausência continua como não conciliada.",
+  },
+  {
+    phase: "03",
+    title: "Métricas públicas comparáveis",
+    dependency: "Taxa de conciliação e cobertura declaradas por exercício.",
+    action: "Publicar valores destinados, empenhados, liquidados e pagos por autoria, ano e modalidade.",
+    acceptance: "Cada número possui fonte, data e etapa orçamentária explicitadas.",
+  },
+  {
+    phase: "04",
+    title: "Atualização auditável",
+    dependency: "Publicação da plataforma e autorização específica para rotina recorrente.",
+    action: "Executar cargas com limites de taxa, comparação de hashes, relatório e alerta de falha.",
+    acceptance: "Cada execução registra cobertura, alterações, erros e data de referência.",
+  },
+  {
+    phase: "05",
+    title: "Evidência de execução física",
+    dependency: "Fontes oficiais adicionais sobre instrumento, vigência, prestação de contas ou objeto.",
+    action: "Associar evidências finalísticas somente quando a documentação permitir confirmação.",
+    acceptance: "“Executada e comprovada” exige evidência oficial; pagamento isolado não basta.",
+  },
+] as const;
+
 function MetricCard({
   icon: Icon,
   label,
@@ -492,6 +530,69 @@ export default function CoveragePage() {
                 >
                   Ver metodologia e limites <ArrowUpRight size={16} />
                 </Link>
+              </aside>
+            </section>
+
+            <section
+              className="mt-12 border-t border-black/10 pt-12"
+              aria-labelledby="trilha-tecnica"
+            >
+              <div className="max-w-3xl">
+                <p className="eyebrow">TRILHA TÉCNICA RECOMENDADA</p>
+                <h2
+                  id="trilha-tecnica"
+                  className="mt-2 text-3xl font-black tracking-[-.055em]"
+                >
+                  Expandir a cobertura sem pular etapas de verificação.
+                </h2>
+                <p className="mt-4 border-l-2 border-[#1e4a77]/35 pl-5 leading-7 text-black/68">
+                  Esta é uma recomendação de implementação, não um indicador de
+                  cobertura atual. Cada compartimento só começa quando o
+                  critério anterior estiver documentado e verificável.
+                </p>
+              </div>
+
+              <ol className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-5">
+                {technicalRoadmap.map(step => (
+                  <li
+                    key={step.phase}
+                    className="rounded-[1.35rem] border border-black/10 bg-white p-6 shadow-[0_8px_30px_rgba(18,25,32,.05)]"
+                  >
+                    <p className="text-xs font-black tracking-[.14em] text-[#1e4a77]">
+                      ETAPA {step.phase}
+                    </p>
+                    <h3 className="mt-4 text-xl font-black tracking-[-.04em]">
+                      {step.title}
+                    </h3>
+                    <dl className="mt-6 space-y-4 text-sm leading-6">
+                      <div>
+                        <dt className="font-bold text-black/60">
+                          Pré-requisito
+                        </dt>
+                        <dd className="mt-1">{step.dependency}</dd>
+                      </div>
+                      <div>
+                        <dt className="font-bold text-black/60">Ação</dt>
+                        <dd className="mt-1">{step.action}</dd>
+                      </div>
+                      <div className="border-t border-black/8 pt-4">
+                        <dt className="font-bold text-[#1e4a77]">
+                          Critério de aceite
+                        </dt>
+                        <dd className="mt-1 font-medium">{step.acceptance}</dd>
+                      </div>
+                    </dl>
+                  </li>
+                ))}
+              </ol>
+
+              <aside className="mt-6 rounded-[1.35rem] border border-[#b6d6f0] bg-[#edf4fb] p-6 text-sm leading-7">
+                <strong>Regra de eficiência:</strong> a próxima etapa não
+                substitui a anterior. Primeiro, dados financeiros completos;
+                depois, chave documental; em seguida, métricas; somente após
+                publicação e autorização, atualização recorrente; por último,
+                evidência física. Isso evita recalcular relações incompletas e
+                apresentar conclusões que a fonte ainda não permite.
               </aside>
             </section>
           </>

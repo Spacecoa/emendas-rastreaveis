@@ -101,6 +101,16 @@ describe("aba pública de cobertura", () => {
     ).toBeTruthy();
     expect(screen.getByText("112/150")).toBeTruthy();
     expect(
+      screen.getByRole("heading", {
+        name: /Expandir a cobertura sem pular etapas de verificação/i,
+      })
+    ).toBeTruthy();
+    expect(
+      screen.getByText(/Esta é uma recomendação de implementação/i)
+    ).toBeTruthy();
+    expect(screen.getByText("ETAPA 01")).toBeTruthy();
+    expect(screen.getByText("ETAPA 05")).toBeTruthy();
+    expect(
       screen.getAllByRole("link", { name: /IBGE/i }).length
     ).toBeGreaterThanOrEqual(2);
     expect(

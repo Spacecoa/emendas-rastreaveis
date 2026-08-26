@@ -151,3 +151,17 @@ As telas de busca, metodologia e detalhe de emenda foram revisadas em desktop de
 | 3. Qualidade de código | A verificação de estilo indicou inconsistências de formatação nos arquivos alterados nesta etapa. | A formatação Prettier foi aplicada seletivamente aos componentes, testes e serviços modificados, sem reformatar áreas não relacionadas. | `prettier --check`, `pnpm check`, `pnpm test` e `git diff --check` concluíram sem falhas. |
 
 Os três ciclos não modificaram os registros de emendas, suas fontes, hashes ou a regra de conciliação territorial. O resultado final registra 22 arquivos de teste aprovados, 44 testes aprovados e uma suíte de e-mail pulada porque o remetente verificado continua pendente.
+
+## Trilha técnica pública de expansão — 26 de agosto de 2026
+
+A aba `/cobertura` passou a apresentar uma trilha técnica de cinco compartimentos, explicitamente rotulada como recomendação de implementação. Ela fica após os dados e as fontes carregadas, para evitar que uma recomendação futura seja interpretada como indicador oficial já disponível.
+
+| Sequência | Função compartimentada | Dependência de aceite |
+| --- | --- | --- |
+| 01 | Cobertura financeira nacional | Carga idempotente, com recorte, URL, data e hash por registro. |
+| 02 | Conciliação por chave | `NR_EMENDA` e `ID_PROPOSTA` oficiais, sem aproximação textual. |
+| 03 | Métricas públicas comparáveis | Cobertura e taxa declaradas por exercício antes de agregar valores. |
+| 04 | Atualização auditável | Publicação e autorização específica antes de qualquer rotina recorrente. |
+| 05 | Evidência de execução física | Documento oficial finalístico, além de pagamento ou vínculo documental. |
+
+O texto informa em cada etapa o pré-requisito, a ação e o critério de aceite. A auditoria de cobertura confirma o rótulo de recomendação, as etapas 01 a 05 e a estrutura sem violações `axe-core` nas regras executadas. A página foi revisada em desktop e no viewport móvel de 375 × 812 px; a trilha mantém os compartimentos em sequência e os dados atuais continuam separados visual e semanticamente do plano técnico.

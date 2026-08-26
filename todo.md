@@ -81,6 +81,8 @@
 - [x] Executar o terceiro ciclo de auto check-up, priorizando qualidade de código, manutenção e regressões.
 - [x] Consolidar evidências e validação final dos três ciclos de refinamento.
 - [x] Confirmar o registro consolidado dos três ciclos e repetir a validação completa antes do checkpoint.
+- [x] Criar uma trilha técnica pública, sequencial e compartimentada para expansão de cobertura, sem apresentá-la como dado oficial atual.
+- [x] Validar acessibilidade, responsividade e clareza entre recomendações futuras e cobertura carregada na nova trilha.
 - [x] Corrigir o extrator de instrumentos para propagar UF e ano a partir das propostas territoriais, depois regenerar o catálogo MG/2025 sem vínculos de emenda.
 - [x] Manter a publicação e o agendamento recorrente suspensos até a conclusão das etapas de expansão por UF autorizadas pelo usuário.
 - [x] Remover ou reclassificar a carga rotulada como SP/2025, pois a documentação oficial da rota CGU de emendas não expõe o parâmetro `uf`.
