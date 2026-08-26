@@ -1,7 +1,9 @@
-import { describe, expect, it } from "vitest";
+// @vitest-environment jsdom
+import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   buildFinancialSummaryCsv,
   buildFinancialSummaryPdf,
+  downloadFinancialSummary,
 } from "../client/src/lib/financialSummaryExport";
 
 const input = {
@@ -24,6 +26,13 @@ const input = {
 };
 
 describe("exportação do resumo financeiro", () => {
+  afterEach(() => {
+    vi.useRealTimers();
+    vi.restoreAllMocks();
+    delete (URL as typeof URL & { createObjectURL?: unknown }).createObjectURL;
+    delete (URL as typeof URL & { revokeObjectURL?: unknown }).revokeObjectURL;
+  });
+
   it("cria CSV auditável com recorte, valores, fonte e indisponibilidade de partido", () => {
     const csv = buildFinancialSummaryCsv(input);
 
@@ -42,5 +51,22 @@ describe("exportação do resumo financeiro", () => {
 
     expect(pdf.type).toBe("application/pdf");
     expect(pdf.size).toBeGreaterThan(500);
+  });
+
+  it("só revoga a URL temporária depois de acionar o download", () => {
+    vi.useFakeTimers();
+    const anchor = document.createElement("a");
+    const click = vi.spyOn(anchor, "click").mockImplementation(() => undefined);
+    const createObjectURL = vi.fn().mockReturnValue("blob:resumo-financeiro");
+    const revoke = vi.fn();
+    Object.assign(URL, { createObjectURL, revokeObjectURL: revoke });
+    vi.spyOn(document, "createElement").mockReturnValue(anchor);
+
+    downloadFinancialSummary(new Blob(["conteúdo"]), "csv", 30053);
+
+    expect(click).toHaveBeenCalledOnce();
+    expect(revoke).not.toHaveBeenCalled();
+    vi.runAllTimers();
+    expect(revoke).toHaveBeenCalledWith("blob:resumo-financeiro");
   });
 });

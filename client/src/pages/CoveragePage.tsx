@@ -198,8 +198,10 @@ export default function CoveragePage() {
   const [exportingFormat, setExportingFormat] = useState<"csv" | "pdf" | null>(
     null
   );
+  const [exportError, setExportError] = useState<string | null>(null);
   const exportFinancialSummary = async (format: "csv" | "pdf") => {
     setExportingFormat(format);
+    setExportError(null);
     const exportInput = {
       rows: financialSeries.map(item => ({
         year: item.year,
@@ -225,6 +227,10 @@ export default function CoveragePage() {
             })
           : await buildFinancialSummaryPdf(exportInput);
       downloadFinancialSummary(blob, format, activeAuthor?.id);
+    } catch {
+      setExportError(
+        `Não foi possível gerar o arquivo ${format.toUpperCase()}. Tente novamente.`
+      );
     } finally {
       setExportingFormat(null);
     }
@@ -552,6 +558,14 @@ export default function CoveragePage() {
                   </button>
                 </div>
               </div>
+              {exportError && (
+                <p
+                  role="alert"
+                  className="mt-3 rounded-lg border border-[#d58e9d]/50 bg-[#fff4f5] px-3 py-2 text-sm font-semibold text-[#822437]"
+                >
+                  {exportError}
+                </p>
+              )}
 
               {financialSeries.length ? (
                 <div className="mt-8 grid gap-4 lg:grid-cols-2">

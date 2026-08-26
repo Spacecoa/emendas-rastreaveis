@@ -173,5 +173,5 @@ export function downloadFinancialSummary(
   anchor.href = url;
   anchor.download = `emendas-em-foco-resumo-financeiro${suffix}-${new Date().toISOString().slice(0, 10)}.${extension}`;
   anchor.click();
-  URL.revokeObjectURL(url);
+  window.setTimeout(() => URL.revokeObjectURL(url), 0);
 }
