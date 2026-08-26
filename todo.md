@@ -28,7 +28,7 @@
 - [x] Adicionar teste de integração sem mocks para o retorno do grupo de beneficiários por CNPJ na API de sugestões.
 - [x] Exibir fontes oficiais clicáveis e data de atualização nas páginas de município e parlamentar.
 - [x] Ampliar filtros combináveis e refletir todos os filtros na URL e nas exportações.
-- [ ] Executar auditoria axe-core das páginas críticas no CI e testar navegação, busca e exportação.
+- [x] Executar auditoria axe-core das páginas críticas no CI e testar navegação, busca e exportação.
 - [x] Alinhar os filtros de situação, valor mínimo pago e paginação da API REST à busca persistida, com teste HTTP sem mocks.
 - [x] Corrigir o estado vazio da busca para não afirmar ausência de conciliação quando o recorte de filtros apenas não retorna registros.
 - [x] Testar a paginação REST com páginas distintas da carga persistida, confirmando que os registros não se repetem.
@@ -43,3 +43,5 @@
 - [x] Verificar exportação CSV, JSON e XLSX com filtros combinados de autoria, função, UF, situação e valor mínimo pago, confirmando o mesmo recorte da URL.
 - [x] Validar o conteúdo CSV exportado para um recorte combinado de autoria, função, UF, situação e valor mínimo pago.
 - [x] Validar a planilha XLSX exportada para o mesmo recorte combinado, confirmando que não inclui registros fora da URL.
+- [x] Impedir que páginas de município ou parlamentar exibam resultados de fallback sem correspondência explícita ao termo consultado.
+- [x] Corrigir a página 404 para português, navegação pública consistente e compatibilidade explícita de React nos componentes restantes.

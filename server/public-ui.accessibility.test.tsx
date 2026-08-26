@@ -67,4 +67,18 @@ describe("acessibilidade das áreas públicas críticas", () => {
     const result = await axe.run(container, { rules: { "color-contrast": { enabled: false } } });
     expect(result.violations).toEqual([]);
   });
+
+  it("abre e fecha a navegação móvel por um botão com estado acessível", () => {
+    render(<PortalLayout><h1>Consulta pública</h1></PortalLayout>);
+    const toggle = screen.getByRole("button", { name: "Abrir menu" });
+    expect(toggle.getAttribute("aria-expanded")).toBe("false");
+
+    fireEvent.click(toggle);
+    expect(screen.getByRole("navigation", { name: "Navegação móvel" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Fechar menu" }).getAttribute("aria-expanded")).toBe("true");
+    expect(screen.getAllByText("Consultar").length).toBeGreaterThan(1);
+
+    fireEvent.click(screen.getByRole("button", { name: "Fechar menu" }));
+    expect(screen.queryByRole("navigation", { name: "Navegação móvel" })).toBeNull();
+  });
 });

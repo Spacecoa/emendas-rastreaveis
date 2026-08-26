@@ -1,3 +1,4 @@
+import React from "react";
 import { BookOpenCheck, CircleHelp, FileWarning, Scale } from "lucide-react";
 import PortalLayout from "@/components/PortalLayout";
 

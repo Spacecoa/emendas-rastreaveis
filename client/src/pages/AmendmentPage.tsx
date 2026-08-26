@@ -1,4 +1,5 @@
 import { ExternalLink, FileText, Loader2, MoveRight, ShieldCheck } from "lucide-react";
+import React from "react";
 import { useLocation } from "wouter";
 import PortalLayout, { CompactSearchLink } from "@/components/PortalLayout";
 import ExecutionBars from "@/components/ExecutionBars";
