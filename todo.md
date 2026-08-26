@@ -134,3 +134,6 @@
 - [x] Aplicar linguagem Cívico editorial nas páginas públicas principais, com hierarquia de leitura, ritmo tipográfico e proveniência em destaque.
 - [x] Aplicar padrões Institucional claro a navegação, busca, filtros, tabelas, ações e estados de interface.
 - [x] Revalidar acessibilidade, responsividade e consistência visual da combinação estética adotada.
+- [x] Verificar a disponibilidade persistida e a proveniência de autoria e partido para uso em filtros do resumo visual.
+- [x] Adicionar filtros acessíveis por autoria e partido ao painel financeiro anual, mantendo partido ausente como informação indisponível.
+- [x] Validar os recálculos filtrados, a URL compartilhável, a acessibilidade e a responsividade do painel.

@@ -95,4 +95,55 @@ describe("síntese pública de cobertura", () => {
       )
     ).toBe(true);
   });
+
+  it("recalcula a série anual por autoria persistida e não inventa filiação partidária ausente", async () => {
+    const coverage = await getPublicCoverageSummary({ authorId: 30053 });
+
+    expect(coverage?.filters).toMatchObject({
+      activeAuthor: {
+        id: 30053,
+        name: "JANDIRA FEGHALI",
+        authorType: "parlamentar",
+        party: null,
+        amendments: 95,
+      },
+      activeParty: null,
+      party: { available: false, options: [] },
+    });
+    expect(coverage?.financialSeries).toMatchObject([
+      {
+        year: 2022,
+        amendments: 23,
+        financialStages: 138,
+        committedAmount: 17882491.66,
+        settledAmount: 12234880,
+        paidAmount: 9923398,
+      },
+      {
+        year: 2023,
+        amendments: 23,
+        financialStages: 138,
+        committedAmount: 32102797.74,
+        settledAmount: 23114879.88,
+        paidAmount: 20214569.93,
+      },
+      {
+        year: 2024,
+        amendments: 25,
+        financialStages: 150,
+        committedAmount: 37508275.82,
+        settledAmount: 9487932.99,
+        paidAmount: 9041998.2,
+      },
+      {
+        year: 2025,
+        amendments: 24,
+        financialStages: 144,
+        committedAmount: 37475218.06,
+        settledAmount: 13330417.01,
+        paidAmount: 11797077.4,
+      },
+    ]);
+    expect(coverage?.totals.amendments).toBe(6311);
+  });
 });

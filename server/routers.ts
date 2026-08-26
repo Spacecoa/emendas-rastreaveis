@@ -42,6 +42,11 @@ const queryInput = z.object({
   page: z.number().int().min(1).max(100).default(1),
 });
 
+const coverageFilterInput = z.object({
+  authorId: z.number().int().positive().optional(),
+  party: z.string().trim().min(1).max(32).optional(),
+});
+
 function matches(record: OfficialAmendment, query: string) {
   if (!query) return true;
   const normalized = query.toLocaleLowerCase("pt-BR");
@@ -195,7 +200,9 @@ export const appRouter = router({
       .input(z.object({ code: z.string().trim().min(1).max(32) }))
       .query(async ({ input }) => fetchPortalDocuments(input.code)),
     sources: publicProcedure.query(async () => getRecentSourceStatus()),
-    coverage: publicProcedure.query(async () => getPublicCoverageSummary()),
+    coverage: publicProcedure
+      .input(coverageFilterInput.optional())
+      .query(async ({ input }) => getPublicCoverageSummary(input)),
     municipalityPerCapita: publicProcedure
       .input(
         z.object({

@@ -7,7 +7,7 @@ import {
   MapPinned,
   ShieldCheck,
 } from "lucide-react";
-import { Link } from "wouter";
+import { Link, useLocation, useSearch } from "wouter";
 import PortalLayout from "@/components/PortalLayout";
 import { formatDate } from "@/lib/format";
 import { trpc } from "@/lib/trpc";
@@ -127,7 +127,22 @@ function MetricCard({
 }
 
 export default function CoveragePage() {
-  const coverage = trpc.emendas.coverage.useQuery(undefined, { retry: false });
+  const [, setLocation] = useLocation();
+  const search = useSearch();
+  const coverageInput = useMemo(() => {
+    const params = new URLSearchParams(search);
+    const rawAuthorId = Number(params.get("autorId"));
+    const party = params.get("partido")?.trim();
+    return {
+      ...(Number.isInteger(rawAuthorId) && rawAuthorId > 0
+        ? { authorId: rawAuthorId }
+        : {}),
+      ...(party ? { party } : {}),
+    };
+  }, [search]);
+  const coverage = trpc.emendas.coverage.useQuery(coverageInput, {
+    retry: false,
+  });
   const [order, setOrder] = useState<"alphabetical" | "catalog">(
     "alphabetical"
   );
@@ -148,10 +163,30 @@ export default function CoveragePage() {
   const cguSource = coverage.data?.sources.find(
     source => source.name === "Portal da Transparência (CGU)"
   );
+  const filters = coverage.data?.filters;
+  const activeAuthor = filters?.activeAuthor ?? null;
+  const activeParty = filters?.activeParty ?? null;
+  const partyAvailable = filters?.party.available ?? false;
+  const authorOptions = filters?.authorOptions ?? [];
   const largestCommittedAmount = Math.max(
     1,
     ...financialSeries.map(item => item.committedAmount ?? 0)
   );
+  const updateFinancialFilters = (authorId: string, party: string) => {
+    const params = new URLSearchParams();
+    if (authorId) params.set("autorId", authorId);
+    if (party) params.set("partido", party);
+    const query = params.toString();
+    setLocation(`/cobertura${query ? `?${query}` : ""}`);
+  };
+  const filteredSearchSuffix = activeAuthor?.name
+    ? `&autor=${encodeURIComponent(activeAuthor.name)}`
+    : "";
+  const filterDescription = activeAuthor
+    ? `Autoria selecionada: ${activeAuthor.name}. Os totais abaixo consideram somente as emendas desta autoria.`
+    : activeParty
+      ? `Partido selecionado: ${activeParty}. Os totais abaixo consideram somente as emendas com esta filiação registrada.`
+      : "Sem filtro de autoria: os totais abaixo representam toda a carga financeira persistida.";
 
   return (
     <PortalLayout>
@@ -228,18 +263,30 @@ export default function CoveragePage() {
               className="mt-12"
               aria-labelledby="serie-financeira-historica"
             >
-              <p className="eyebrow">SÉRIE FINANCEIRA NACIONAL</p>
+              <p className="eyebrow">
+                {activeAuthor || activeParty
+                  ? "SÉRIE FINANCEIRA FILTRADA"
+                  : "SÉRIE FINANCEIRA NACIONAL"}
+              </p>
               <h2
                 id="serie-financeira-historica"
                 className="mt-2 text-3xl font-black tracking-[-.055em]"
               >
-                Emendas CGU carregadas de 2022 a 2025.
+                {activeAuthor
+                  ? `Emendas de ${activeAuthor.name} de 2022 a 2025.`
+                  : activeParty
+                    ? `Emendas com partido ${activeParty} de 2022 a 2025.`
+                    : "Emendas CGU carregadas de 2022 a 2025."}
               </h2>
               <p className="mt-3 max-w-3xl text-sm leading-6 text-black/65">
                 Cada linha reflete somente registros financeiros persistidos do
-                arquivo nacional da CGU. A presença de código municipal IBGE não
-                é uma prova de entrega; a conciliação documental exibida nesta
-                página permanece restrita ao exercício de 2025.
+                arquivo nacional da CGU
+                {activeAuthor || activeParty
+                  ? " dentro do recorte selecionado"
+                  : ""}
+                . A presença de código municipal IBGE não é uma prova de
+                entrega; a conciliação documental exibida nesta página permanece
+                restrita ao exercício de 2025.
               </p>
               {financialSeries.length ? (
                 <div className="mt-6 overflow-x-auto rounded-[1.4rem] bg-white shadow-[0_8px_30px_rgba(18,25,32,.05)]">
@@ -327,6 +374,100 @@ export default function CoveragePage() {
                 </p>
               </div>
 
+              <fieldset className="mt-6 grid gap-4 rounded-[0.9rem] border border-[#b6d6f0] bg-white/85 p-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] lg:items-end">
+                <legend className="px-1 text-sm font-black tracking-[-0.02em]">
+                  Detalhar o recorte
+                </legend>
+                <div>
+                  <label
+                    htmlFor="filtro-autoria-resumo"
+                    className="mb-1.5 block text-sm font-bold"
+                  >
+                    Autor ou autora
+                  </label>
+                  <select
+                    id="filtro-autoria-resumo"
+                    value={coverageInput.authorId?.toString() ?? ""}
+                    onChange={event =>
+                      updateFinancialFilters(
+                        event.target.value,
+                        activeParty ?? ""
+                      )
+                    }
+                    className="query-control h-11 w-full px-3 text-sm outline-none focus:border-[#1e4a77] focus:ring-4 focus:ring-[#1e4a77]/20"
+                  >
+                    <option value="">Todas as autorias carregadas</option>
+                    {authorOptions.map(author => (
+                      <option key={author.id} value={author.id}>
+                        {author.name} · {author.authorType} ·{" "}
+                        {author.amendments} emendas
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label
+                    htmlFor="filtro-partido-resumo"
+                    className="mb-1.5 block text-sm font-bold"
+                  >
+                    Partido político
+                  </label>
+                  <select
+                    id="filtro-partido-resumo"
+                    value={activeParty ?? ""}
+                    disabled={!partyAvailable}
+                    aria-describedby="aviso-partido-resumo"
+                    onChange={event =>
+                      updateFinancialFilters(
+                        coverageInput.authorId?.toString() ?? "",
+                        event.target.value
+                      )
+                    }
+                    className="query-control h-11 w-full px-3 text-sm outline-none disabled:cursor-not-allowed disabled:bg-black/5 disabled:text-black/55"
+                  >
+                    {partyAvailable ? (
+                      <>
+                        <option value="">Todos os partidos disponíveis</option>
+                        {filters?.party.options.map(party => (
+                          <option key={party.name} value={party.name}>
+                            {party.name} · {party.authors} autorias ·{" "}
+                            {party.amendments} emendas
+                          </option>
+                        ))}
+                      </>
+                    ) : (
+                      <option value="">
+                        Informação não disponível na carga
+                      </option>
+                    )}
+                  </select>
+                  <p
+                    id="aviso-partido-resumo"
+                    className="mt-1.5 text-xs leading-5 text-black/60"
+                  >
+                    {partyAvailable
+                      ? "A filiação exibida é a registrada na fonte persistida."
+                      : "A carga financeira de 2022–2025 não traz partido preenchido para as autorias; o filtro permanece indisponível sem inferência externa."}
+                  </p>
+                </div>
+                {(coverageInput.authorId || activeParty) && (
+                  <button
+                    type="button"
+                    onClick={() => updateFinancialFilters("", "")}
+                    className="h-11 rounded-md border border-[#1e4a77]/30 bg-white px-4 text-sm font-bold text-[#1e4a77] transition hover:bg-[#edf4fb] focus:outline-none focus-visible:ring-4 focus-visible:ring-[#1e4a77]/35"
+                  >
+                    Limpar recorte
+                  </button>
+                )}
+              </fieldset>
+
+              <p
+                className="mt-3 text-sm font-semibold text-[#1e4a77]"
+                aria-live="polite"
+              >
+                {filterDescription}
+              </p>
+
               {financialSeries.length ? (
                 <div className="mt-8 grid gap-4 lg:grid-cols-2">
                   {financialSeries.map(item => {
@@ -355,9 +496,9 @@ export default function CoveragePage() {
                             </strong>
                           </div>
                           <Link
-                            href={`/busca?ano=${item.year}`}
+                            href={`/busca?ano=${item.year}${filteredSearchSuffix}`}
                             className="inline-flex size-9 shrink-0 items-center justify-center rounded-full border border-black/15 hover:bg-[#edf4fb] focus:outline-none focus-visible:ring-4 focus-visible:ring-[#1e4a77]/35"
-                            aria-label={`Consultar emendas do exercício ${item.year}`}
+                            aria-label={`Consultar emendas do exercício ${item.year}${activeAuthor ? ` da autoria ${activeAuthor.name}` : ""}`}
                           >
                             <ArrowUpRight size={17} />
                           </Link>
@@ -427,7 +568,9 @@ export default function CoveragePage() {
                 )}{" "}
                 carregado com URL, data e hash de proveniência. A escala visual
                 usa somente o valor empenhado; os valores completos de cada
-                etapa aparecem abaixo de cada barra.
+                etapa aparecem abaixo de cada barra. O filtro de autoria usa a
+                identidade persistida; a filiação partidária só é exibida quando
+                estiver presente na fonte oficial carregada.
               </p>
             </section>
 

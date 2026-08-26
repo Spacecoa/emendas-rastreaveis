@@ -54,6 +54,20 @@ vi.mock("@/lib/trpc", () => ({
                 updatedAt: new Date("2026-08-26T17:25:02.000Z"),
               },
             ],
+            filters: {
+              activeAuthor: null,
+              activeParty: null,
+              authorOptions: [
+                {
+                  id: 30053,
+                  name: "JANDIRA FEGHALI",
+                  authorType: "parlamentar",
+                  party: null,
+                  amendments: 95,
+                },
+              ],
+              party: { available: false, options: [] },
+            },
             totals: {
               amendments: 6311,
               financialStages: 37866,
@@ -151,6 +165,18 @@ describe("aba pública de cobertura", () => {
       screen.getByRole("heading", {
         name: /Quanto foi registrado em cada ano/i,
       })
+    ).toBeTruthy();
+    expect(screen.getByLabelText("Autor ou autora")).toBeTruthy();
+    expect(
+      screen.getByRole("option", {
+        name: /JANDIRA FEGHALI · parlamentar · 95 emendas/i,
+      })
+    ).toBeTruthy();
+    expect(
+      screen.getByLabelText("Partido político").hasAttribute("disabled")
+    ).toBe(true);
+    expect(
+      screen.getByText(/não traz partido preenchido para as autorias/i)
     ).toBeTruthy();
     expect(screen.getAllByText(/Total empenhado/).length).toBe(4);
     expect(

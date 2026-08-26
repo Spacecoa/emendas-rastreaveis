@@ -263,12 +263,19 @@ export async function getStoredMunicipalityAmendments(input: {
   );
 }
 
-export async function getPublicCoverageSummary() {
+export async function getPublicCoverageSummary(
+  input: { authorId?: number; party?: string } = {}
+) {
   const db = await getDb();
   if (!db) return null;
   const countValue = (value: unknown) => Number(value ?? 0);
   const monetaryValue = (value: unknown) =>
     value === null || value === undefined ? null : Number(value);
+  const financialFilterConditions = [
+    inArray(amendments.year, [2022, 2023, 2024, 2025]),
+    ...(input.authorId ? [eq(amendments.authorId, input.authorId)] : []),
+    ...(input.party ? [eq(authors.party, input.party)] : []),
+  ];
   const [
     amendmentRows,
     stageRows,
@@ -280,6 +287,8 @@ export async function getPublicCoverageSummary() {
     catalogStateRows,
     sourceRows,
     financialSeriesRows,
+    authorFilterRows,
+    partyFilterRows,
   ] = await Promise.all([
     db
       .select({ total: sql<number>`COUNT(*)` })
@@ -378,9 +387,40 @@ export async function getPublicCoverageSummary() {
       })
       .from(amendments)
       .leftJoin(executionStages, eq(executionStages.amendmentId, amendments.id))
-      .where(inArray(amendments.year, [2022, 2023, 2024, 2025]))
+      .leftJoin(authors, eq(amendments.authorId, authors.id))
+      .where(and(...financialFilterConditions))
       .groupBy(amendments.year)
       .orderBy(asc(amendments.year)),
+    db
+      .select({
+        id: authors.id,
+        name: authors.name,
+        authorType: authors.authorType,
+        party: authors.party,
+        amendments: sql<number>`COUNT(DISTINCT ${amendments.id})`,
+      })
+      .from(authors)
+      .innerJoin(amendments, eq(amendments.authorId, authors.id))
+      .where(inArray(amendments.year, [2022, 2023, 2024, 2025]))
+      .groupBy(authors.id, authors.name, authors.authorType, authors.party)
+      .orderBy(asc(authors.name)),
+    db
+      .select({
+        party: authors.party,
+        authors: sql<number>`COUNT(DISTINCT ${authors.id})`,
+        amendments: sql<number>`COUNT(DISTINCT ${amendments.id})`,
+      })
+      .from(authors)
+      .innerJoin(amendments, eq(amendments.authorId, authors.id))
+      .where(
+        and(
+          inArray(amendments.year, [2022, 2023, 2024, 2025]),
+          isNotNull(authors.party),
+          sql`TRIM(${authors.party}) <> ''`
+        )
+      )
+      .groupBy(authors.party)
+      .orderBy(asc(authors.party)),
   ]);
   const reconciliation = reconciliationRows[0] ?? null;
   const catalogByState = new Map<
@@ -451,6 +491,32 @@ export async function getPublicCoverageSummary() {
       paidAmount: monetaryValue(row.paidAmount),
       updatedAt: row.updatedAt,
     })),
+    filters: {
+      activeAuthor:
+        authorFilterRows.find(author => author.id === input.authorId) ?? null,
+      activeParty: input.party ?? null,
+      authorOptions: authorFilterRows.map(author => ({
+        id: author.id,
+        name: author.name,
+        authorType: author.authorType,
+        party: author.party,
+        amendments: countValue(author.amendments),
+      })),
+      party: {
+        available: partyFilterRows.length > 0,
+        options: partyFilterRows.flatMap(row =>
+          row.party && row.party.trim()
+            ? [
+                {
+                  name: row.party,
+                  authors: countValue(row.authors),
+                  amendments: countValue(row.amendments),
+                },
+              ]
+            : []
+        ),
+      },
+    },
     totals: {
       amendments: countValue(amendmentRows[0]?.total),
       financialStages: countValue(stageRows[0]?.total),
