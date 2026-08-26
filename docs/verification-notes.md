@@ -59,3 +59,28 @@ Após autorização explícita, a cobertura de Minas Gerais foi carregada exclus
 > A taxa pública de 55/75 (73,33%) continua sendo a conciliação documental específica já publicada para a amostra financeira CGU/Transferegov. Ela não foi estendida a MG e não confirma entrega física, execução municipal ou aplicação de recursos.
 
 **Fontes da etapa:** dados abertos de [Proponentes do Transferegov](https://repositorio.dados.gov.br/seges/detru/siconv_proponente.csv.zip), [Propostas do Transferegov](https://repositorio.dados.gov.br/seges/detru/siconv_proposta.csv.zip) e [Convênios do Transferegov](https://repositorio.dados.gov.br/seges/detru/siconv_convenio.csv.zip); [municípios do IBGE](https://servicodados.ibge.gov.br/api/v1/localidades/estados/MG/municipios) e [Estimativas da População 2025 do IBGE](https://ftp.ibge.gov.br/Estimativas_de_Populacao/Estimativas_2025/POP2025_20260113.ods).
+
+## Expansão nacional e check-up de integridade — 26 de agosto de 2026
+
+Após autorização para seguir diretamente com todas as UFs restantes, foram extraídos de uma única leitura das bases nacionais do Transferegov os recortes de AC, AL, AP, AM, BA, CE, DF, ES, GO, MA, MT, MS, PA, PB, PR, PE, PI, RN, RS, RO, RR, SC, SP, SE e TO. Para cada UF, o recorte preserva a URL da fonte, a data de extração e o hash de cada linha. O cadastro de localidades e as estimativas municipais foram consultados diretamente em fontes oficiais do IBGE.[1] [2]
+
+| Dimensão | Novos registros | Total público persistido após a expansão | Verificação de integridade |
+| --- | ---: | ---: | --- |
+| Beneficiários territoriais | 5.000 | 5.400 | 200 por UF nas 27 UFs; URL e hash presentes. |
+| Objetos de propostas | 5.000 | 5.400 | 200 por UF nas 27 UFs; catálogo separado da emenda. |
+| Instrumentos | 1.653 | 1.812 | De 26 a 161 por UF; URL e hash presentes. |
+| Registros municipais e população 2025 | 4.626 | 5.571 | 27 UFs, população em todos os registros, com ano, URL e hash. |
+
+O total de 5.571 registros territoriais segue a resposta oficial do IBGE, que inclui Brasília na consulta do Distrito Federal. A interface mantém a denominação técnica já usada pelo catálogo de municípios e preserva a fonte clicável em cada UF.[3]
+
+> Os 5.200 beneficiários e objetos, além dos 1.698 instrumentos das UFs fora do RJ, estão marcados como `nao_conciliado` e sem `amendmentId`. A expansão de cobertura territorial **não** cria prova de vínculo com emenda CGU, execução financeira, execução física ou entrega.
+
+O check-up posterior confirmou zero entradas de catálogo sem URL ou hash, zero registros municipais sem URL ou hash, zero emendas duplicadas, zero estágios de execução órfãos e zero populações sem proveniência. Os endpoints `GET /api/v1/emendas?ano=2025&uf=MG&limit=1` e `GET /api/v1/openapi.json` responderam HTTP 200. A chave da CGU não foi encontrada no diretório cliente, e os logs desde 03:30 UTC-3 não registraram erro. `pnpm check && pnpm test && git diff --check` concluiu com 19 arquivos de teste aprovados, 30 testes aprovados e 1 teste de Resend pulado porque o remetente externo continua pendente. A home foi verificada em desktop e em 375 × 812 px, exibindo 27 UFs e os controles de ordenação sem sobreposição.
+
+**Referências**
+
+[1] [Proponentes, propostas e convênios — dados abertos Transferegov](https://repositorio.dados.gov.br/seges/detru/)
+
+[2] [API de Localidades e Estimativas da População 2025 — IBGE](https://servicodados.ibge.gov.br/api/docs/localidades)
+
+[3] [Brasília (DF) — Cidades e Estados, IBGE](https://www.ibge.gov.br/cidades-e-estados/df/brasilia.html)

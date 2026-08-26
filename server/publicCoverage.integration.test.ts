@@ -12,13 +12,17 @@ describe("síntese pública de cobertura", () => {
       totals: {
         amendments: 75,
         financialStages: 450,
-        beneficiaries: 400,
-        objects: 400,
-        instruments: 159,
-        municipalities: 945,
+        beneficiaries: 5400,
+        objects: 5400,
+        instruments: 1812,
+        municipalities: 5571,
       },
       reconciliation: { evaluated: 75, matched: 55, matchRate: 0.7333 },
     });
+    expect(coverage?.availableStates).toHaveLength(27);
+    expect(coverage?.availableStates.map(state => state.uf)).toEqual(expect.arrayContaining([
+      "AC", "DF", "MG", "RJ", "SP", "TO",
+    ]));
     expect(minasGerais).toMatchObject({
       municipalityCount: 853,
       population: 21393441,
