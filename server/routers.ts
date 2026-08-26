@@ -16,6 +16,8 @@ const queryInput = z.object({
   uf: z.string().trim().toUpperCase().length(2).optional(),
   status: z.enum(["executada_comprovada", "em_execucao", "pendencia", "nao_cumprida", "informacao_insuficiente"]).optional(),
   minPaid: z.number().nonnegative().optional(),
+  author: z.string().trim().min(1).max(255).optional(),
+  budgetFunction: z.string().trim().min(1).max(180).optional(),
   page: z.number().int().min(1).max(100).default(1),
 });
 
@@ -25,6 +27,10 @@ function matches(record: OfficialAmendment, query: string) {
   return [record.author, record.locality, record.number, record.code, record.budgetFunction, record.budgetSubfunction, record.type]
     .filter(Boolean)
     .some(value => value?.toLocaleLowerCase("pt-BR").includes(normalized));
+}
+
+function matchesFilter(value: string | null, filter: string | undefined) {
+  return !filter || Boolean(value?.toLocaleLowerCase("pt-BR").includes(filter.toLocaleLowerCase("pt-BR")));
 }
 
 function sumKnown(records: OfficialAmendment[], field: "committed" | "settled" | "paid" | "remainingRegistered" | "remainingCancelled" | "remainingPaid") {
@@ -49,7 +55,7 @@ export const appRouter = router({
     search: publicProcedure.input(queryInput).query(async ({ input }) => {
       const [storedRecords, storedYearAvailable] = await Promise.all([searchStoredAmendments(input), hasStoredAmendments(input.year)]);
       const records = storedYearAvailable ? storedRecords : await fetchPortalAmendments(input);
-      const filtered = records.filter(record => matches(record, input.query) && (!input.status || record.complianceStatus === input.status) && (input.minPaid === undefined || (record.paid !== null && record.paid >= input.minPaid))).slice(0, 40);
+      const filtered = records.filter(record => matches(record, input.query) && matchesFilter(record.author, input.author) && matchesFilter(record.budgetFunction, input.budgetFunction) && (!input.status || record.complianceStatus === input.status) && (input.minPaid === undefined || (record.paid !== null && record.paid >= input.minPaid))).slice(0, 40);
       return {
         records: filtered,
         count: filtered.length,

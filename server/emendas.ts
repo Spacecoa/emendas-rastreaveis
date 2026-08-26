@@ -132,7 +132,7 @@ export async function getStoredAmendment(code: string, year: number): Promise<Of
   };
 }
 
-export async function searchStoredAmendments(input: { query: string; year: number; uf?: string; status?: OfficialAmendment["complianceStatus"]; minPaid?: number; page?: number }): Promise<OfficialAmendment[]> {
+export async function searchStoredAmendments(input: { query: string; year: number; uf?: string; status?: OfficialAmendment["complianceStatus"]; minPaid?: number; author?: string; budgetFunction?: string; page?: number }): Promise<OfficialAmendment[]> {
   const db = await getDb();
   if (!db) return [];
   const query = input.query.trim();
@@ -150,6 +150,8 @@ export async function searchStoredAmendments(input: { query: string; year: numbe
   }
   if (input.uf) filters.push(like(amendments.locality, `%${input.uf.toUpperCase()}%`));
   if (input.status) filters.push(eq(amendments.complianceStatus, input.status));
+  if (input.author) filters.push(like(authors.name, `%${input.author.trim()}%`));
+  if (input.budgetFunction) filters.push(like(amendments.budgetFunction, `%${input.budgetFunction.trim()}%`));
 
   const page = Math.max(1, input.page ?? 1);
   const rows = await db.select({ code: amendments.code }).from(amendments).leftJoin(authors, eq(amendments.authorId, authors.id)).where(and(...filters)).limit(40).offset((page - 1) * 40);

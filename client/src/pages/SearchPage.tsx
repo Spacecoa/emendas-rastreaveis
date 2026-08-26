@@ -41,7 +41,7 @@ export default function SearchPage() {
     const status = allowedStatuses.includes(statusValue as typeof allowedStatuses[number]) ? statusValue as typeof allowedStatuses[number] : undefined;
     const minPaidValue = Number(params.get("pagoMin"));
     const minPaid = Number.isFinite(minPaidValue) && minPaidValue >= 0 && params.has("pagoMin") ? minPaidValue : undefined;
-    return { query: params.get("q") ?? "", year: Number(params.get("ano") ?? 2025), uf: params.get("uf") || undefined, status, minPaid, page: 1 };
+    return { query: params.get("q") ?? "", year: Number(params.get("ano") ?? 2025), uf: params.get("uf") || undefined, status, minPaid, author: params.get("autor") || undefined, budgetFunction: params.get("funcao") || undefined, page: 1 };
   }, [location, searchString]);
   const query = trpc.emendas.search.useQuery(input, { retry: false });
   const records = query.data?.records ?? [];

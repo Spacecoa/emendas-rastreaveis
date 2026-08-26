@@ -4,7 +4,7 @@ import { Loader2, Search } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 
 type SearchStatus = "" | "executada_comprovada" | "em_execucao" | "pendencia" | "nao_cumprida" | "informacao_insuficiente";
-type SearchInitialValues = { query?: string; year?: number; uf?: string; status?: Exclude<SearchStatus, "">; minPaid?: number };
+type SearchInitialValues = { query?: string; year?: number; uf?: string; status?: Exclude<SearchStatus, "">; minPaid?: number; author?: string; budgetFunction?: string };
 
 export default function SearchPanel({ compact = false, initialValues }: { compact?: boolean; initialValues?: SearchInitialValues }) {
   const [, setLocation] = useLocation();
@@ -13,6 +13,8 @@ export default function SearchPanel({ compact = false, initialValues }: { compac
   const [uf, setUf] = useState(initialValues?.uf ?? "");
   const [status, setStatus] = useState<SearchStatus>(initialValues?.status ?? "");
   const [minPaid, setMinPaid] = useState(initialValues?.minPaid?.toString() ?? "");
+  const [author, setAuthor] = useState(initialValues?.author ?? "");
+  const [budgetFunction, setBudgetFunction] = useState(initialValues?.budgetFunction ?? "");
   const [isFocused, setIsFocused] = useState(false);
   useEffect(() => {
     if (!initialValues) return;
@@ -21,10 +23,12 @@ export default function SearchPanel({ compact = false, initialValues }: { compac
     setUf(initialValues.uf ?? "");
     setStatus(initialValues.status ?? "");
     setMinPaid(initialValues.minPaid?.toString() ?? "");
-  }, [initialValues?.query, initialValues?.year, initialValues?.uf, initialValues?.status, initialValues?.minPaid]);
+    setAuthor(initialValues.author ?? "");
+    setBudgetFunction(initialValues.budgetFunction ?? "");
+  }, [initialValues?.query, initialValues?.year, initialValues?.uf, initialValues?.status, initialValues?.minPaid, initialValues?.author, initialValues?.budgetFunction]);
   const enabled = query.trim().length >= 2;
   const normalizedMinPaid = minPaid.trim() === "" ? undefined : Number(minPaid);
-  const suggestions = trpc.emendas.search.useQuery({ query, year, uf: uf || undefined, status: status || undefined, minPaid: Number.isFinite(normalizedMinPaid) ? normalizedMinPaid : undefined, page: 1 }, { enabled, retry: false });
+  const suggestions = trpc.emendas.search.useQuery({ query, year, uf: uf || undefined, status: status || undefined, minPaid: Number.isFinite(normalizedMinPaid) ? normalizedMinPaid : undefined, author: author || undefined, budgetFunction: budgetFunction || undefined, page: 1 }, { enabled, retry: false });
   const extraSuggestions = trpc.emendas.suggestions.useQuery({ query }, { enabled, retry: false });
   const records = suggestions.data?.records.slice(0, 6) ?? [];
   const authors = Array.from(new Set(records.map(record => record.author).filter((value): value is string => Boolean(value)))).slice(0, 3);
@@ -35,11 +39,13 @@ export default function SearchPanel({ compact = false, initialValues }: { compac
     if (uf) params.set("uf", uf);
     if (status) params.set("situacao", status);
     if (Number.isFinite(normalizedMinPaid)) params.set("pagoMin", String(normalizedMinPaid));
+    if (author.trim()) params.set("autor", author.trim());
+    if (budgetFunction.trim()) params.set("funcao", budgetFunction.trim());
     setLocation(`/busca?${params.toString()}`);
   }
 
   return <form onSubmit={submit} className={compact ? "" : "rounded-[1.7rem] bg-white p-4 shadow-[0_16px_45px_rgba(20,31,43,0.1)] sm:p-5"}>
-    <div className="grid gap-3 md:grid-cols-[1fr_6.5rem_5.5rem_10rem_8.5rem_auto] md:items-end">
+    <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-[minmax(15rem,1fr)_7rem_6rem_11rem_9rem_11rem_11rem_auto] 2xl:items-end">
       <div>
         <label className="mb-1.5 block text-sm font-bold" htmlFor="busca-principal">O que você quer acompanhar?</label>
         <div className="relative">
@@ -72,6 +78,14 @@ export default function SearchPanel({ compact = false, initialValues }: { compac
       <div>
         <label className="mb-1.5 block text-sm font-bold" htmlFor="pago-minimo">Pago mínimo</label>
         <input id="pago-minimo" type="number" min="0" step="0.01" value={minPaid} onChange={event => setMinPaid(event.target.value)} placeholder="R$ 0" className="h-13 w-full rounded-xl border border-black/20 bg-[#fbfcfd] px-3 outline-none focus:border-[#1e4a77] focus:ring-4 focus:ring-[#1e4a77]/20" />
+      </div>
+      <div>
+        <label className="mb-1.5 block text-sm font-bold" htmlFor="autor-busca">Autoria</label>
+        <input id="autor-busca" value={author} onChange={event => setAuthor(event.target.value)} placeholder="Nome ou bancada" className="h-13 w-full rounded-xl border border-black/20 bg-[#fbfcfd] px-3 outline-none focus:border-[#1e4a77] focus:ring-4 focus:ring-[#1e4a77]/20" />
+      </div>
+      <div>
+        <label className="mb-1.5 block text-sm font-bold" htmlFor="funcao-busca">Função</label>
+        <input id="funcao-busca" value={budgetFunction} onChange={event => setBudgetFunction(event.target.value)} placeholder="Ex.: Saúde" className="h-13 w-full rounded-xl border border-black/20 bg-[#fbfcfd] px-3 outline-none focus:border-[#1e4a77] focus:ring-4 focus:ring-[#1e4a77]/20" />
       </div>
       <button className="h-13 rounded-xl bg-[#171c21] px-6 font-bold text-white transition hover:bg-[#1e4a77] active:scale-[.97] focus:outline-none focus-visible:ring-4 focus-visible:ring-[#1e4a77]/35" type="submit">Consultar</button>
     </div>
