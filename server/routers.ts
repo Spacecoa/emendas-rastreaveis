@@ -1,7 +1,35 @@
 import { COOKIE_NAME } from "@shared/const";
+import { and, eq } from "drizzle-orm";
+import { z } from "zod";
+import { alertSubscriptions } from "../drizzle/schema";
+import { getDb } from "./db";
+import { getRecentSourceStatus, getStoredAmendment, searchStoredAmendments } from "./emendas";
+import { fetchPortalAmendments, fetchPortalDocuments, type OfficialAmendment } from "./portalTransparency";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
-import { publicProcedure, router } from "./_core/trpc";
+import { protectedProcedure, publicProcedure, router } from "./_core/trpc";
+
+const queryInput = z.object({
+  query: z.string().trim().max(120).default(""),
+  year: z.number().int().min(2016).max(2100).default(new Date().getFullYear()),
+  uf: z.string().trim().toUpperCase().length(2).optional(),
+  status: z.enum(["executada_comprovada", "em_execucao", "pendencia", "nao_cumprida", "informacao_insuficiente"]).optional(),
+  minPaid: z.number().nonnegative().optional(),
+  page: z.number().int().min(1).max(100).default(1),
+});
+
+function matches(record: OfficialAmendment, query: string) {
+  if (!query) return true;
+  const normalized = query.toLocaleLowerCase("pt-BR");
+  return [record.author, record.locality, record.number, record.code, record.budgetFunction, record.budgetSubfunction, record.type]
+    .filter(Boolean)
+    .some(value => value?.toLocaleLowerCase("pt-BR").includes(normalized));
+}
+
+function sumKnown(records: OfficialAmendment[], field: "committed" | "settled" | "paid" | "remainingRegistered" | "remainingCancelled" | "remainingPaid") {
+  const values = records.map(record => record[field]).filter((value): value is number => value !== null);
+  return values.length ? values.reduce((total, value) => total + value, 0) : null;
+}
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -16,13 +44,73 @@ export const appRouter = router({
       } as const;
     }),
   }),
-
-  // TODO: add feature routers here, e.g.
-  // todo: router({
-  //   list: protectedProcedure.query(({ ctx }) =>
-  //     db.getUserTodos(ctx.user.id)
-  //   ),
-  // }),
+  emendas: router({
+    search: publicProcedure.input(queryInput).query(async ({ input }) => {
+      const storedRecords = await searchStoredAmendments(input);
+      const records = storedRecords.length ? storedRecords : await fetchPortalAmendments(input);
+      const filtered = records.filter(record => matches(record, input.query) && (!input.status || record.complianceStatus === input.status) && (input.minPaid === undefined || (record.paid !== null && record.paid >= input.minPaid))).slice(0, 40);
+      return {
+        records: filtered,
+        count: filtered.length,
+        query: input.query,
+        sourceCoverage: storedRecords.length
+          ? "Resultados da carga oficial persistida. O recorte atual é RJ/2025, com cobertura e taxa de conciliação descritas na metodologia."
+          : "Resultados da página consultada na fonte oficial. A ampliação nacional depende das cargas persistidas e conciliadas.",
+      };
+    }),
+    overview: publicProcedure.input(queryInput.omit({ query: true })).query(async ({ input }) => {
+      const records = await fetchPortalAmendments(input);
+      return {
+        financial: {
+          committed: sumKnown(records, "committed"),
+          settled: sumKnown(records, "settled"),
+          paid: sumKnown(records, "paid"),
+          remainingRegistered: sumKnown(records, "remainingRegistered"),
+          remainingCancelled: sumKnown(records, "remainingCancelled"),
+        },
+        recordCount: records.length,
+        updatedAt: records[0]?.extractedAt ?? null,
+        sourceUrl: records[0]?.sourceUrl ?? "https://api.portaldatransparencia.gov.br/",
+        coverage: "Agregação da página consultada na fonte oficial. Não representa, por si só, o total nacional do ano.",
+      };
+    }),
+    byCode: publicProcedure.input(z.object({ code: z.string().trim().min(1).max(32), year: z.number().int().min(2016).max(2100) })).query(async ({ input }) => {
+      const stored = await getStoredAmendment(input.code, input.year);
+      if (stored) return stored;
+      const records = await fetchPortalAmendments({ year: input.year, page: 1 });
+      return records.find(record => record.code === input.code) ?? null;
+    }),
+    documents: publicProcedure.input(z.object({ code: z.string().trim().min(1).max(32) })).query(async ({ input }) => fetchPortalDocuments(input.code)),
+    sources: publicProcedure.query(async () => getRecentSourceStatus()),
+  }),
+  subscriptions: router({
+    create: protectedProcedure.input(z.object({
+      email: z.string().email().max(320),
+      municipalityId: z.number().int().positive().optional(),
+      authorId: z.number().int().positive().optional(),
+    }).refine(value => Boolean(value.municipalityId || value.authorId), "Escolha um município ou um autor para acompanhar.")).mutation(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) throw new Error("O banco de dados não está disponível no momento.");
+      await db.insert(alertSubscriptions).values({
+        userId: ctx.user.id,
+        municipalityId: input.municipalityId ?? null,
+        authorId: input.authorId ?? null,
+        email: input.email,
+      });
+      return { success: true } as const;
+    }),
+    list: protectedProcedure.query(async ({ ctx }) => {
+      const db = await getDb();
+      if (!db) return [];
+      return db.select().from(alertSubscriptions).where(eq(alertSubscriptions.userId, ctx.user.id));
+    }),
+    setActive: protectedProcedure.input(z.object({ id: z.number().int().positive(), active: z.boolean() })).mutation(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) throw new Error("O banco de dados não está disponível no momento.");
+      await db.update(alertSubscriptions).set({ active: input.active }).where(and(eq(alertSubscriptions.id, input.id), eq(alertSubscriptions.userId, ctx.user.id)));
+      return { success: true } as const;
+    }),
+  }),
 });
 
 export type AppRouter = typeof appRouter;

@@ -4,13 +4,22 @@ import NotFound from "@/pages/NotFound";
 import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
+import AmendmentPage from "./pages/AmendmentPage";
+import EntityPage from "./pages/EntityPage";
 import Home from "./pages/Home";
+import MethodologyPage from "./pages/MethodologyPage";
+import SearchPage from "./pages/SearchPage";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
   return (
     <Switch>
       <Route path={"/"} component={Home} />
+      <Route path={"/busca"} component={SearchPage} />
+      <Route path={"/emendas/:code"} component={AmendmentPage} />
+      <Route path={"/municipios/:name"} component={() => <EntityPage type="municipio" />} />
+      <Route path={"/parlamentares/:name"} component={() => <EntityPage type="parlamentar" />} />
+      <Route path={"/metodologia"} component={MethodologyPage} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />
