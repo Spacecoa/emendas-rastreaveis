@@ -110,7 +110,7 @@ export default function SearchPanel({
             className="mb-1.5 block text-sm font-bold"
             htmlFor="busca-principal"
           >
-            O que você quer acompanhar?
+            O que você quer encontrar?
           </label>
           <div className="relative">
             <Search
@@ -128,7 +128,7 @@ export default function SearchPanel({
               aria-expanded={isFocused && enabled && records.length > 0}
               aria-controls="sugestoes-busca"
               aria-autocomplete="list"
-              placeholder="Cidade, parlamentar, CNPJ, número ou assunto"
+              placeholder="Ex.: cidade, nome, número da emenda ou assunto"
               className="query-control h-13 w-full py-3 pl-12 pr-4 text-base outline-none transition focus:border-[#1e4a77] focus:ring-4 focus:ring-[#1e4a77]/20"
             />
             {isFocused &&
@@ -293,7 +293,7 @@ export default function SearchPanel({
             className="mb-1.5 block text-sm font-bold"
             htmlFor="situacao-busca"
           >
-            Situação
+            Andamento informado
           </label>
           <select
             id="situacao-busca"
@@ -316,7 +316,7 @@ export default function SearchPanel({
             className="mb-1.5 block text-sm font-bold"
             htmlFor="pago-minimo"
           >
-            Pago mínimo
+            Valor mínimo pago
           </label>
           <input
             id="pago-minimo"
@@ -334,13 +334,13 @@ export default function SearchPanel({
             className="mb-1.5 block text-sm font-bold"
             htmlFor="autor-busca"
           >
-            Autoria
+            Quem indicou
           </label>
           <input
             id="autor-busca"
             value={author}
             onChange={event => setAuthor(event.target.value)}
-            placeholder="Nome ou bancada"
+            placeholder="Nome da pessoa ou bancada"
             className="query-control h-13 w-full px-3 outline-none focus:border-[#1e4a77] focus:ring-4 focus:ring-[#1e4a77]/20"
           />
         </div>
@@ -349,7 +349,7 @@ export default function SearchPanel({
             className="mb-1.5 block text-sm font-bold"
             htmlFor="funcao-busca"
           >
-            Função
+            Área do governo
           </label>
           <input
             id="funcao-busca"
@@ -368,8 +368,9 @@ export default function SearchPanel({
       </div>
       {!compact && (
         <p className="mt-3 text-sm leading-5 text-black/60">
-          Você pode buscar por município, autoria, CNPJ, código ou palavras do
-          objeto. Os resultados mostram a fonte e a hora de consulta.
+          Comece por uma cidade, pessoa, bancada, CNPJ, número da emenda ou
+          assunto. Você também pode escolher o ano, o estado e um valor mínimo.
+          Os resultados sempre mostram a fonte e a data da consulta.
         </p>
       )}
     </form>

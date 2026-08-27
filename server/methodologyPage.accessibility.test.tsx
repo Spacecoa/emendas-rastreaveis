@@ -10,7 +10,7 @@ describe("acessibilidade da metodologia", () => {
     const { container } = render(<MethodologyPage />);
     expect(
       screen.getByRole("heading", {
-        name: "A cor não é o dado. A regra é o dado.",
+        name: "A cor ajuda a ler. A explicação mostra a regra.",
       })
     ).toBeTruthy();
     expect(screen.getByText("LIMITAÇÕES ATUAIS")).toBeTruthy();

@@ -48,43 +48,41 @@ export default function MethodologyPage() {
   return (
     <PortalLayout>
       <div className="container py-12 sm:py-16">
-        <p className="eyebrow">METODOLOGIA E LIMITES</p>
+        <p className="eyebrow">COMO CONFERIMOS AS INFORMAÇÕES</p>
         <h1 className="mt-3 max-w-4xl text-4xl font-black tracking-[-.06em] sm:text-5xl">
-          Como transformamos registros em informação verificável.
+          Como mostramos os dados com cuidado.
         </h1>
         <p className="mt-5 max-w-3xl border-l-2 border-[#1e4a77]/35 pl-5 text-lg leading-8 text-black/68">
-          Esta plataforma não atribui culpa, nem transforma ausência de dados em
-          certeza. Ela separa o que a fonte financeira mostra do que as fontes
-          de execução física podem demonstrar.
+          Mostramos apenas o que as fontes oficiais informam. Não acusamos
+          pessoas e não completamos informações que ainda não existem. Também
+          separamos o dinheiro pago da prova de que algo foi entregue.
         </p>
         <section className="mt-12 grid gap-5 lg:grid-cols-3">
           <article className="method-card">
             <Scale className="text-[#1e4a77]" />
-            <h2>Princípio de proveniência</h2>
+            <h2>De onde vem cada informação</h2>
             <p>
-              Cada entidade guarda fonte, URL de origem, data de extração e hash
-              do registro. Assim, cada informação pode ser conferida e comparada
-              em futuras cargas.
+              Cada informação guarda o link da fonte, a data em que foi obtida e
+              um código de conferência. Assim, qualquer pessoa pode voltar à
+              origem e comparar o que mudou depois.
             </p>
           </article>
           <article className="method-card">
             <BookOpenCheck className="text-[#1e4a77]" />
-            <h2>Conciliação declarada</h2>
+            <h2>Quando duas bases têm o mesmo código</h2>
             <p>
-              A carga financeira nacional abrange os exercícios de 2022 a 2025.
-              A conciliação documental nacional atualmente publicada é a de
-              2025: 4.710 das 6.311 emendas (74,63%) correspondem exatamente ao
-              campo oficial <code>NR_EMENDA</code> do Transferegov. Esse vínculo
-              documental não é uma prova de entrega física.
+              Os dados financeiros vão de 2022 a 2025. Em 2025, 4.710 das 6.311
+              emendas (74,63%) têm o mesmo código no campo oficial
+              <code> NR_EMENDA</code> do Transferegov. Isso mostra que os
+              registros podem ser ligados, mas não prova entrega.
             </p>
           </article>
           <article className="method-card">
             <FileWarning className="text-[#1e4a77]" />
-            <h2>Nunca estimar ausência</h2>
+            <h2>Quando falta dado, avisamos</h2>
             <p>
-              Campo que não existe na fonte aparece como “informação não
-              disponível”. Não usamos zero ou estimativa para preencher o que
-              ainda não foi publicado oficialmente.
+              Se a fonte não informa algo, mostramos “informação não
+              disponível”. Não trocamos falta de dado por zero nem por palpite.
             </p>
           </article>
         </section>
@@ -94,7 +92,7 @@ export default function MethodologyPage() {
             <div>
               <p className="eyebrow">SEMÁFORO DE CUMPRIMENTO</p>
               <h2 className="mt-2 text-3xl font-black tracking-[-.05em]">
-                A cor não é o dado. A regra é o dado.
+                A cor ajuda a ler. A explicação mostra a regra.
               </h2>
             </div>
           </div>
@@ -103,7 +101,7 @@ export default function MethodologyPage() {
               <thead className="bg-[#edf4fb] text-sm">
                 <tr>
                   <th className="p-5">Situação</th>
-                  <th className="p-5">Regra em linguagem simples</th>
+                  <th className="p-5">O que isso quer dizer</th>
                 </tr>
               </thead>
               <tbody>

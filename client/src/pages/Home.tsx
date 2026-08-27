@@ -80,9 +80,9 @@ export default function Home() {
               <span className="font-light italic">sem pular etapas.</span>
             </h1>
             <p className="mt-6 max-w-2xl border-l-2 border-[#1e4a77]/35 pl-5 text-lg leading-8 text-black/70">
-              Consulte o caminho de cada emenda parlamentar — da indicação ao
-              pagamento — e veja, com honestidade, quando ainda faltam dados
-              para provar o resultado no município.
+              Veja o caminho de cada emenda, desde a indicação até o pagamento.
+              Quando não houver informação suficiente para confirmar o resultado
+              no município, a plataforma avisa com clareza.
             </p>
           </div>
           <div className="relative mt-10 max-w-5xl">
@@ -93,7 +93,7 @@ export default function Home() {
               <span
                 className={`size-2 rounded-full ${portal?.status === "available" ? "bg-[#1e4a77]" : "bg-black/35"}`}
               />
-              Fonte financeira: Portal da Transparência (CGU)
+              Dados financeiros: Portal da Transparência (CGU)
               {portal
                 ? ` · atualizada em ${formatDate(portal.latestSuccessfulLoadAt)}`
                 : " · consulte cobertura e proveniência"}
@@ -131,7 +131,7 @@ export default function Home() {
             className="inline-flex w-fit items-center gap-2 rounded-full border border-black/12 bg-white px-5 py-3 font-bold shadow-sm transition hover:bg-[#edf4fb] focus:outline-none focus-visible:ring-4 focus-visible:ring-[#1e4a77]/35"
             href="/cobertura"
           >
-            <Search size={17} /> Ver cobertura e fontes
+            <Search size={17} /> Ver dados disponíveis e fontes
           </Link>
         </div>
         {coverage.isLoading ? (
@@ -147,9 +147,9 @@ export default function Home() {
                 <span>CGU · exercício {coverage.data.referenceYear}</span>
               </div>
               <div className="metric-card">
-                <p>Estágios financeiros</p>
+                <p>Etapas do dinheiro</p>
                 <strong>{number(coverage.data.totals.financialStages)}</strong>
-                <span>empenho, liquidação, pagamento e restos</span>
+                <span>reservado, confirmado, pago e valores pendentes</span>
               </div>
               <div className="metric-card">
                 <p>Municípios com população</p>
@@ -179,7 +179,7 @@ export default function Home() {
                 </span>
               </div>
               <div className="metric-card">
-                <p>Chaves conciliadas</p>
+                <p>Registros ligados entre duas bases</p>
                 <strong>
                   {coverage.data.reconciliation
                     ? `${coverage.data.reconciliation.matched}/${coverage.data.reconciliation.evaluated}`
@@ -193,10 +193,10 @@ export default function Home() {
               </div>
             </div>
             <p className="mt-5 max-w-4xl text-sm leading-6 text-black/65">
-              A taxa de conciliação usa igualdade exata entre os oito últimos
-              dígitos do código CGU de 2025 e o campo oficial{" "}
-              <code>NR_EMENDA</code> do Transferegov. Ela indica vínculo
-              documental entre bases, não comprovação de execução física.
+              Quando duas bases oficiais têm o mesmo código, mostramos esse
+              vínculo. Em 2025, a comparação usa os oito últimos dígitos do
+              código CGU e o campo <code>NR_EMENDA</code> do Transferegov. Isso
+              não confirma que uma obra ou serviço foi entregue.
             </p>
           </>
         ) : (
@@ -221,9 +221,9 @@ export default function Home() {
                 UFs disponíveis.
               </h2>
               <p className="mt-4 max-w-2xl leading-7 text-black/65">
-                Apenas UFs com municípios e população oficial já carregados
-                aparecem aqui. Escolha a ordenação por nome ou pela população de
-                referência conhecida.
+                Aqui aparecem os estados que já têm municípios e população
+                oficial carregados. Ordene por nome ou pela população mais
+                recente disponível.
               </p>
             </div>
             <div

@@ -124,16 +124,16 @@ export default function SearchPage() {
     <PortalLayout>
       <div className="container py-12 sm:py-16">
         <div className="flex flex-wrap items-center gap-3">
-          <p className="eyebrow">CONSULTA PÚBLICA</p>
-          <span className="source-stamp">Recorte compartilhável</span>
+          <p className="eyebrow">BUSQUE E CONFIRA</p>
+          <span className="source-stamp">Link para compartilhar a busca</span>
         </div>
         <h1 className="mt-3 text-4xl font-black tracking-[-0.06em] sm:text-5xl">
           Encontre uma emenda, um lugar ou uma autoria.
         </h1>
         <p className="mt-4 max-w-3xl border-l-2 border-[#1e4a77]/35 pl-5 leading-7 text-black/65">
-          Os filtros ficam na URL para que o mesmo recorte possa ser
-          compartilhado. A exportação leva exatamente os registros visíveis,
-          incluindo proveniência.
+          Você pode copiar o endereço desta página para mostrar a mesma busca a
+          outra pessoa. Ao baixar os resultados, o arquivo leva exatamente o que
+          aparece na tela, com a fonte de cada registro.
         </p>
         <div className="mt-8">
           <SearchPanel compact initialValues={input} />
@@ -141,17 +141,17 @@ export default function SearchPage() {
         <section className="mt-10" aria-live="polite">
           {query.isLoading ? (
             <div className="flex items-center gap-3 rounded-2xl bg-white p-8">
-              <Loader2 className="animate-spin text-[#1e4a77]" /> Consultando a
-              fonte oficial…
+              <Loader2 className="animate-spin text-[#1e4a77]" /> Procurando nos
+              dados oficiais…
             </div>
           ) : query.error ? (
             <div className="rounded-2xl border border-[#b85b6f]/30 bg-[#f9e9ed] p-7">
               <h2 className="font-bold">
-                Não foi possível consultar a fonte neste momento.
+                Não foi possível fazer a busca agora.
               </h2>
               <p className="mt-2 text-sm leading-6">
-                A chave foi validada, mas a resposta pode estar temporariamente
-                indisponível. Tente novamente em alguns instantes.
+                A conexão com os dados pode estar indisponível por alguns
+                instantes. Tente de novo em breve.
               </p>
             </div>
           ) : (
@@ -159,7 +159,7 @@ export default function SearchPage() {
               <div className="flex flex-wrap items-end justify-between gap-5">
                 <div>
                   <p className="text-sm font-bold text-[#1e4a77]">
-                    {records.length} registros encontrados nesta consulta
+                    {records.length} resultados encontrados
                   </p>
                   <p className="mt-1 text-sm text-black/60">
                     {query.data?.sourceCoverage}
@@ -201,16 +201,16 @@ export default function SearchPage() {
                 <div className="mt-8 rounded-2xl bg-white p-10 text-center">
                   <SearchX className="mx-auto text-[#1e4a77]" size={32} />
                   <h2 className="mt-4 text-xl font-bold">
-                    Nenhum registro encontrado para este recorte.
+                    Não encontramos resultados com esta busca.
                   </h2>
                   <p className="mt-2 text-sm text-black/65">
-                    Revise os filtros ou tente outro termo de busca. CNPJ e
-                    objeto podem aparecer como sugestões oficiais, mas só passam
-                    a integrar uma emenda após o casamento por chaves
-                    verificáveis.
+                    Tente retirar um filtro ou usar outro termo. CNPJ e objeto
+                    podem aparecer como sugestões oficiais, mas só entram em uma
+                    emenda quando os códigos oficiais permitem confirmar a
+                    ligação.
                   </p>
                   <p className="mt-2 text-sm text-black/65">
-                    A busca não preenche ausências com dados aproximados.
+                    Quando falta informação, a busca não usa aproximações.
                   </p>
                 </div>
               ) : (
@@ -223,10 +223,10 @@ export default function SearchPage() {
                       <thead className="border-b border-black/10 bg-[#edf4fb] text-xs uppercase tracking-[.08em] text-black/60">
                         <tr>
                           <th className="px-5 py-4">Emenda</th>
-                          <th className="px-5 py-4">Autoria</th>
-                          <th className="px-5 py-4">Destino</th>
+                          <th className="px-5 py-4">Quem indicou</th>
+                          <th className="px-5 py-4">Para onde vai</th>
                           <th className="px-5 py-4">Pago</th>
-                          <th className="px-5 py-4">Situação</th>
+                          <th className="px-5 py-4">Como aparece nos dados</th>
                           <th className="px-5 py-4">
                             <span className="sr-only">Ação</span>
                           </th>

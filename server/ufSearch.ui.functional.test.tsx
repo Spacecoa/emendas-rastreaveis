@@ -178,7 +178,7 @@ describe("fluxo visível de busca territorial", () => {
 
     await waitFor(() =>
       expect(
-        screen.getByText("Nenhum registro encontrado para este recorte.")
+        screen.getByText("Não encontramos resultados com esta busca.")
       ).toBeTruthy()
     );
     expect(screen.queryByLabelText("Exportar recorte")).toBeNull();

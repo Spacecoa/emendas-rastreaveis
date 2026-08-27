@@ -37,7 +37,7 @@ describe("página pública de chat", () => {
 
     expect(
       screen.getByRole("heading", {
-        name: "Pergunte aos dados, com fonte e limite.",
+        name: /Pergunte sobre as emendas/i,
       })
     ).toBeTruthy();
     fireEvent.click(

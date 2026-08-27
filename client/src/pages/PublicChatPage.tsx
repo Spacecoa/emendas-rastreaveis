@@ -15,7 +15,7 @@ import { trpc } from "@/lib/trpc";
 const suggestedPrompts = [
   "Quantas emendas de 2022 estão carregadas?",
   "Quantas emendas de 2025 estão carregadas?",
-  "O que significa a conciliação documental?",
+  "O que quer dizer quando duas bases têm o mesmo código?",
   "O que há sobre a emenda 202529240019?",
 ];
 
@@ -72,16 +72,18 @@ export default function PublicChatPage() {
         <div className="flex flex-wrap items-start justify-between gap-5">
           <div className="max-w-3xl">
             <div className="flex flex-wrap items-center gap-3">
-              <p className="eyebrow">CONSULTA CONVERSACIONAL</p>
-              <span className="source-stamp">Resposta fundamentada</span>
+              <p className="eyebrow">PERGUNTE EM LINGUAGEM SIMPLES</p>
+              <span className="source-stamp">Resposta com fontes</span>
             </div>
             <h1 className="mt-3 text-4xl font-black tracking-[-0.06em] sm:text-5xl">
-              Pergunte aos dados, com fonte e limite.
+              Pergunte sobre as emendas.
+              <br />
+              Veja de onde vem a resposta.
             </h1>
             <p className="mt-4 border-l-2 border-[#1e4a77]/35 pl-5 leading-7 text-black/65">
-              O assistente traduz o recorte oficial já carregado em linguagem
-              simples. Ele não cria dados, não conclui entrega física e indica
-              quando a pergunta ultrapassa a cobertura disponível.
+              Faça uma pergunta como faria a uma pessoa. O assistente procura
+              apenas nos dados oficiais já disponíveis, mostra as fontes e avisa
+              quando não há informação suficiente.
             </p>
           </div>
           <CompactSearchLink />
@@ -100,7 +102,9 @@ export default function PublicChatPage() {
                       <Bot size={23} aria-hidden="true" />
                     </span>
                     <p className="mt-4 max-w-md text-sm leading-6 text-black/65">
-                      Faça uma pergunta sobre a base oficial carregada.
+                      Faça uma pergunta sobre os dados já disponíveis. Comece
+                      por um ano, uma pessoa, um município ou o número da
+                      emenda.
                     </p>
                     <div className="mt-6 flex max-w-xl flex-wrap justify-center gap-2">
                       {suggestedPrompts.map(prompt => (
@@ -173,7 +177,7 @@ export default function PublicChatPage() {
                             aria-hidden="true"
                           />
                         </span>
-                        Consultando o recorte oficial…
+                        Buscando nos dados oficiais…
                       </li>
                     )}
                   </ol>
@@ -202,7 +206,7 @@ export default function PublicChatPage() {
                   disabled={chat.isPending}
                   maxLength={600}
                   rows={2}
-                  placeholder="Ex.: Quantas emendas de 2024 estão carregadas?"
+                  placeholder="Ex.: Quantas emendas de 2024 estão aqui?"
                   className="min-h-11 flex-1 resize-none rounded-xl border border-black/15 bg-white px-3 py-2 text-sm leading-5 outline-none transition focus:border-[#1e4a77] focus:ring-4 focus:ring-[#1e4a77]/15 disabled:cursor-not-allowed disabled:opacity-60"
                 />
                 <Button
@@ -251,23 +255,22 @@ export default function PublicChatPage() {
             <section className="rounded-[1.4rem] bg-[#edf4fb] p-6">
               <Database className="text-[#1e4a77]" aria-hidden="true" />
               <h2 className="mt-4 font-black tracking-[-.03em]">
-                O que ele consulta
+                Quais dados ele usa
               </h2>
               <p className="mt-2 text-sm leading-6 text-black/70">
-                Carga financeira CGU de 2022 a 2025, metadados de cobertura e
-                conciliação documental Transferegov de 2025 já persistidos no
-                projeto.
+                Dados financeiros da CGU de 2022 a 2025, informações sobre a
+                cobertura e comparação de códigos com o Transferegov em 2025.
               </p>
             </section>
             <section className="rounded-[1.4rem] border border-black/10 bg-white p-6">
               <ShieldCheck className="text-[#1e4a77]" aria-hidden="true" />
               <h2 className="mt-4 font-black tracking-[-.03em]">
-                Limites protegidos
+                O que ele não pode afirmar
               </h2>
               <p className="mt-2 text-sm leading-6 text-black/70">
-                Pagamento não prova entrega do objeto. Vínculo documental não
-                prova execução física. Sem dado no recorte, a resposta informa a
-                indisponibilidade em vez de estimar.
+                Pagamento não prova que algo foi entregue. Encontrar o mesmo
+                código em duas bases também não prova isso. Quando faltam dados,
+                ele informa que não sabe em vez de estimar.
               </p>
             </section>
             <section className="rounded-[1.4rem] border border-dashed border-black/20 bg-[#f8f9fa] p-6">
@@ -276,12 +279,12 @@ export default function PublicChatPage() {
                 aria-hidden="true"
               />
               <h2 className="mt-4 font-black tracking-[-.03em]">
-                Perguntas mais úteis
+                Por onde começar
               </h2>
               <p className="mt-2 text-sm leading-6 text-black/70">
-                Consulte código de emenda, autoria, etapa financeira, cobertura
-                de 2022 a 2025, fonte e significado da conciliação. Para filtros
-                precisos e exportação, use a busca pública.
+                Pergunte por número de emenda, quem indicou, valores pagos,
+                dados de 2022 a 2025 ou fontes. Para escolher vários filtros e
+                baixar os dados, use a busca.
               </p>
             </section>
           </aside>

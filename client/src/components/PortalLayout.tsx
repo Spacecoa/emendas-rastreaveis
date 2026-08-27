@@ -3,12 +3,16 @@ import { Menu, Scale, Search } from "lucide-react";
 import React, { useState } from "react";
 
 const navigation = [
-  { href: "/busca", label: "Consultar" },
-  { href: "/cobertura", label: "Cobertura" },
-  { href: "/chat", label: "Perguntar aos dados" },
-  { href: "/metodologia", label: "Metodologia" },
-  { href: "/metodologia#glossario", label: "Glossário" },
-  { href: "/api/v1/openapi.json", label: "API pública", external: true },
+  { href: "/busca", label: "Buscar emendas" },
+  { href: "/cobertura", label: "Dados disponíveis" },
+  { href: "/chat", label: "Fazer uma pergunta" },
+  { href: "/metodologia", label: "Como usamos os dados" },
+  { href: "/metodologia#glossario", label: "Palavras explicadas" },
+  {
+    href: "/api/v1/openapi.json",
+    label: "Para desenvolvedores",
+    external: true,
+  },
 ];
 
 function FooterLink({
@@ -45,9 +49,9 @@ export default function PortalLayout({
       <header className="site-header">
         <div className="site-header-meta hidden sm:block">
           <div className="container flex items-center justify-between py-2">
-            <span>Dados públicos · leitura responsável</span>
+            <span>Dados públicos · explicados com clareza</span>
             <span>
-              <strong>2022–2025</strong> · fontes verificáveis
+              <strong>2022–2025</strong> · fontes para conferência
             </span>
           </div>
         </div>
@@ -133,12 +137,12 @@ export default function PortalLayout({
           <section>
             <p className="font-black tracking-[-0.04em]">Emendas em Foco</p>
             <p className="mt-2 text-sm leading-6 text-black/65">
-              Plataforma pública de análise de dados oficiais sobre emendas. Não
-              substitui a consulta às fontes, auditorias ou órgãos de controle.
+              Plataforma para entender dados oficiais sobre emendas. Confira
+              sempre as fontes e os órgãos de controle quando precisar.
             </p>
           </section>
           <section className="text-sm leading-6 text-black/65">
-            <p className="font-bold text-black">Fontes</p>
+            <p className="font-bold text-black">De onde vêm os dados</p>
             <p className="mt-2">
               <FooterLink href="https://api.portaldatransparencia.gov.br/">
                 Portal da Transparência (CGU)
@@ -151,24 +155,23 @@ export default function PortalLayout({
               <FooterLink href="https://www.ibge.gov.br/estatisticas/sociais/populacao/9103-estimativas-de-populacao.html">
                 IBGE
               </FooterLink>
-              . Cada resultado preserva origem e data de extração.
+              . Cada resultado mostra de onde veio e quando foi obtido.
             </p>
           </section>
           <section className="text-sm leading-6 text-black/65">
-            <p className="font-bold text-black">Tratamento e segurança</p>
+            <p className="font-bold text-black">Como cuidamos dos dados</p>
             <p className="mt-2">
-              A plataforma usa dados públicos necessários à análise, não
-              registra segredos no código e mantém URLs, datas e hashes para
-              conferência. Dados ausentes não são estimados como zero.
+              Usamos apenas dados públicos necessários à consulta. Não deixamos
+              senhas ou chaves no código. Quando faltar informação, mostramos
+              que ela não está disponível, em vez de inventar um valor.
             </p>
             <p className="mt-2">
-              Nenhuma medida técnica elimina todos os riscos: reporte
-              inconsistências pela fonte original ou pelos canais oficiais
-              competentes.
+              Se encontrar uma informação estranha, confirme na fonte original
+              ou procure os canais oficiais responsáveis.
             </p>
           </section>
           <section className="text-sm leading-6 text-black/65">
-            <p className="font-bold text-black">Enquadramento jurídico</p>
+            <p className="font-bold text-black">Uso responsável</p>
             <p className="mt-2">
               A análise se apoia no direito de acesso à informação e na
               publicidade de interesse público previstos na{" "}
@@ -182,9 +185,8 @@ export default function PortalLayout({
               .
             </p>
             <p className="mt-2">
-              Essas normas não criam imunidade jurídica: este site é
-              informativo, de interesse público e destinado à análise, não a
-              acusações ou aconselhamento jurídico.
+              Este site é informativo e de interesse público. Ele não serve para
+              acusações nem substitui orientação jurídica.
             </p>
           </section>
         </div>
@@ -199,7 +201,7 @@ export function CompactSearchLink() {
       href="/busca"
       className="inline-flex items-center gap-2 rounded-md border border-black/15 bg-white px-4 py-2 text-sm font-semibold shadow-sm transition hover:border-[#1e4a77]/45 hover:bg-[#edf4fb] focus:outline-none focus-visible:ring-4 focus-visible:ring-[#1e4a77]/35"
     >
-      <Search size={16} /> Nova consulta
+      <Search size={16} /> Fazer uma busca
     </Link>
   );
 }

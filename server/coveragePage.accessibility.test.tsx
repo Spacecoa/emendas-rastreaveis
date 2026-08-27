@@ -153,7 +153,7 @@ describe("aba pública de cobertura", () => {
     const { container } = render(<CoveragePage />);
 
     expect(
-      screen.getByRole("heading", { name: /O que está carregado/i })
+      screen.getByRole("heading", { name: /O que já sabemos/i })
     ).toBeTruthy();
     expect(screen.getByText("4.710/6.311")).toBeTruthy();
     expect(
@@ -163,7 +163,7 @@ describe("aba pública de cobertura", () => {
     ).toBeTruthy();
     expect(
       screen.getByRole("heading", {
-        name: /Quanto foi registrado em cada ano/i,
+        name: /O que o dinheiro mostra em cada ano/i,
       })
     ).toBeTruthy();
     expect(screen.getByLabelText("Autor ou autora")).toBeTruthy();
@@ -196,7 +196,7 @@ describe("aba pública de cobertura", () => {
       })
     ).toBeTruthy();
     expect(
-      screen.getAllByText(/Pagamento não comprova entrega física/i).length
+      screen.getAllByText(/Pagamento não comprova entrega/i).length
     ).toBeGreaterThan(0);
     expect(
       screen

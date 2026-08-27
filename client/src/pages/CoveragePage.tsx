@@ -241,24 +241,24 @@ export default function CoveragePage() {
       <div className="container py-12 sm:py-16">
         <header className="max-w-4xl">
           <div className="flex flex-wrap items-center gap-3">
-            <p className="eyebrow">COBERTURA E RASTREABILIDADE</p>
-            <span className="source-stamp">Base persistida</span>
+            <p className="eyebrow">O QUE JÁ PODE SER CONSULTADO</p>
+            <span className="source-stamp">Dados salvos para consulta</span>
           </div>
           <h1 className="mt-3 text-4xl font-black tracking-[-0.065em] sm:text-5xl">
-            O que está carregado,
-            <br className="hidden sm:block" /> e o que ainda não se pode
-            afirmar.
+            O que já sabemos —
+            <br className="hidden sm:block" /> e o que ainda precisa de prova.
           </h1>
           <p className="mt-5 max-w-3xl text-lg leading-8 text-black/68">
-            Esta aba mostra registros oficiais persistidos, fontes e alcance
-            documental por UF. Não preenche lacunas, não deduz UF por texto e
-            não trata pagamento ou conciliação como prova de entrega física.
+            Aqui estão os dados que já foram trazidos de fontes oficiais. Não
+            completamos o que falta, não escolhemos um estado só pelo texto e
+            não tratamos pagamento como prova de que uma obra ou serviço foi
+            entregue.
           </p>
         </header>
 
         {coverage.isLoading ? (
           <div className="mt-12 rounded-[1.5rem] bg-white p-8 text-sm shadow-[0_8px_30px_rgba(18,25,32,.05)]">
-            Lendo a cobertura persistida…
+            Carregando os dados disponíveis…
           </div>
         ) : !coverage.data ? (
           <div className="mt-12 rounded-[1.5rem] bg-white p-8 text-sm shadow-[0_8px_30px_rgba(18,25,32,.05)]">
@@ -285,13 +285,13 @@ export default function CoveragePage() {
               />
               <MetricCard
                 icon={BookOpenCheck}
-                label="Catálogo territorial"
+                label="Registros de municípios"
                 value={number(coverage.data.totals.objects)}
-                text={`Objetos e ${number(coverage.data.totals.instruments)} instrumentos com proveniência.`}
+                text={`Objetos e ${number(coverage.data.totals.instruments)} documentos ligados a municípios, com fonte registrada.`}
               />
               <MetricCard
                 icon={ShieldCheck}
-                label="Conciliação no recorte avaliado"
+                label="Mesmo código em duas fontes"
                 value={
                   reconciliation
                     ? `${number(reconciliation.matched)}/${number(reconciliation.evaluated)}`
@@ -300,8 +300,8 @@ export default function CoveragePage() {
                 text={
                   reconciliation?.matchRate !== null &&
                   reconciliation?.matchRate !== undefined
-                    ? `${(reconciliation.matchRate * 100).toLocaleString("pt-BR", { maximumFractionDigits: 2 })}% por chave exata; não comprova entrega.`
-                    : "Taxa ainda não disponível. O escopo avaliado pode ser menor que a carga financeira."
+                    ? `${(reconciliation.matchRate * 100).toLocaleString("pt-BR", { maximumFractionDigits: 2 })}% dos códigos conferidos são iguais nas duas bases. Isso não confirma entrega.`
+                    : "Essa comparação ainda não está disponível. A parte conferida pode ser menor que o conjunto financeiro."
                 }
                 tone="caution"
               />
@@ -327,14 +327,13 @@ export default function CoveragePage() {
                     : "Emendas CGU carregadas de 2022 a 2025."}
               </h2>
               <p className="mt-3 max-w-3xl text-sm leading-6 text-black/65">
-                Cada linha reflete somente registros financeiros persistidos do
+                Cada ano mostra somente informações financeiras já trazidas do
                 arquivo nacional da CGU
                 {activeAuthor || activeParty
                   ? " dentro do recorte selecionado"
                   : ""}
-                . A presença de código municipal IBGE não é uma prova de
-                entrega; a conciliação documental exibida nesta página permanece
-                restrita ao exercício de 2025.
+                . Ter um código de município não prova entrega. A comparação
+                entre a CGU e o Transferegov mostrada aqui é somente de 2025.
               </p>
               {financialSeries.length ? (
                 <div className="mt-6 overflow-x-auto rounded-[1.4rem] bg-white shadow-[0_8px_30px_rgba(18,25,32,.05)]">
@@ -410,15 +409,14 @@ export default function CoveragePage() {
                   id="valores-financeiros-anuais"
                   className="mt-2 text-3xl font-black tracking-[-.055em]"
                 >
-                  Quanto foi registrado em cada ano.
+                  O que o dinheiro mostra em cada ano.
                 </h2>
                 <p className="mt-3 text-sm leading-6 text-black/65">
-                  O arquivo nacional carregado não traz um valor de indicação
-                  preenchido para todos os exercícios. Por isso, o painel mostra
-                  os totais oficiais de <strong>empenho</strong>,
-                  <strong> liquidação</strong> e <strong>pagamento</strong>. São
-                  etapas diferentes e, portanto, não são somadas entre si.
-                  Pagamento não comprova entrega física.
+                  Nem todo ano tem um valor de indicação informado. Por isso,
+                  mostramos três momentos diferentes: dinheiro reservado (
+                  <strong>empenho</strong>), etapa reconhecida para pagamento (
+                  <strong>liquidação</strong>) e dinheiro pago. Eles não são
+                  somados. Pagamento não comprova entrega.
                 </p>
               </div>
 
@@ -559,9 +557,9 @@ export default function CoveragePage() {
 
               <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-y border-[#1e4a77]/15 py-3">
                 <p className="max-w-2xl text-xs leading-5 text-black/65">
-                  Exporte somente o recorte exibido. Os arquivos incluem fonte,
-                  URL, data de geração e o limite de que pagamento não comprova
-                  entrega física.
+                  Baixe somente os dados que aparecem acima. Os arquivos incluem
+                  fonte, link, data de geração e o aviso de que pagamento não
+                  comprova entrega.
                 </p>
                 <div
                   className="flex flex-wrap gap-2"
@@ -725,25 +723,27 @@ export default function CoveragePage() {
                 id="como-ler-cobertura"
                 className="mt-3 text-2xl font-black tracking-[-.045em]"
               >
-                Cobertura é presença de dados, não confirmação de resultado.
+                Ter dados não confirma que algo foi entregue.
               </h2>
               <div className="mt-6 grid gap-5 text-sm leading-6 text-white/80 md:grid-cols-3">
                 <p>
-                  <strong className="text-white">UF carregada</strong>
+                  <strong className="text-white">Estado disponível</strong>
                   <br />
-                  Municípios e população IBGE com fonte, data e hash.
-                </p>
-                <p>
-                  <strong className="text-white">Catálogo</strong>
-                  <br />
-                  Beneficiários, objetos ou instrumentos disponíveis para
+                  Municípios e população do IBGE, com fonte, data e código de
                   conferência.
                 </p>
                 <p>
-                  <strong className="text-white">Conciliado</strong>
+                  <strong className="text-white">Registros ligados</strong>
                   <br />
-                  Chave documental exata entre bases; não demonstra execução
-                  física.
+                  Pessoas ou órgãos que recebem, objetos ou documentos que podem
+                  ser conferidos.
+                </p>
+                <p>
+                  <strong className="text-white">
+                    Código encontrado nas duas bases
+                  </strong>
+                  <br />
+                  Mesmo código oficial nas duas bases; não demonstra entrega.
                 </p>
               </div>
             </section>
@@ -756,12 +756,12 @@ export default function CoveragePage() {
                     id="cobertura-uf"
                     className="mt-2 text-3xl font-black tracking-[-.055em]"
                   >
-                    Rastreabilidade visível por UF.
+                    Dados disponíveis por estado.
                   </h2>
                   <p className="mt-3 max-w-2xl text-sm leading-6 text-black/65">
-                    As contagens vêm do banco persistido. Fontes abrem a origem
-                    registrada; hashes contabilizados ajudam a detectar
-                    registros sem proveniência ou duplicados.
+                    As contagens vêm dos dados salvos para consulta. Os botões
+                    de fonte abrem a origem; os códigos de conferência ajudam a
+                    encontrar registros sem origem ou repetidos.
                   </p>
                 </div>
                 <div

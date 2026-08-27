@@ -60,10 +60,10 @@ export default function EntityPage({
               {term}
             </h1>
             <p className="mt-4 max-w-3xl border-l-2 border-[#1e4a77]/35 pl-5 leading-7 text-black/65">
-              Esta página reúne os registros retornados pela consulta oficial
-              atual. Para municípios, o valor por pessoa só aparece quando há
-              código municipal IBGE, população oficial do mesmo exercício e
-              valor de pagamento publicado para todas as emendas do recorte.
+              Esta página junta os resultados desta consulta oficial. Para um
+              município, o valor por morador só aparece quando cada emenda tem
+              código do IBGE, população oficial do mesmo ano e valor pago
+              publicado.
             </p>
           </div>
           <CompactSearchLink />
@@ -71,20 +71,19 @@ export default function EntityPage({
         {search.isLoading ||
         (type === "municipio" && municipalityRecords.isLoading) ? (
           <div className="mt-10 flex items-center gap-3 rounded-2xl bg-white p-8">
-            <Loader2 className="animate-spin text-[#1e4a77]" /> Consultando
-            registros oficiais…
+            <Loader2 className="animate-spin text-[#1e4a77]" /> Procurando nos
+            dados oficiais…
           </div>
         ) : (
           <>
             {shown.length === 0 ? (
               <section className="mt-10 rounded-[1.4rem] bg-white p-8 shadow-[0_8px_30px_rgba(18,25,32,.05)]">
                 <h2 className="text-xl font-bold">
-                  Nenhum registro oficial corresponde a este recorte.
+                  Não encontramos resultados para esta busca.
                 </h2>
                 <p className="mt-3 max-w-2xl text-sm leading-6 text-black/65">
-                  A página não apresenta resultados aproximados de outro
-                  município ou parlamentar. Tente a busca pública para ajustar o
-                  termo, o ano ou os demais filtros.
+                  A página não troca este município ou parlamentar por outro
+                  parecido. Use a busca para mudar o nome, o ano ou os filtros.
                 </p>
                 <div className="mt-6">
                   <CompactSearchLink />
@@ -114,23 +113,23 @@ export default function EntityPage({
                   <article className="metric-card">
                     <p>Registros no recorte</p>
                     <strong>{shown.length}</strong>
-                    <span>na página consultada</span>
+                    <span>encontrados nesta busca</span>
                   </article>
                   <article className="metric-card">
                     <p>Empenhado</p>
                     <strong>{formatCurrency(committed)}</strong>
-                    <span>execução financeira</span>
+                    <span>dinheiro reservado</span>
                   </article>
                   <article className="metric-card">
                     <p>Pago</p>
                     <strong>{formatCurrency(paid)}</strong>
                     <span>
-                      {formatPercent(paid, committed)} do empenhado conhecido
+                      {formatPercent(paid, committed)} do dinheiro reservado
                     </span>
                   </article>
                   {type === "municipio" && (
                     <article className="metric-card">
-                      <p>Pago por habitante</p>
+                      <p>Dinheiro pago por morador</p>
                       <strong>
                         {perCapita.data?.perCapitaPaid === null ||
                         perCapita.data?.perCapitaPaid === undefined
@@ -139,7 +138,7 @@ export default function EntityPage({
                       </strong>
                       <span>
                         {perCapita.data?.status === "eligible"
-                          ? `${perCapita.data.linkedAmendments} emendas com código IBGE e população 2025.`
+                          ? `${perCapita.data.linkedAmendments} emendas com código IBGE e população de 2025.`
                           : (perCapita.data?.reason ??
                             "Verificando vínculo municipal e população oficial.")}
                       </span>
@@ -161,14 +160,14 @@ export default function EntityPage({
                     <MapPinned className="text-[#1e4a77]" />
                     <h2 className="mt-5 font-bold tracking-[-.03em]">
                       {perCapita.data?.status === "eligible"
-                        ? "Pagamento por pessoa no recorte municipal"
-                        : "Valor por pessoa não disponível para este recorte"}
+                        ? "Dinheiro pago por morador neste município"
+                        : "Valor por morador não disponível nesta busca"}
                     </h2>
                     <p className="mt-2 text-sm leading-6 text-black/65">
                       {perCapita.data?.status === "eligible"
                         ? `A soma de ${formatCurrency(perCapita.data.paid)} em pagamentos oficiais de ${perCapita.data.linkedAmendments} emendas com código IBGE foi dividida pela população de ${perCapita.data.population?.toLocaleString("pt-BR")} habitantes em ${perCapita.data.populationReferenceYear}. Pagamento não comprova entrega física.`
                         : (perCapita.data?.reason ??
-                          "Não exibimos estimativas. Sem vínculo municipal, população oficial do mesmo exercício ou pagamento publicado, o indicador permanece indisponível.")}
+                          "Não fazemos estimativas. Sem vínculo com o município, população oficial do mesmo ano ou valor pago publicado, não mostramos esse cálculo.")}
                     </p>
                     {perCapita.data?.status === "eligible" && (
                       <p className="mt-4 text-xs leading-5 text-black/60">
@@ -195,10 +194,9 @@ export default function EntityPage({
                   </section>
                 </div>
                 <section className="mt-6 rounded-[1.4rem] bg-white p-6 shadow-[0_8px_30px_rgba(18,25,32,.05)]">
-                  <p className="eyebrow">LINHA DO TEMPO DO RECORTE</p>
+                  <p className="eyebrow">CAMINHO DO DINHEIRO</p>
                   <h2 className="mt-2 text-xl font-black tracking-[-.04em]">
-                    A execução financeira agrupada não comprova a entrega
-                    física.
+                    Valores pagos não comprovam, por si só, a entrega.
                   </h2>
                   <ol className="mt-6 grid gap-4 md:grid-cols-3">
                     <li className="border-l-4 border-[#1e4a77] pl-4">
@@ -209,7 +207,8 @@ export default function EntityPage({
                         {formatCurrency(committed)}
                       </p>
                       <p className="mt-1 text-sm text-black/65">
-                        Reserva e compromisso de pagamento no recorte.
+                        Dinheiro reservado e compromisso de pagamento nesta
+                        busca.
                       </p>
                     </li>
                     <li className="border-l-4 border-[#76a9d1] pl-4">
@@ -225,7 +224,7 @@ export default function EntityPage({
                         )}
                       </p>
                       <p className="mt-1 text-sm text-black/65">
-                        Reconhecimento financeiro registrado na fonte.
+                        Etapa reconhecida pela fonte como apta para pagamento.
                       </p>
                     </li>
                     <li className="border-l-4 border-[#d58e9d] pl-4">
@@ -247,8 +246,8 @@ export default function EntityPage({
                       Emendas no recorte
                     </h2>
                     <p className="mt-1 text-sm text-black/60">
-                      Selecione uma emenda para ver etapas, documentos e limites
-                      de avaliação.
+                      Selecione uma emenda para ver os valores, documentos e o
+                      que os dados ainda não permitem afirmar.
                     </p>
                   </div>
                   <div className="divide-y divide-black/5">
@@ -264,8 +263,8 @@ export default function EntityPage({
                               Emenda {record.number ?? record.code}
                             </p>
                             <p className="mt-1 text-sm text-black/60">
-                              {record.budgetFunction ?? "Função não informada"}{" "}
-                              · {record.locality ?? "Localidade não informada"}
+                              {record.budgetFunction ?? "Área não informada"} ·{" "}
+                              {record.locality ?? "Localidade não informada"}
                             </p>
                           </div>
                           <div className="flex flex-wrap items-center gap-4">

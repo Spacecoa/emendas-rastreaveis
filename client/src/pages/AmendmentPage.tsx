@@ -59,18 +59,17 @@ export default function AmendmentPage() {
       <div className="container py-12 sm:py-16">
         {query.isLoading ? (
           <div className="flex items-center gap-3 rounded-2xl bg-white p-8">
-            <Loader2 className="animate-spin text-[#1e4a77]" /> Consultando a
-            emenda na fonte oficial…
+            <Loader2 className="animate-spin text-[#1e4a77]" /> Procurando esta
+            emenda nos dados oficiais…
           </div>
         ) : !record ? (
           <div className="rounded-[1.5rem] bg-white p-9">
             <h1 className="text-3xl font-black tracking-[-.05em]">
-              Emenda não encontrada nesta página da fonte.
+              Não encontramos esta emenda agora.
             </h1>
             <p className="mt-3 max-w-2xl leading-7 text-black/65">
-              A consulta individual ainda usa a primeira página retornada pela
-              fonte oficial. Use a busca para encontrar o recorte correto; a
-              carga persistida ampliará a cobertura.
+              Tente usar a busca com outro ano, número ou nome. Quando não há
+              resultado, a plataforma não cria uma resposta aproximada.
             </p>
             <div className="mt-6">
               <CompactSearchLink />
@@ -91,10 +90,10 @@ export default function AmendmentPage() {
                   <strong>
                     {record.locality ?? "localidade não informada"}
                   </strong>
-                  , na função{" "}
+                  , na área de atuação{" "}
                   <strong>{record.budgetFunction ?? "não informada"}</strong>. A
-                  descrição oficial do objeto não está disponível nesta fonte
-                  inicial.
+                  descrição do que será feito não aparece nesta fonte. Por isso,
+                  não completamos essa informação.
                 </p>
               </div>
               <div className="flex flex-col items-start gap-3">
@@ -137,24 +136,28 @@ export default function AmendmentPage() {
                 title="Execução financeira conhecida"
               />
               <aside className="rounded-[1.4rem] bg-white p-6 shadow-[0_8px_30px_rgba(18,25,32,.05)]">
-                <h2 className="font-bold tracking-[-.03em]">
-                  Resumo em números
-                </h2>
+                <h2 className="font-bold tracking-[-.03em]">Veja os valores</h2>
                 <dl className="mt-5 space-y-4 text-sm">
                   <div className="flex justify-between gap-4 border-b border-black/8 pb-3">
-                    <dt className="text-black/60">Pago sobre empenhado</dt>
+                    <dt className="text-black/60">
+                      Dinheiro pago em relação ao reservado
+                    </dt>
                     <dd className="font-bold">
                       {formatPercent(record.paid, record.committed)}
                     </dd>
                   </div>
                   <div className="flex justify-between gap-4 border-b border-black/8 pb-3">
-                    <dt className="text-black/60">Restos a pagar inscritos</dt>
+                    <dt className="text-black/60">
+                      Valores que ficaram pendentes
+                    </dt>
                     <dd className="font-bold">
                       {formatCurrency(record.remainingRegistered)}
                     </dd>
                   </div>
                   <div className="flex justify-between gap-4">
-                    <dt className="text-black/60">Restos cancelados</dt>
+                    <dt className="text-black/60">
+                      Valores pendentes cancelados
+                    </dt>
                     <dd className="font-bold">
                       {formatCurrency(record.remainingCancelled)}
                     </dd>
@@ -164,9 +167,9 @@ export default function AmendmentPage() {
             </section>
             <section className="mt-8 rounded-[1.5rem] bg-white p-6 shadow-[0_8px_30px_rgba(18,25,32,.05)] sm:p-8">
               <div>
-                <p className="eyebrow">LINHA DO TEMPO AUDITÁVEL</p>
+                <p className="eyebrow">CAMINHO DO DINHEIRO</p>
                 <h2 className="mt-2 text-2xl font-black tracking-[-.05em]">
-                  Etapas diferentes, perguntas diferentes.
+                  Cada etapa conta uma parte da história.
                 </h2>
               </div>
               <ol className="mt-8 grid gap-0 md:grid-cols-2 lg:grid-cols-3">
@@ -210,15 +213,17 @@ export default function AmendmentPage() {
                   Documentos relacionados
                 </h2>
                 {documents.isFetching ? (
-                  <p className="mt-2 text-sm">Consultando documentos…</p>
+                  <p className="mt-2 text-sm">Procurando documentos…</p>
                 ) : documents.data?.items ? (
                   <p className="mt-2 text-sm leading-6">
-                    A fonte retornou documentos relacionados. O detalhamento
-                    estruturado será incorporado na etapa de persistência.
+                    A fonte encontrou documentos ligados a este registro. Eles
+                    ainda precisam ser organizados para aparecerem em detalhe
+                    nesta página.
                   </p>
                 ) : (
                   <p className="mt-2 text-sm leading-6">
-                    Informação não disponível na resposta atual da fonte.
+                    A fonte consultada não trouxe documentos ligados a este
+                    registro.
                   </p>
                 )}
               </article>

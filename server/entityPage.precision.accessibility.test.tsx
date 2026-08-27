@@ -85,7 +85,7 @@ describe("precisão da página de entidade", () => {
 
     expect(
       screen.getByRole("heading", {
-        name: "Nenhum registro oficial corresponde a este recorte.",
+        name: "Não encontramos resultados para esta busca.",
       })
     ).toBeTruthy();
     expect(screen.queryByText("Emenda 0017")).toBeNull();
@@ -115,11 +115,11 @@ describe("precisão da página de entidade", () => {
     window.history.replaceState({}, "", "/municipios/Abre%20Campo?ano=2025");
     const { container } = render(<EntityPage type="municipio" />);
 
-    expect(screen.getByText("Pago por habitante")).toBeTruthy();
+    expect(screen.getByText("Dinheiro pago por morador")).toBeTruthy();
     expect(screen.getByText(/R\$\s*174,17/)).toBeTruthy();
     expect(
       screen.getByRole("heading", {
-        name: "Pagamento por pessoa no recorte municipal",
+        name: "Dinheiro pago por morador neste município",
       })
     ).toBeTruthy();
     expect(

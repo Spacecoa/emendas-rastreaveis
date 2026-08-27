@@ -81,9 +81,9 @@ describe("transparência da página inicial", () => {
     expect(
       screen.getByRole("button", { name: "A–Z" }).getAttribute("aria-pressed")
     ).toBe("true");
-    expect(screen.getByText("Enquadramento jurídico")).toBeTruthy();
+    expect(screen.getByText("Uso responsável")).toBeTruthy();
     expect(
-      screen.getByText(/Fonte financeira: Portal da Transparência/)
+      screen.getByText(/Dados financeiros: Portal da Transparência/)
     ).toBeTruthy();
     expect(screen.queryByText("aguardando primeira carga")).toBeNull();
 

@@ -154,3 +154,10 @@
 - [x] Validar seleção, limpeza, URL compartilhável, acessibilidade e responsividade dos novos filtros.
 - [x] Criar um guia completo de auditoria de segurança para Claude, com escopo de código, ameaças, método de achados e salvaguardas de segredos.
 - [x] Revisar o guia de auditoria para confirmar que não inclui chaves, conteúdo sensível ou instruções que alterem o sistema sem validação humana.
+- [x] Mapear e simplificar os textos prioritários de consulta, cobertura, chat, metodologia e exportações, preservando precisão e limites dos dados.
+- [x] Melhorar a orientação visual e os estados de uso das páginas públicas para pessoas sem familiaridade técnica.
+- [x] Validar compreensão, acessibilidade, contraste, teclado e responsividade após a simplificação da experiência.
+- [x] Concluir a simplificação de cobertura, chat, metodologia e rótulos compartilhados, com explicações cotidianas para termos de dados públicos.
+- [x] Revalidar as telas simplificadas em desktop e celular, incluindo leitura por teclado e auditoria axe.
+- [x] Gerar um pacote completo do código-fonte versionado para revisão no Claude, excluindo credenciais, ambiente, dependências, build, dados e logs sensíveis.
+- [x] Validar o inventário e o pacote de código para ausência de segredos aparentes e alinhamento com o guia de auditoria.

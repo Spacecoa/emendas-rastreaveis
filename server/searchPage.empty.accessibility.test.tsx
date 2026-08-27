@@ -11,16 +11,37 @@ vi.mock("@/lib/trpc", () => ({
         useQuery: () => ({
           isLoading: false,
           error: null,
-          data: { records: [], sourceCoverage: "Resultados da carga oficial persistida." },
+          data: {
+            records: [],
+            sourceCoverage: "Resultados da carga oficial persistida.",
+          },
         }),
       },
-      suggestions: { useQuery: () => ({ data: { amendments: [], authors: [], beneficiaries: [], municipalities: [], objects: [] } }) },
+      suggestions: {
+        useQuery: () => ({
+          data: {
+            amendments: [],
+            authors: [],
+            beneficiaries: [],
+            municipalities: [],
+            objects: [],
+          },
+        }),
+      },
     },
   },
 }));
 
 vi.mock("wouter", () => ({
-  Link: ({ href, children, ...props }: React.AnchorHTMLAttributes<HTMLAnchorElement> & { href: string }) => <a href={href} {...props}>{children}</a>,
+  Link: ({
+    href,
+    children,
+    ...props
+  }: React.AnchorHTMLAttributes<HTMLAnchorElement> & { href: string }) => (
+    <a href={href} {...props}>
+      {children}
+    </a>
+  ),
   useLocation: () => ["/busca"],
   useSearch: () => "?q=termo-inexistente&ano=2025&uf=RJ",
 }));
@@ -31,10 +52,16 @@ describe("estado vazio da busca pública", () => {
   it("informa ausência de resultados sem afirmar ausência de conciliação e não cria violações axe", async () => {
     const { container } = render(<SearchPage />);
 
-    expect(screen.getByRole("heading", { name: "Nenhum registro encontrado para este recorte." })).toBeTruthy();
+    expect(
+      screen.getByRole("heading", {
+        name: "Não encontramos resultados com esta busca.",
+      })
+    ).toBeTruthy();
     expect(screen.queryByText(/Nenhuma emenda conciliada/i)).toBeNull();
 
-    const result = await axe.run(container, { rules: { "color-contrast": { enabled: false } } });
+    const result = await axe.run(container, {
+      rules: { "color-contrast": { enabled: false } },
+    });
     expect(result.violations).toEqual([]);
   });
 });
