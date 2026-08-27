@@ -174,3 +174,8 @@
 - [x] Reorganizar as páginas públicas em blocos de pergunta, resposta, fonte e limite, sem perder os dados oficiais ou sua rastreabilidade.
 - [x] Revisar textos, contrastes, foco, semântica, redução de movimento e responsividade em todas as telas públicas após o redesign.
 - [x] Executar testes, build e revisão visual desktop/celular do novo template de informação pública.
+- [x] Inventariar arquivos oficiais e chaves estáveis disponíveis para conciliar emendas de 2022, 2023, 2024 e 2025.
+- [ ] Implementar e executar conciliação histórica idempotente apenas por chave oficial, com data, URL e hash de proveniência por carga.
+- [ ] Validar por exercício os totais, a taxa de conciliação e amostras de vínculos, sem inferência territorial ou de entrega física.
+- [ ] Atualizar a cobertura pública e a metodologia para mostrar claramente quais anos possuem conciliação documental e quais permanecem sem ela.
+- [ ] Obter uma fonte oficial com exercício ou relação documental única para conciliar 2022, 2023 e 2024 sem reutilizar `NR_EMENDA` entre anos.
