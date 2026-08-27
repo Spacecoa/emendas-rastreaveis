@@ -152,3 +152,5 @@
 
 - [x] Implementar controles intuitivos de autor e partido no painel anual, com rótulos explicativos e estados claros.
 - [x] Validar seleção, limpeza, URL compartilhável, acessibilidade e responsividade dos novos filtros.
+- [x] Criar um guia completo de auditoria de segurança para Claude, com escopo de código, ameaças, método de achados e salvaguardas de segredos.
+- [x] Revisar o guia de auditoria para confirmar que não inclui chaves, conteúdo sensível ou instruções que alterem o sistema sem validação humana.
