@@ -68,19 +68,19 @@ export default function PublicChatPage() {
 
   return (
     <PortalLayout>
-      <div className="container py-12 sm:py-16">
+      <div className="container py-12 sm:py-20">
         <div className="flex flex-wrap items-start justify-between gap-5">
           <div className="max-w-3xl">
             <div className="flex flex-wrap items-center gap-3">
               <p className="eyebrow">PERGUNTE EM LINGUAGEM SIMPLES</p>
               <span className="source-stamp">Resposta com fontes</span>
             </div>
-            <h1 className="mt-3 text-4xl font-black tracking-[-0.06em] sm:text-5xl">
-              Pergunte sobre as emendas.
+            <h1 className="mt-4 text-5xl sm:text-6xl">
+              Faça uma pergunta.
               <br />
-              Veja de onde vem a resposta.
+              <em className="text-[#075d78]">Veja a fonte da resposta.</em>
             </h1>
-            <p className="mt-4 border-l-2 border-[#1e4a77]/35 pl-5 leading-7 text-black/65">
+            <p className="page-intro mt-6 max-w-2xl">
               Faça uma pergunta como faria a uma pessoa. O assistente procura
               apenas nos dados oficiais já disponíveis, mostra as fontes e avisa
               quando não há informação suficiente.
@@ -94,11 +94,11 @@ export default function PublicChatPage() {
             <h2 id="chat-title" className="sr-only">
               Conversa com os dados públicos
             </h2>
-            <div className="flex min-h-[32rem] flex-col overflow-hidden rounded-[1.4rem] border border-black/10 bg-white shadow-[0_8px_30px_rgba(18,25,32,.05)]">
+            <div className="content-card flex min-h-[32rem] flex-col overflow-hidden border-[#142230]">
               <div className="flex-1 overflow-y-auto p-5 sm:p-6">
                 {messages.length === 0 ? (
                   <div className="flex min-h-80 flex-col items-center justify-center text-center">
-                    <span className="grid size-12 place-items-center rounded-full bg-[#edf4fb] text-[#1e4a77]">
+                    <span className="grid size-12 place-items-center rounded-full border-2 border-[#142230] bg-[#f8e7c9] text-[#063c52]">
                       <Bot size={23} aria-hidden="true" />
                     </span>
                     <p className="mt-4 max-w-md text-sm leading-6 text-black/65">
@@ -113,7 +113,7 @@ export default function PublicChatPage() {
                           type="button"
                           disabled={chat.isPending}
                           onClick={() => sendMessage(prompt)}
-                          className="rounded-xl border border-black/10 bg-[#faf9f6] px-3 py-2 text-sm leading-5 transition hover:border-[#1e4a77]/40 hover:bg-[#edf4fb] disabled:cursor-not-allowed disabled:opacity-50"
+                          className="border border-[#b8c6c8] bg-[#fffdf8] px-3 py-2 text-sm leading-5 transition hover:border-[#075d78] hover:bg-[#dcedf2] disabled:cursor-not-allowed disabled:opacity-50"
                         >
                           {prompt}
                         </button>
@@ -128,12 +128,12 @@ export default function PublicChatPage() {
                         className={`flex gap-3 ${message.role === "user" ? "justify-end" : "justify-start"}`}
                       >
                         {message.role === "assistant" && (
-                          <span className="grid size-8 shrink-0 place-items-center rounded-full bg-[#edf4fb] text-[#1e4a77]">
+                          <span className="grid size-8 shrink-0 place-items-center rounded-full border border-[#075d78] bg-[#dcedf2] text-[#063c52]">
                             <Bot size={16} aria-hidden="true" />
                           </span>
                         )}
                         <div
-                          className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm leading-6 ${message.role === "user" ? "bg-[#16191d] text-white" : "bg-[#f4f5f4] text-black/80"}`}
+                          className={`max-w-[85%] rounded-md border px-4 py-3 text-sm leading-6 ${message.role === "user" ? "border-[#142230] bg-[#142230] text-white" : "border-[#d6d0c4] bg-[#f8f4ea] text-black/80"}`}
                         >
                           <p className="whitespace-pre-wrap">
                             {message.content}
@@ -162,7 +162,7 @@ export default function PublicChatPage() {
                           )}
                         </div>
                         {message.role === "user" && (
-                          <span className="grid size-8 shrink-0 place-items-center rounded-full bg-[#16191d] text-white">
+                          <span className="grid size-8 shrink-0 place-items-center rounded-full bg-[#142230] text-white">
                             <User size={16} aria-hidden="true" />
                           </span>
                         )}
@@ -170,7 +170,7 @@ export default function PublicChatPage() {
                     ))}
                     {chat.isPending && (
                       <li className="flex items-center gap-3 text-sm text-black/60">
-                        <span className="grid size-8 place-items-center rounded-full bg-[#edf4fb] text-[#1e4a77]">
+                        <span className="grid size-8 place-items-center rounded-full border border-[#075d78] bg-[#dcedf2] text-[#063c52]">
                           <Loader2
                             className="animate-spin"
                             size={16}
@@ -184,7 +184,7 @@ export default function PublicChatPage() {
                 )}
               </div>
               <form
-                className="flex items-end gap-3 border-t border-black/10 bg-[#faf9f6] p-4"
+                className="flex items-end gap-3 border-t border-[#d6d0c4] bg-[#f1ede4] p-4"
                 onSubmit={event => {
                   event.preventDefault();
                   sendMessage(input);
@@ -207,7 +207,7 @@ export default function PublicChatPage() {
                   maxLength={600}
                   rows={2}
                   placeholder="Ex.: Quantas emendas de 2024 estão aqui?"
-                  className="min-h-11 flex-1 resize-none rounded-xl border border-black/15 bg-white px-3 py-2 text-sm leading-5 outline-none transition focus:border-[#1e4a77] focus:ring-4 focus:ring-[#1e4a77]/15 disabled:cursor-not-allowed disabled:opacity-60"
+                  className="min-h-11 flex-1 resize-none rounded-md border border-[#9ba7a9] bg-white px-3 py-2 text-sm leading-5 outline-none transition focus:border-[#075d78] focus:ring-4 focus:ring-[#075d78]/15 disabled:cursor-not-allowed disabled:opacity-60"
                 />
                 <Button
                   type="submit"
@@ -231,7 +231,7 @@ export default function PublicChatPage() {
             {error && (
               <p
                 role="alert"
-                className="mt-4 rounded-xl border border-[#c47887]/40 bg-[#f9ecee] px-4 py-3 text-sm leading-6 text-[#6e1c2c]"
+                className="limit-panel mt-4 px-4 py-3 text-sm leading-6"
               >
                 {error}
               </p>
@@ -252,7 +252,7 @@ export default function PublicChatPage() {
           </section>
 
           <aside className="space-y-4" aria-label="Como o chat usa os dados">
-            <section className="rounded-[1.4rem] bg-[#edf4fb] p-6">
+            <section className="content-card border-t-4 border-t-[#075d78] bg-[#dcedf2] p-6">
               <Database className="text-[#1e4a77]" aria-hidden="true" />
               <h2 className="mt-4 font-black tracking-[-.03em]">
                 Quais dados ele usa
@@ -262,7 +262,7 @@ export default function PublicChatPage() {
                 cobertura e comparação de códigos com o Transferegov em 2025.
               </p>
             </section>
-            <section className="rounded-[1.4rem] border border-black/10 bg-white p-6">
+            <section className="content-card border-l-5 border-l-[#b76d16] p-6">
               <ShieldCheck className="text-[#1e4a77]" aria-hidden="true" />
               <h2 className="mt-4 font-black tracking-[-.03em]">
                 O que ele não pode afirmar
@@ -273,7 +273,7 @@ export default function PublicChatPage() {
                 ele informa que não sabe em vez de estimar.
               </p>
             </section>
-            <section className="rounded-[1.4rem] border border-dashed border-black/20 bg-[#f8f9fa] p-6">
+            <section className="content-card border-dashed bg-[#f1ede4] p-6">
               <MessageCircleQuestion
                 className="text-[#1e4a77]"
                 aria-hidden="true"

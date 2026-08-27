@@ -103,8 +103,25 @@ export default function SearchPanel({
   }
 
   return (
-    <form onSubmit={submit} className="data-query-panel p-4 sm:p-5">
-      <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-[minmax(15rem,1fr)_7rem_6rem_11rem_9rem_11rem_11rem_auto] 2xl:items-end">
+    <form
+      onSubmit={submit}
+      aria-label="Pesquisar dados de emendas"
+      aria-describedby={compact ? undefined : "ajuda-busca-principal"}
+      className="data-query-panel p-5 sm:p-7"
+    >
+      {!compact && (
+        <div className="mb-6 flex flex-wrap items-start justify-between gap-4 border-b border-[#d6d0c4] pb-5">
+          <div>
+            <p className="section-kicker">COMECE PELA SUA PERGUNTA</p>
+            <p className="mt-1 text-base font-bold text-[#142230]">
+              Escreva o que você quer encontrar. Os outros campos ajudam a
+              reduzir os resultados, se for necessário.
+            </p>
+          </div>
+          <span className="evidence-chip">Fonte e data em cada resultado</span>
+        </div>
+      )}
+      <div className="grid gap-x-4 gap-y-5 md:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-[minmax(15rem,1fr)_7rem_6rem_11rem_9rem_11rem_11rem_auto] 2xl:items-end">
         <div>
           <label
             className="mb-1.5 block text-sm font-bold"
@@ -128,7 +145,7 @@ export default function SearchPanel({
               aria-expanded={isFocused && enabled && records.length > 0}
               aria-controls="sugestoes-busca"
               aria-autocomplete="list"
-              placeholder="Ex.: cidade, nome, número da emenda ou assunto"
+              placeholder="Ex.: saúde, nome, cidade ou número"
               className="query-control h-13 w-full py-3 pl-12 pr-4 text-base outline-none transition focus:border-[#1e4a77] focus:ring-4 focus:ring-[#1e4a77]/20"
             />
             {isFocused &&
@@ -367,10 +384,13 @@ export default function SearchPanel({
         </button>
       </div>
       {!compact && (
-        <p className="mt-3 text-sm leading-5 text-black/60">
-          Comece por uma cidade, pessoa, bancada, CNPJ, número da emenda ou
-          assunto. Você também pode escolher o ano, o estado e um valor mínimo.
-          Os resultados sempre mostram a fonte e a data da consulta.
+        <p
+          id="ajuda-busca-principal"
+          className="mt-5 border-t border-[#d6d0c4] pt-4 text-sm leading-6 text-black/70"
+        >
+          Você pode procurar por cidade, pessoa, bancada, CNPJ, número da emenda
+          ou assunto. Se não quiser limitar por estado, autor ou valor, deixe
+          esses campos vazios. Cada resultado mostra a fonte e a data.
         </p>
       )}
     </form>

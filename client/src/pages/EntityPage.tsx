@@ -50,16 +50,14 @@ export default function EntityPage({
 
   return (
     <PortalLayout>
-      <div className="container py-12 sm:py-16">
+      <div className="container py-12 sm:py-20">
         <div className="flex flex-wrap items-start justify-between gap-5">
           <div>
             <p className="eyebrow">
               {title.toUpperCase()} · {year}
             </p>
-            <h1 className="mt-3 text-4xl font-black tracking-[-0.06em] sm:text-5xl">
-              {term}
-            </h1>
-            <p className="mt-4 max-w-3xl border-l-2 border-[#1e4a77]/35 pl-5 leading-7 text-black/65">
+            <h1 className="mt-4 text-5xl sm:text-6xl">{term}</h1>
+            <p className="page-intro mt-6 max-w-3xl">
               Esta página junta os resultados desta consulta oficial. Para um
               município, o valor por morador só aparece quando cada emenda tem
               código do IBGE, população oficial do mesmo ano e valor pago
@@ -70,14 +68,14 @@ export default function EntityPage({
         </div>
         {search.isLoading ||
         (type === "municipio" && municipalityRecords.isLoading) ? (
-          <div className="mt-10 flex items-center gap-3 rounded-2xl bg-white p-8">
+          <div className="content-card mt-10 flex items-center gap-3 p-8">
             <Loader2 className="animate-spin text-[#1e4a77]" /> Procurando nos
             dados oficiais…
           </div>
         ) : (
           <>
             {shown.length === 0 ? (
-              <section className="mt-10 rounded-[1.4rem] bg-white p-8 shadow-[0_8px_30px_rgba(18,25,32,.05)]">
+              <section className="content-card mt-10 p-8">
                 <h2 className="text-xl font-bold">
                   Não encontramos resultados para esta busca.
                 </h2>
@@ -92,7 +90,7 @@ export default function EntityPage({
             ) : (
               <>
                 {shown[0] && (
-                  <div className="mt-7 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-[#b6d6f0] bg-[#edf4fb] px-5 py-4 text-sm">
+                  <div className="notice-panel mt-7 flex flex-wrap items-center justify-between gap-3 px-5 py-4 text-sm">
                     <span>
                       <strong>Fonte do recorte:</strong> {shown[0].source} ·
                       extraído em {formatDate(shown[0].extractedAt)}
@@ -156,7 +154,7 @@ export default function EntityPage({
                       paid,
                     }}
                   />
-                  <section className="rounded-[1.4rem] border border-dashed border-black/20 bg-[#f8f9fa] p-6">
+                  <section className="content-card border-dashed bg-[#f1ede4] p-6">
                     <MapPinned className="text-[#1e4a77]" />
                     <h2 className="mt-5 font-bold tracking-[-.03em]">
                       {perCapita.data?.status === "eligible"
@@ -193,7 +191,7 @@ export default function EntityPage({
                     )}
                   </section>
                 </div>
-                <section className="mt-6 rounded-[1.4rem] bg-white p-6 shadow-[0_8px_30px_rgba(18,25,32,.05)]">
+                <section className="content-card mt-6 p-6">
                   <p className="eyebrow">CAMINHO DO DINHEIRO</p>
                   <h2 className="mt-2 text-xl font-black tracking-[-.04em]">
                     Valores pagos não comprovam, por si só, a entrega.
@@ -240,7 +238,7 @@ export default function EntityPage({
                     </li>
                   </ol>
                 </section>
-                <section className="mt-8 overflow-hidden rounded-[1.4rem] bg-white shadow-[0_8px_30px_rgba(18,25,32,.05)]">
+                <section className="content-card mt-8 overflow-hidden">
                   <div className="border-b border-black/10 px-6 py-5">
                     <h2 className="font-bold tracking-[-.03em]">
                       Emendas no recorte

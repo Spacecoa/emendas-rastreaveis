@@ -122,15 +122,17 @@ export default function SearchPage() {
 
   return (
     <PortalLayout>
-      <div className="container py-12 sm:py-16">
+      <div className="container py-12 sm:py-20">
         <div className="flex flex-wrap items-center gap-3">
           <p className="eyebrow">BUSQUE E CONFIRA</p>
           <span className="source-stamp">Link para compartilhar a busca</span>
         </div>
-        <h1 className="mt-3 text-4xl font-black tracking-[-0.06em] sm:text-5xl">
-          Encontre uma emenda, um lugar ou uma autoria.
+        <h1 className="mt-4 max-w-4xl text-5xl sm:text-6xl">
+          Encontre uma emenda.
+          <br />
+          <em className="text-[#075d78]">Confira o que a fonte informa.</em>
         </h1>
-        <p className="mt-4 max-w-3xl border-l-2 border-[#1e4a77]/35 pl-5 leading-7 text-black/65">
+        <p className="page-intro mt-6 max-w-3xl">
           Você pode copiar o endereço desta página para mostrar a mesma busca a
           outra pessoa. Ao baixar os resultados, o arquivo leva exatamente o que
           aparece na tela, com a fonte de cada registro.
@@ -140,12 +142,12 @@ export default function SearchPage() {
         </div>
         <section className="mt-10" aria-live="polite">
           {query.isLoading ? (
-            <div className="flex items-center gap-3 rounded-2xl bg-white p-8">
+            <div className="content-card flex items-center gap-3 p-8">
               <Loader2 className="animate-spin text-[#1e4a77]" /> Procurando nos
               dados oficiais…
             </div>
           ) : query.error ? (
-            <div className="rounded-2xl border border-[#b85b6f]/30 bg-[#f9e9ed] p-7">
+            <div className="limit-panel p-7">
               <h2 className="font-bold">
                 Não foi possível fazer a busca agora.
               </h2>
@@ -158,8 +160,8 @@ export default function SearchPage() {
             <>
               <div className="flex flex-wrap items-end justify-between gap-5">
                 <div>
-                  <p className="text-sm font-bold text-[#1e4a77]">
-                    {records.length} resultados encontrados
+                  <p className="text-sm font-bold text-[#063c52]">
+                    {records.length} resultados nesta página
                   </p>
                   <p className="mt-1 text-sm text-black/60">
                     {query.data?.sourceCoverage}
@@ -198,7 +200,7 @@ export default function SearchPage() {
                 )}
               </div>
               {records.length === 0 ? (
-                <div className="mt-8 rounded-2xl bg-white p-10 text-center">
+                <div className="content-card mt-8 p-10 text-center">
                   <SearchX className="mx-auto text-[#1e4a77]" size={32} />
                   <h2 className="mt-4 text-xl font-bold">
                     Não encontramos resultados com esta busca.
@@ -214,7 +216,7 @@ export default function SearchPage() {
                   </p>
                 </div>
               ) : (
-                <div className="institutional-table mt-6 min-w-0 overflow-hidden rounded-[0.9rem] bg-white">
+                <div className="institutional-table mt-6 min-w-0 overflow-hidden bg-[#fffdf8]">
                   <div className="results-scroll">
                     <table className="min-w-[860px] w-full text-left">
                       <caption className="sr-only">

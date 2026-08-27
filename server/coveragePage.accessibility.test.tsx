@@ -153,7 +153,7 @@ describe("aba pública de cobertura", () => {
     const { container } = render(<CoveragePage />);
 
     expect(
-      screen.getByRole("heading", { name: /O que já sabemos/i })
+      screen.getByRole("heading", { name: /Veja os dados disponíveis/i })
     ).toBeTruthy();
     expect(screen.getByText("4.710/6.311")).toBeTruthy();
     expect(

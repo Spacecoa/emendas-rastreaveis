@@ -117,13 +117,13 @@ function MetricCard({
 }) {
   const toneClass =
     tone === "blue"
-      ? "border border-[#b6d6f0] bg-[#edf4fb]"
+      ? "border-[#075d78] bg-[#dcedf2]"
       : tone === "caution"
-        ? "border border-[#e9c6ce] bg-[#fff8f9]"
-        : "bg-white shadow-[0_8px_30px_rgba(18,25,32,.05)]";
-  const iconClass = tone === "caution" ? "text-[#822437]" : "text-[#1e4a77]";
+        ? "border-[#8f3742] bg-[#f7e4e5]"
+        : "";
+  const iconClass = tone === "caution" ? "text-[#8f3742]" : "text-[#075d78]";
   return (
-    <article className={`rounded-[1.35rem] p-6 ${toneClass}`}>
+    <article className={`metric-card ${toneClass}`}>
       <Icon className={iconClass} size={22} />
       <p className="mt-8 text-sm font-semibold text-black/60">{label}</p>
       <strong className="mt-1 block text-4xl font-black tracking-[-.06em]">
@@ -238,17 +238,18 @@ export default function CoveragePage() {
 
   return (
     <PortalLayout>
-      <div className="container py-12 sm:py-16">
+      <div className="container py-12 sm:py-20">
         <header className="max-w-4xl">
           <div className="flex flex-wrap items-center gap-3">
             <p className="eyebrow">O QUE JÁ PODE SER CONSULTADO</p>
             <span className="source-stamp">Dados salvos para consulta</span>
           </div>
-          <h1 className="mt-3 text-4xl font-black tracking-[-0.065em] sm:text-5xl">
-            O que já sabemos —
-            <br className="hidden sm:block" /> e o que ainda precisa de prova.
+          <h1 className="mt-4 max-w-4xl text-5xl sm:text-6xl">
+            Veja os dados disponíveis.
+            <br />
+            <em className="text-[#075d78]">Confira antes de concluir.</em>
           </h1>
-          <p className="mt-5 max-w-3xl text-lg leading-8 text-black/68">
+          <p className="page-intro mt-6 max-w-3xl">
             Aqui estão os dados que já foram trazidos de fontes oficiais. Não
             completamos o que falta, não escolhemos um estado só pelo texto e
             não tratamos pagamento como prova de que uma obra ou serviço foi
@@ -336,7 +337,7 @@ export default function CoveragePage() {
                 entre a CGU e o Transferegov mostrada aqui é somente de 2025.
               </p>
               {financialSeries.length ? (
-                <div className="mt-6 overflow-x-auto rounded-[1.4rem] bg-white shadow-[0_8px_30px_rgba(18,25,32,.05)]">
+                <div className="results-scroll institutional-table mt-6 bg-[#fffdf8]">
                   <table className="min-w-[720px] w-full text-left">
                     <caption className="sr-only">
                       Série financeira nacional de emendas CGU por exercício
@@ -400,7 +401,7 @@ export default function CoveragePage() {
             </section>
 
             <section
-              className="mt-12 rounded-[1.6rem] border border-[#b6d6f0] bg-[#edf4fb] p-6 sm:p-8"
+              className="data-panel mt-12 border-t-4 border-t-[#075d78] bg-[#e9f3f5] p-6 sm:p-8"
               aria-labelledby="valores-financeiros-anuais"
             >
               <div className="max-w-3xl">
@@ -617,10 +618,7 @@ export default function CoveragePage() {
                       )
                     );
                     return (
-                      <article
-                        key={item.year}
-                        className="rounded-[1.35rem] bg-white p-5 shadow-[0_8px_30px_rgba(18,25,32,.05)]"
-                      >
+                      <article key={item.year} className="content-card p-5">
                         <div className="flex items-start justify-between gap-4">
                           <div>
                             <p className="text-xs font-black tracking-[.14em] text-[#1e4a77]">
@@ -713,7 +711,7 @@ export default function CoveragePage() {
             </section>
 
             <section
-              className="mt-10 rounded-[1.5rem] border border-black/10 bg-[#171c21] p-6 text-white sm:p-8"
+              className="mt-10 border-l-5 border-[#b76d16] bg-[#142230] p-6 text-white sm:p-8"
               aria-labelledby="como-ler-cobertura"
             >
               <p className="text-xs font-bold tracking-[.12em] text-[#b6d6f0]">

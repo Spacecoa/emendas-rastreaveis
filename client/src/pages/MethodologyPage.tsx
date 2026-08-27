@@ -47,15 +47,22 @@ const glossary = [
 export default function MethodologyPage() {
   return (
     <PortalLayout>
-      <div className="container py-12 sm:py-16">
-        <p className="eyebrow">COMO CONFERIMOS AS INFORMAÇÕES</p>
-        <h1 className="mt-3 max-w-4xl text-4xl font-black tracking-[-.06em] sm:text-5xl">
-          Como mostramos os dados com cuidado.
-        </h1>
-        <p className="mt-5 max-w-3xl border-l-2 border-[#1e4a77]/35 pl-5 text-lg leading-8 text-black/68">
+      <div className="container py-12 sm:py-20">
+        <div className="max-w-4xl">
+          <div className="flex flex-wrap items-center gap-3">
+            <p className="eyebrow">COMO USAMOS OS DADOS</p>
+            <span className="source-stamp">Regras abertas para conferir</span>
+          </div>
+          <h1 className="mt-4 text-5xl sm:text-6xl">
+            Veja o dado.
+            <br />
+            <em className="text-[#075d78]">Entenda o que ele permite dizer.</em>
+          </h1>
+        </div>
+        <p className="page-intro mt-7 max-w-3xl">
           Mostramos apenas o que as fontes oficiais informam. Não acusamos
-          pessoas e não completamos informações que ainda não existem. Também
-          separamos o dinheiro pago da prova de que algo foi entregue.
+          pessoas e não completamos lacunas. Também separamos dinheiro pago da
+          prova de que algo foi entregue.
         </p>
         <section className="mt-12 grid gap-5 lg:grid-cols-3">
           <article className="method-card">
@@ -96,7 +103,7 @@ export default function MethodologyPage() {
               </h2>
             </div>
           </div>
-          <div className="mt-7 overflow-hidden rounded-[1.4rem] bg-white shadow-[0_8px_30px_rgba(18,25,32,.05)]">
+          <div className="institutional-table results-scroll mt-7 bg-[#fffdf8]">
             <table className="w-full text-left">
               <thead className="bg-[#edf4fb] text-sm">
                 <tr>
@@ -124,7 +131,7 @@ export default function MethodologyPage() {
           </h2>
           <dl className="mt-7 grid gap-x-10 gap-y-6 md:grid-cols-2">
             {glossary.map(([term, definition]) => (
-              <div key={term} className="border-t border-black/15 pt-4">
+              <div key={term} className="border-t-2 border-[#d6d0c4] pt-4">
                 <dt className="font-bold">{term}</dt>
                 <dd className="mt-2 text-sm leading-6 text-black/68">
                   {definition}
@@ -133,7 +140,7 @@ export default function MethodologyPage() {
             ))}
           </dl>
         </section>
-        <section className="mt-14 rounded-[1.5rem] bg-[#171c21] p-7 text-white sm:p-9">
+        <section className="mt-14 border-l-5 border-[#b76d16] bg-[#142230] p-7 text-white sm:p-9">
           <p className="text-xs font-bold tracking-[.12em] text-[#b6d6f0]">
             LIMITAÇÕES ATUAIS
           </p>

@@ -169,3 +169,8 @@
 - [x] Testar os achados corrigidos contra as bases persistidas e registrar o parecer para os itens dependentes de confirmação humana.
 - [ ] Confirmar com a plataforma o isolamento de `JWT_SECRET` por projeto e uma política de limite agregada no gateway para a hospedagem com múltiplas instâncias.
 - [ ] Receber os outros achados da auditoria com arquivo, linha e cenário de reprodução para validação técnica individual.
+- [x] Definir e aplicar uma nova linguagem visual de serviço público, com tipografia, cores, espaçamentos e componentes voltados à leitura simples e inclusiva.
+- [x] Reconstruir cabeçalho, navegação, busca, estados de carregamento e ações para uso claro por teclado, mouse e tela pequena.
+- [x] Reorganizar as páginas públicas em blocos de pergunta, resposta, fonte e limite, sem perder os dados oficiais ou sua rastreabilidade.
+- [x] Revisar textos, contrastes, foco, semântica, redução de movimento e responsividade em todas as telas públicas após o redesign.
+- [x] Executar testes, build e revisão visual desktop/celular do novo template de informação pública.

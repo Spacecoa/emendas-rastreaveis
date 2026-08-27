@@ -42,39 +42,38 @@ export default function PortalLayout({
   const [open, setOpen] = useState(false);
   const [location] = useLocation();
   return (
-    <div className="min-h-screen bg-[#f6f6f3] text-[#16191d]">
+    <div className="public-shell">
       <a className="skip-link" href="#conteudo">
         Pular para o conteúdo principal
       </a>
       <header className="site-header">
         <div className="site-header-meta hidden sm:block">
           <div className="container flex items-center justify-between py-2">
-            <span>Dados públicos · explicados com clareza</span>
+            <span>Observatório público de emendas</span>
             <span>
-              <strong>2022–2025</strong> · fontes para conferência
+              <strong>2022–2025</strong> · dados, fonte e limite visíveis
             </span>
           </div>
         </div>
         <div className="container flex min-h-[4.5rem] items-center justify-between gap-5">
           <Link
             href="/"
-            className="group flex items-center gap-3 rounded-sm font-black tracking-[-0.05em] focus:outline-none focus-visible:ring-4 focus-visible:ring-[#1e4a77]/35"
+            className="site-brand group flex items-center gap-3 rounded-sm focus:outline-none"
           >
             <span
-              className="grid size-9 place-items-center rounded-full bg-[#151a20] text-[#f7f8f9] transition-transform duration-150 group-active:scale-95"
+              className="site-brand-mark transition-transform duration-150 group-active:scale-95"
               aria-hidden="true"
             >
               <Scale size={18} strokeWidth={2.4} />
             </span>
-            <span className="text-xl leading-none">
-              Emendas
-              <br />
-              <span className="font-light tracking-[-0.06em]">em foco</span>
+            <span className="site-brand-wordmark">
+              Emendas em Foco
+              <em>Dados para conferir</em>
             </span>
           </Link>
           <nav
             aria-label="Navegação principal"
-            className="hidden items-center gap-2 text-sm font-semibold md:flex"
+            className="hidden items-center gap-1 md:flex"
           >
             {navigation.map(item =>
               item.external ? (
@@ -93,7 +92,7 @@ export default function PortalLayout({
             )}
           </nav>
           <button
-            className="grid size-10 place-items-center rounded-md border border-black/15 bg-white md:hidden"
+            className="mobile-menu-button md:hidden"
             aria-label={open ? "Fechar menu" : "Abrir menu"}
             aria-expanded={open}
             onClick={() => setOpen(value => !value)}
@@ -104,14 +103,14 @@ export default function PortalLayout({
         {open && (
           <nav
             aria-label="Navegação móvel"
-            className="container flex flex-col gap-1 border-t border-black/10 bg-[#faf9f6] py-4 md:hidden"
+            className="mobile-nav container flex flex-col gap-1 py-4 md:hidden"
           >
             {navigation.map(item =>
               item.external ? (
                 <a
                   key={item.href}
                   href={item.href}
-                  className="rounded px-2 py-3 font-medium hover:bg-black/5"
+                  className="rounded px-3 py-3"
                 >
                   {item.label}
                 </a>
@@ -119,7 +118,7 @@ export default function PortalLayout({
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="rounded px-2 py-3 font-medium hover:bg-black/5"
+                  className="rounded px-3 py-3"
                   onClick={() => setOpen(false)}
                 >
                   {item.label}
@@ -135,14 +134,14 @@ export default function PortalLayout({
       <footer className="site-footer mt-20 border-t border-black/10">
         <div className="container grid gap-8 py-10 md:grid-cols-2 xl:grid-cols-4">
           <section>
-            <p className="font-black tracking-[-0.04em]">Emendas em Foco</p>
+            <p className="footer-title">Emendas em Foco</p>
             <p className="mt-2 text-sm leading-6 text-black/65">
               Plataforma para entender dados oficiais sobre emendas. Confira
               sempre as fontes e os órgãos de controle quando precisar.
             </p>
           </section>
           <section className="text-sm leading-6 text-black/65">
-            <p className="font-bold text-black">De onde vêm os dados</p>
+            <p className="footer-heading">De onde vêm os dados</p>
             <p className="mt-2">
               <FooterLink href="https://api.portaldatransparencia.gov.br/">
                 Portal da Transparência (CGU)
@@ -159,7 +158,7 @@ export default function PortalLayout({
             </p>
           </section>
           <section className="text-sm leading-6 text-black/65">
-            <p className="font-bold text-black">Como cuidamos dos dados</p>
+            <p className="footer-heading">Como cuidamos dos dados</p>
             <p className="mt-2">
               Usamos apenas dados públicos necessários à consulta. Não deixamos
               senhas ou chaves no código. Quando faltar informação, mostramos
@@ -171,7 +170,7 @@ export default function PortalLayout({
             </p>
           </section>
           <section className="text-sm leading-6 text-black/65">
-            <p className="font-bold text-black">Uso responsável</p>
+            <p className="footer-heading">Uso responsável</p>
             <p className="mt-2">
               A análise se apoia no direito de acesso à informação e na
               publicidade de interesse público previstos na{" "}
@@ -197,10 +196,7 @@ export default function PortalLayout({
 
 export function CompactSearchLink() {
   return (
-    <Link
-      href="/busca"
-      className="inline-flex items-center gap-2 rounded-md border border-black/15 bg-white px-4 py-2 text-sm font-semibold shadow-sm transition hover:border-[#1e4a77]/45 hover:bg-[#edf4fb] focus:outline-none focus-visible:ring-4 focus-visible:ring-[#1e4a77]/35"
-    >
+    <Link href="/busca" className="action-link text-sm">
       <Search size={16} /> Fazer uma busca
     </Link>
   );

@@ -1,6 +1,6 @@
 import {
-  ArrowDownRight,
-  CircleDashed,
+  ArrowRight,
+  CircleCheckBig,
   FileCheck2,
   Landmark,
   Search,
@@ -15,18 +15,21 @@ import { trpc } from "@/lib/trpc";
 const steps = [
   {
     icon: Landmark,
-    title: "O dinheiro foi reservado?",
-    text: "Mostramos as etapas de orçamento, empenho, liquidação e pagamento como fatos diferentes.",
+    number: "01",
+    title: "Veja o dinheiro reservado",
+    text: "Empenho mostra que o governo separou o recurso e assumiu o compromisso de pagar.",
   },
   {
-    icon: CircleDashed,
-    title: "A entrega foi confirmada?",
-    text: "A situação da obra ou do serviço só aparece como comprovada quando a fonte oficial permite verificar.",
+    icon: CircleCheckBig,
+    number: "02",
+    title: "Veja o dinheiro pago",
+    text: "Pagamento mostra que o recurso saiu. Ele não prova, sozinho, que uma obra ou serviço foi entregue.",
   },
   {
     icon: FileCheck2,
-    title: "É possível auditar?",
-    text: "Cada número preserva sua fonte, link, data de extração e limite de interpretação.",
+    number: "03",
+    title: "Confira a fonte",
+    text: "Cada resultado preserva o link da fonte, a data em que foi obtido e os limites daquela informação.",
   },
 ];
 
@@ -64,79 +67,100 @@ export default function Home() {
 
   return (
     <PortalLayout>
-      <section className="hero-grid overflow-hidden border-b border-black/10">
+      <section className="hero-grid">
         <div className="container relative py-16 sm:py-24 lg:py-28">
-          <div
-            className="absolute -right-10 top-12 size-32 rounded-full border border-[#1e4a77]/10 bg-[#b6d6f0]/25"
-            aria-hidden="true"
-          />
-          <div className="relative max-w-4xl">
+          <div className="relative max-w-5xl">
             <div className="flex flex-wrap items-center gap-3">
-              <p className="eyebrow">REGISTROS PÚBLICOS, LEITURA CLARA</p>
-              <span className="source-stamp">Fonte e limite visíveis</span>
+              <p className="eyebrow">CONSULTA PÚBLICA DE EMENDAS</p>
+              <span className="source-stamp">Dados oficiais verificáveis</span>
             </div>
-            <h1 className="mt-5 max-w-3xl text-5xl font-black leading-[.92] tracking-[-0.07em] text-[#151a20] sm:text-6xl lg:text-7xl">
-              Acompanhe a emenda{" "}
-              <span className="font-light italic">sem pular etapas.</span>
+            <h1 className="hero-title mt-6">
+              Escolha uma pergunta.
+              <br />
+              <em>Confira a resposta na fonte.</em>
             </h1>
-            <p className="mt-6 max-w-2xl border-l-2 border-[#1e4a77]/35 pl-5 text-lg leading-8 text-black/70">
-              Veja o caminho de cada emenda, desde a indicação até o pagamento.
-              Quando não houver informação suficiente para confirmar o resultado
-              no município, a plataforma avisa com clareza.
+            <p className="hero-lede mt-7 max-w-2xl">
+              Pesquise emendas, pessoas, municípios e valores. A plataforma
+              mostra o que os dados dizem, de onde vieram e o que ainda não é
+              possível concluir.
             </p>
           </div>
-          <div className="relative mt-10 max-w-5xl">
+
+          <div className="relative mt-12 max-w-6xl">
             <SearchPanel />
           </div>
-          <div className="relative mt-7 flex flex-wrap gap-x-7 gap-y-3 text-sm text-black/65">
+
+          <div className="relative mt-7 flex flex-wrap items-center gap-x-8 gap-y-3 text-sm text-black/70">
             <span className="inline-flex items-center gap-2">
               <span
-                className={`size-2 rounded-full ${portal?.status === "available" ? "bg-[#1e4a77]" : "bg-black/35"}`}
+                className={`size-2.5 rounded-full ${portal?.status === "available" ? "bg-[#075d78]" : "bg-[#8c989b]"}`}
+                aria-hidden="true"
               />
               Dados financeiros: Portal da Transparência (CGU)
               {portal
-                ? ` · atualizada em ${formatDate(portal.latestSuccessfulLoadAt)}`
-                : " · consulte cobertura e proveniência"}
+                ? ` · obtidos em ${formatDate(portal.latestSuccessfulLoadAt)}`
+                : " · consulte a cobertura"}
             </span>
             <Link
-              className="inline-flex items-center gap-1 font-semibold underline decoration-black/25 underline-offset-4"
+              className="inline-flex items-center gap-2 font-bold text-[#063c52] underline decoration-[#b76d16] decoration-2 underline-offset-4"
               href="/metodologia"
             >
-              Como lemos os dados <ArrowDownRight size={15} />
+              Como ler os dados <ArrowRight size={16} aria-hidden="true" />
             </Link>
           </div>
         </div>
       </section>
 
       <section
-        className="container py-16 sm:py-20"
-        aria-labelledby="cobertura-titulo"
+        className="container py-12 sm:py-16"
+        aria-labelledby="antes-de-concluir"
       >
-        <div className="flex flex-wrap items-end justify-between gap-5">
+        <div className="notice-panel grid gap-5 p-6 sm:grid-cols-[auto_1fr_auto] sm:items-center sm:p-8">
+          <div className="grid size-11 place-items-center rounded-full bg-[#063c52] text-white">
+            <FileCheck2 size={21} aria-hidden="true" />
+          </div>
           <div>
-            <p className="eyebrow">COBERTURA CONCRETA</p>
-            <h2
-              id="cobertura-titulo"
-              className="mt-3 text-3xl font-black tracking-[-0.055em] sm:text-4xl"
-            >
-              O que está disponível hoje.
+            <p className="section-kicker">LEIA ANTES DE CONCLUIR</p>
+            <h2 id="antes-de-concluir" className="mt-2 text-2xl sm:text-3xl">
+              Dinheiro pago não é prova de entrega.
             </h2>
-            <p className="mt-4 max-w-3xl leading-7 text-black/65">
-              Estes totais vêm da carga oficial persistida. A cobertura atual é
-              parcial e declarada: não representa o Brasil inteiro, nem prova
-              entrega física.
+            <p className="mt-2 max-w-3xl text-sm leading-6 text-black/72">
+              Os valores mostram as etapas financeiras. Para afirmar que algo
+              foi entregue, seriam necessários documentos oficiais adicionais.
             </p>
           </div>
           <Link
-            className="inline-flex w-fit items-center gap-2 rounded-full border border-black/12 bg-white px-5 py-3 font-bold shadow-sm transition hover:bg-[#edf4fb] focus:outline-none focus-visible:ring-4 focus-visible:ring-[#1e4a77]/35"
-            href="/cobertura"
+            className="action-link w-fit text-sm"
+            href="/metodologia#semaforo"
           >
-            <Search size={17} /> Ver dados disponíveis e fontes
+            Entender os limites <ArrowRight size={16} aria-hidden="true" />
           </Link>
         </div>
+      </section>
+
+      <section
+        className="container pb-16 sm:pb-20"
+        aria-labelledby="cobertura-titulo"
+      >
+        <div className="grid gap-7 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
+          <div>
+            <p className="eyebrow">O QUE JÁ ESTÁ DISPONÍVEL</p>
+            <h2 id="cobertura-titulo" className="mt-3 text-4xl sm:text-5xl">
+              O que está disponível hoje.
+            </h2>
+            <p className="page-intro mt-5 max-w-3xl">
+              Estes totais vêm de registros oficiais já carregados. Eles não
+              representam tudo o que existe no país e não comprovam entrega.
+            </p>
+          </div>
+          <Link className="action-link w-fit text-sm" href="/cobertura">
+            Ver dados e fontes <ArrowRight size={16} aria-hidden="true" />
+          </Link>
+        </div>
+
         {coverage.isLoading ? (
-          <p className="mt-8 text-sm text-black/60">
-            Carregando a cobertura oficial…
+          <p className="mt-8 rounded-md border border-[#d6d0c4] bg-[#fffdf8] p-5 text-sm text-black/70">
+            Carregando os dados disponíveis…
           </p>
         ) : coverage.data ? (
           <>
@@ -149,7 +173,7 @@ export default function Home() {
               <div className="metric-card">
                 <p>Etapas do dinheiro</p>
                 <strong>{number(coverage.data.totals.financialStages)}</strong>
-                <span>reservado, confirmado, pago e valores pendentes</span>
+                <span>dinheiro reservado, reconhecido, pago e pendente</span>
               </div>
               <div className="metric-card">
                 <p>Municípios com população</p>
@@ -161,12 +185,12 @@ export default function Home() {
                 </span>
               </div>
               <div className="metric-card">
-                <p>Beneficiários</p>
+                <p>Beneficiários registrados</p>
                 <strong>{number(coverage.data.totals.beneficiaries)}</strong>
-                <span>Transferegov · catálogo oficial</span>
+                <span>catálogo oficial do Transferegov</span>
               </div>
               <div className="metric-card">
-                <p>Objetos e instrumentos</p>
+                <p>Objetos e documentos</p>
                 <strong>
                   {number(
                     coverage.data.totals.objects +
@@ -175,7 +199,7 @@ export default function Home() {
                 </strong>
                 <span>
                   {number(coverage.data.totals.objects)} objetos ·{" "}
-                  {number(coverage.data.totals.instruments)} instrumentos
+                  {number(coverage.data.totals.instruments)} documentos
                 </span>
               </div>
               <div className="metric-card">
@@ -187,53 +211,51 @@ export default function Home() {
                 </strong>
                 <span>
                   {coverage.data.reconciliation
-                    ? `${percent(coverage.data.reconciliation.matchRate)} por NR_EMENDA`
-                    : "aguardando carga"}
+                    ? `${percent(coverage.data.reconciliation.matchRate)} por código igual`
+                    : "aguardando comparação"}
                 </span>
               </div>
             </div>
-            <p className="mt-5 max-w-4xl text-sm leading-6 text-black/65">
-              Quando duas bases oficiais têm o mesmo código, mostramos esse
-              vínculo. Em 2025, a comparação usa os oito últimos dígitos do
-              código CGU e o campo <code>NR_EMENDA</code> do Transferegov. Isso
-              não confirma que uma obra ou serviço foi entregue.
+            <p className="limit-panel mt-5 max-w-5xl p-4 text-sm leading-6">
+              <strong>O que essa comparação quer dizer:</strong> quando duas
+              bases oficiais têm o mesmo código, mostramos esse vínculo. Em
+              2025, a comparação usa os oito últimos dígitos do código CGU e o
+              campo <code>NR_EMENDA</code> do Transferegov. Isso não confirma a
+              entrega de obra ou serviço.
             </p>
           </>
         ) : (
-          <p className="mt-8 text-sm text-black/60">
+          <p className="mt-8 rounded-md border border-[#d6d0c4] bg-[#fffdf8] p-5 text-sm text-black/70">
             A síntese de cobertura não está disponível neste momento.
           </p>
         )}
       </section>
 
       <section
-        className="border-y border-black/10 bg-[#e9eff4]"
+        className="border-y border-[#d6d0c4] bg-[#e9f3f5]"
         aria-labelledby="ufs-titulo"
       >
-        <div className="container py-14">
-          <div className="flex flex-wrap items-end justify-between gap-5">
+        <div className="container py-16 sm:py-20">
+          <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
             <div>
-              <p className="eyebrow">ACESSO RÁPIDO</p>
-              <h2
-                id="ufs-titulo"
-                className="mt-3 text-3xl font-black tracking-[-0.055em] sm:text-4xl"
-              >
-                UFs disponíveis.
+              <p className="eyebrow">COMECE PELO SEU ESTADO</p>
+              <h2 id="ufs-titulo" className="mt-3 text-4xl sm:text-5xl">
+                Estados com dados para consultar.
               </h2>
-              <p className="mt-4 max-w-2xl leading-7 text-black/65">
-                Aqui aparecem os estados que já têm municípios e população
-                oficial carregados. Ordene por nome ou pela população mais
-                recente disponível.
+              <p className="page-intro mt-5 max-w-3xl">
+                Escolha um estado para ver emendas que têm vínculo territorial
+                comprovado por documento ou código oficial. A plataforma não
+                decide o estado apenas pelo texto.
               </p>
             </div>
             <div
-              className="flex rounded-full border border-black/15 bg-white p-1"
+              className="flex w-fit rounded-md border border-[#142230] bg-[#fffdf8] p-1"
               role="group"
               aria-label="Ordenar unidades federativas"
             >
               <button
                 type="button"
-                className={`rounded-full px-4 py-2 text-sm font-bold ${stateOrder === "alphabetical" ? "bg-[#151a20] text-white" : "text-black/65"}`}
+                className={`rounded px-4 py-2 text-sm font-bold ${stateOrder === "alphabetical" ? "bg-[#142230] text-white" : "text-[#142230]"}`}
                 aria-pressed={stateOrder === "alphabetical"}
                 onClick={() => setStateOrder("alphabetical")}
               >
@@ -241,7 +263,7 @@ export default function Home() {
               </button>
               <button
                 type="button"
-                className={`rounded-full px-4 py-2 text-sm font-bold ${stateOrder === "population" ? "bg-[#151a20] text-white" : "text-black/65"}`}
+                className={`rounded px-4 py-2 text-sm font-bold ${stateOrder === "population" ? "bg-[#142230] text-white" : "text-[#142230]"}`}
                 aria-pressed={stateOrder === "population"}
                 onClick={() => setStateOrder("population")}
               >
@@ -249,101 +271,78 @@ export default function Home() {
               </button>
             </div>
           </div>
-          <ul className="mt-8 grid gap-4 md:grid-cols-2">
+
+          <ul className="mt-9 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
             {states.map(state => (
               <li key={state.uf}>
                 <Link
                   href={`/busca?ano=${coverage.data?.referenceYear ?? 2025}&uf=${state.uf}`}
-                  className="block rounded-[1.35rem] bg-white p-6 shadow-[0_8px_30px_rgba(18,25,32,.05)] transition hover:-translate-y-0.5 hover:bg-[#f9e4e8] focus:outline-none focus-visible:ring-4 focus-visible:ring-[#1e4a77]/35"
+                  className="group block border border-[#b8c6c8] bg-[#fffdf8] p-5 transition hover:-translate-y-0.5 hover:border-[#075d78] hover:bg-white focus:outline-none"
                 >
                   <div className="flex items-start justify-between gap-4">
                     <div>
-                      <p className="text-2xl font-black tracking-[-.05em]">
-                        {state.uf}
+                      <p className="font-mono text-xs font-bold text-[#075d78]">
+                        UF · {state.uf}
                       </p>
-                      <p className="mt-2 text-sm leading-6 text-black/65">
-                        {number(state.municipalityCount)} municípios com
-                        população de referência em{" "}
-                        {state.populationReferenceYear ?? "ano não informado"}.
+                      <p className="mt-2 text-xl font-bold text-[#142230]">
+                        {number(state.municipalityCount)} municípios
                       </p>
                     </div>
-                    <span className="rounded-full bg-[#edf4fb] px-3 py-1 text-xs font-bold text-[#1e4a77]">
-                      Consultar
-                    </span>
+                    <span className="evidence-chip">Ver emendas</span>
                   </div>
-                  <p className="mt-5 text-sm font-bold tabular-nums">
+                  <p className="mt-6 border-t border-[#d6d0c4] pt-4 text-sm font-bold tabular-nums text-[#142230]">
                     {number(state.population)} habitantes
                   </p>
-                  <p className="mt-1 text-xs text-black/55">
-                    Atualizada em {formatDate(state.updatedAt)} ·{" "}
-                    <span className="underline">IBGE</span>
+                  <p className="mt-1 text-xs leading-5 text-black/65">
+                    População IBGE de{" "}
+                    {state.populationReferenceYear ?? "ano não informado"} ·
+                    dados obtidos em {formatDate(state.updatedAt)}
                   </p>
                 </Link>
               </li>
             ))}
           </ul>
           {!coverage.isLoading && states.length === 0 && (
-            <p className="mt-8 text-sm text-black/60">
-              Nenhuma UF possui cobertura municipal suficiente para acesso
+            <p className="mt-8 rounded-md border border-[#d6d0c4] bg-[#fffdf8] p-5 text-sm text-black/70">
+              Nenhum estado tem cobertura municipal suficiente para este acesso
               rápido.
             </p>
           )}
         </div>
       </section>
 
-      <section className="container py-16 sm:py-20">
-        <div className="grid gap-10 lg:grid-cols-[.8fr_2fr] lg:items-start">
+      <section className="container py-16 sm:py-20" aria-labelledby="como-usar">
+        <div className="grid gap-10 lg:grid-cols-[minmax(0,.8fr)_minmax(0,2fr)] lg:items-start">
           <div>
-            <p className="eyebrow">SEM CONFUNDIR AS ETAPAS</p>
-            <h2 className="mt-3 text-3xl font-black tracking-[-0.055em] sm:text-4xl">
-              Pagar não é, sozinho, entregar.
+            <p className="eyebrow">UM JEITO SEGURO DE LER</p>
+            <h2 id="como-usar" className="mt-3 text-4xl sm:text-5xl">
+              Três passos para entender uma emenda.
             </h2>
-            <p className="mt-4 max-w-sm leading-7 text-black/65">
-              A execução financeira e a execução do objeto são medidas
-              separadas. Uma obra pode receber recurso e ainda não estar pronta.
+            <p className="page-intro mt-5 max-w-md">
+              Você não precisa conhecer termos de orçamento. A página explica o
+              significado de cada etapa antes de apresentar uma conclusão.
             </p>
           </div>
-          <div className="grid gap-4 md:grid-cols-3">
+          <ol className="grid gap-4 md:grid-cols-3">
             {steps.map(step => (
-              <article
-                key={step.title}
-                className="rounded-[1.4rem] bg-white p-6 shadow-[0_8px_30px_rgba(18,25,32,0.05)]"
-              >
-                <step.icon
-                  size={23}
-                  className="text-[#1e4a77]"
-                  aria-hidden="true"
-                />
-                <h3 className="mt-8 font-bold tracking-[-0.025em]">
-                  {step.title}
-                </h3>
-                <p className="mt-3 text-sm leading-6 text-black/65">
+              <li key={step.title} className="method-card">
+                <div className="flex items-center justify-between gap-4">
+                  <step.icon
+                    size={23}
+                    className="text-[#075d78]"
+                    aria-hidden="true"
+                  />
+                  <span className="font-mono text-xs font-bold text-[#b76d16]">
+                    PASSO {step.number}
+                  </span>
+                </div>
+                <h3 className="mt-8 text-lg font-bold">{step.title}</h3>
+                <p className="mt-3 text-sm leading-6 text-black/70">
                   {step.text}
                 </p>
-              </article>
+              </li>
             ))}
-          </div>
-        </div>
-      </section>
-      <section className="border-y border-black/10 bg-[#e9eff4]">
-        <div className="container grid gap-8 py-12 md:grid-cols-[1.2fr_1fr] md:items-center">
-          <div>
-            <p className="eyebrow">ENTENDA ANTES DE CONCLUIR</p>
-            <h2 className="mt-3 text-3xl font-black tracking-[-0.055em]">
-              Dados ausentes aparecem como ausentes.
-            </h2>
-            <p className="mt-4 max-w-2xl leading-7 text-black/65">
-              Não preenchemos lacunas com estimativas e não atribuímos
-              irregularidade. A plataforma apresenta registros, suas limitações
-              e links para conferência.
-            </p>
-          </div>
-          <Link
-            className="inline-flex w-fit items-center gap-2 rounded-full bg-white px-5 py-3 font-bold shadow-sm transition hover:bg-[#f9e4e8] focus:outline-none focus-visible:ring-4 focus-visible:ring-[#1e4a77]/35"
-            href="/metodologia"
-          >
-            <Search size={17} /> Ler metodologia e glossário
-          </Link>
+          </ol>
         </div>
       </section>
     </PortalLayout>

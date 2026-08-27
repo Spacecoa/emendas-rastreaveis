@@ -56,17 +56,15 @@ export default function AmendmentPage() {
 
   return (
     <PortalLayout>
-      <div className="container py-12 sm:py-16">
+      <div className="container py-12 sm:py-20">
         {query.isLoading ? (
-          <div className="flex items-center gap-3 rounded-2xl bg-white p-8">
+          <div className="content-card flex items-center gap-3 p-8">
             <Loader2 className="animate-spin text-[#1e4a77]" /> Procurando esta
             emenda nos dados oficiais…
           </div>
         ) : !record ? (
-          <div className="rounded-[1.5rem] bg-white p-9">
-            <h1 className="text-3xl font-black tracking-[-.05em]">
-              Não encontramos esta emenda agora.
-            </h1>
+          <div className="content-card p-9">
+            <h1 className="text-4xl">Não encontramos esta emenda agora.</h1>
             <p className="mt-3 max-w-2xl leading-7 text-black/65">
               Tente usar a busca com outro ano, número ou nome. Quando não há
               resultado, a plataforma não cria uma resposta aproximada.
@@ -82,10 +80,10 @@ export default function AmendmentPage() {
                 <p className="eyebrow">
                   EMENDA {record.number ?? record.code} · {record.year ?? year}
                 </p>
-                <h1 className="mt-3 max-w-4xl text-4xl font-black tracking-[-.06em] sm:text-5xl">
+                <h1 className="mt-4 max-w-4xl text-5xl sm:text-6xl">
                   {record.author ?? "Autoria não informada"}
                 </h1>
-                <p className="mt-4 max-w-3xl border-l-2 border-[#1e4a77]/35 pl-5 text-lg leading-8 text-black/68">
+                <p className="page-intro mt-6 max-w-3xl">
                   Destinada a{" "}
                   <strong>
                     {record.locality ?? "localidade não informada"}
@@ -101,7 +99,7 @@ export default function AmendmentPage() {
                 <CompactSearchLink />
               </div>
             </div>
-            <section className="mt-10 rounded-[1.5rem] border border-[#b6d6f0] bg-[#edf4fb] p-6 sm:p-8">
+            <section className="notice-panel mt-10 p-6 sm:p-8">
               <div className="flex gap-4">
                 <ShieldCheck
                   className="mt-1 shrink-0 text-[#1e4a77]"
@@ -135,7 +133,7 @@ export default function AmendmentPage() {
                 }}
                 title="Execução financeira conhecida"
               />
-              <aside className="rounded-[1.4rem] bg-white p-6 shadow-[0_8px_30px_rgba(18,25,32,.05)]">
+              <aside className="content-card p-6">
                 <h2 className="font-bold tracking-[-.03em]">Veja os valores</h2>
                 <dl className="mt-5 space-y-4 text-sm">
                   <div className="flex justify-between gap-4 border-b border-black/8 pb-3">
@@ -165,7 +163,7 @@ export default function AmendmentPage() {
                 </dl>
               </aside>
             </section>
-            <section className="mt-8 rounded-[1.5rem] bg-white p-6 shadow-[0_8px_30px_rgba(18,25,32,.05)] sm:p-8">
+            <section className="content-card mt-8 p-6 sm:p-8">
               <div>
                 <p className="eyebrow">CAMINHO DO DINHEIRO</p>
                 <h2 className="mt-2 text-2xl font-black tracking-[-.05em]">
@@ -207,7 +205,7 @@ export default function AmendmentPage() {
               </ol>
             </section>
             <section className="mt-8 grid gap-6 md:grid-cols-2">
-              <article className="rounded-[1.4rem] bg-[#f9e4e8] p-6">
+              <article className="content-card border-l-5 border-l-[#b76d16] bg-[#f8e7c9] p-6">
                 <FileText className="text-[#822437]" />
                 <h2 className="mt-5 font-bold tracking-[-.03em]">
                   Documentos relacionados
@@ -227,7 +225,7 @@ export default function AmendmentPage() {
                   </p>
                 )}
               </article>
-              <article className="rounded-[1.4rem] bg-[#f2f3f5] p-6">
+              <article className="content-card bg-[#e9f3f5] p-6">
                 <ExternalLink className="text-[#1e4a77]" />
                 <h2 className="mt-5 font-bold tracking-[-.03em]">
                   Origem do registro

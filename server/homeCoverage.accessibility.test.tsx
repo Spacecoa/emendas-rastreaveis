@@ -77,7 +77,7 @@ describe("transparência da página inicial", () => {
     ).toBeTruthy();
     expect(screen.getByText("6.311")).toBeTruthy();
     expect(screen.getByText("4710/6311")).toBeTruthy();
-    expect(screen.getByText("RJ")).toBeTruthy();
+    expect(screen.getByText(/UF · RJ/)).toBeTruthy();
     expect(
       screen.getByRole("button", { name: "A–Z" }).getAttribute("aria-pressed")
     ).toBe("true");
