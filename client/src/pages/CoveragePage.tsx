@@ -424,8 +424,13 @@ export default function CoveragePage() {
 
               <fieldset className="mt-6 grid gap-4 rounded-[0.9rem] border border-[#b6d6f0] bg-white/85 p-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] lg:items-end">
                 <legend className="px-1 text-sm font-black tracking-[-0.02em]">
-                  Detalhar o recorte
+                  1. Escolha como detalhar o recorte
                 </legend>
+                <p className="-mt-1 text-xs leading-5 text-black/60 lg:col-span-2">
+                  Selecione uma autoria para recalcular os valores anuais. O
+                  filtro de partido só fica disponível quando a fonte oficial
+                  traz essa filiação preenchida.
+                </p>
                 <div>
                   <label
                     htmlFor="filtro-autoria-resumo"
@@ -436,6 +441,7 @@ export default function CoveragePage() {
                   <select
                     id="filtro-autoria-resumo"
                     value={coverageInput.authorId?.toString() ?? ""}
+                    aria-describedby="ajuda-autoria-resumo"
                     onChange={event =>
                       updateFinancialFilters(
                         event.target.value,
@@ -452,6 +458,14 @@ export default function CoveragePage() {
                       </option>
                     ))}
                   </select>
+                  <p
+                    id="ajuda-autoria-resumo"
+                    className="mt-1.5 text-xs leading-5 text-black/60"
+                  >
+                    {authorOptions.length
+                      ? `${authorOptions.length} autorias disponíveis na carga selecionada.`
+                      : "Nenhuma autoria está disponível neste recorte."}
+                  </p>
                 </div>
                 <div>
                   <label
@@ -515,6 +529,33 @@ export default function CoveragePage() {
               >
                 {filterDescription}
               </p>
+              {(activeAuthor || activeParty) && (
+                <div
+                  className="mt-3 flex flex-wrap items-center gap-2 text-xs"
+                  aria-label="Filtros ativos"
+                >
+                  <span className="font-bold uppercase tracking-[.08em] text-black/55">
+                    Recorte ativo
+                  </span>
+                  {activeAuthor && (
+                    <span className="rounded-full border border-[#1e4a77]/25 bg-white px-3 py-1.5 font-semibold text-[#1e4a77]">
+                      Autoria: {activeAuthor.name}
+                    </span>
+                  )}
+                  {activeParty && (
+                    <span className="rounded-full border border-[#1e4a77]/25 bg-white px-3 py-1.5 font-semibold text-[#1e4a77]">
+                      Partido: {activeParty}
+                    </span>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => updateFinancialFilters("", "")}
+                    className="font-bold text-[#1e4a77] underline underline-offset-2 focus:outline-none focus-visible:ring-4 focus-visible:ring-[#1e4a77]/25"
+                  >
+                    Remover filtros
+                  </button>
+                </div>
+              )}
 
               <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-y border-[#1e4a77]/15 py-3">
                 <p className="max-w-2xl text-xs leading-5 text-black/65">

@@ -168,6 +168,12 @@ describe("aba pública de cobertura", () => {
     ).toBeTruthy();
     expect(screen.getByLabelText("Autor ou autora")).toBeTruthy();
     expect(
+      screen.getByText(/1\. Escolha como detalhar o recorte/i)
+    ).toBeTruthy();
+    expect(
+      screen.getByText(/1 autorias disponíveis na carga selecionada/i)
+    ).toBeTruthy();
+    expect(
       screen.getByRole("option", {
         name: /JANDIRA FEGHALI · parlamentar · 95 emendas/i,
       })

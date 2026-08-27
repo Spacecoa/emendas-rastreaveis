@@ -40,3 +40,13 @@ Um item será marcado como **Aprovado** quando o fluxo esperado for reproduzíve
 | Média      | Filtro partidário utilizável                     | Exige que a fonte carregada disponibilize filiação partidária com proveniência adequada; a interface mantém o estado indisponível sem deduzir partidos.        |
 | Média      | URLs amigáveis de município e parlamentar        | Pode aceitar slugs além da identidade literal exibida pela fonte, mas requer uma tabela de alias auditável para não reintroduzir correspondências aproximadas. |
 | Baixa      | Monitoramento do carregamento sob demanda do PDF | O gerador de PDF permanece em chunk separado; acompanhar o impacto após publicação real antes de alterar a estratégia de bundle.                               |
+
+### Evidência visual da nova tentativa de filtros
+
+A revisão visual da rota `/cobertura` em desktop (1280×720) confirmou o cabeçalho do painel, os cartões de resumo e a hierarquia editorial. Em celular (390×844), a navegação colapsa corretamente, os cartões empilham e o conteúdo permanece legível; os controles do painel seguem em fluxo vertical para uso por toque e teclado. A interface agora orienta o usuário com “1. Escolha como detalhar o recorte”, informa a quantidade de autorias disponíveis e apresenta um resumo visual dos filtros ativos com ação de remoção. O partido permanece explicitamente indisponível quando a fonte oficial não o fornece.
+
+### Segunda tentativa de melhoria dos filtros
+
+A interface passou a orientar a seleção com a instrução “1. Escolha como detalhar o recorte”. O campo de autoria informa quantas autorias estão disponíveis e cada opção mantém nome, tipo e quantidade de emendas. O campo de partido explica a origem da filiação e permanece desabilitado com mensagem explícita quando a carga oficial não possui partido preenchido. Quando há recorte ativo, a página mostra etiquetas de autoria e/ou partido e oferece a ação “Remover filtros”; a seleção continua refletida na URL para compartilhamento.
+
+A checagem final desta tentativa aprovou `pnpm check`, os testes direcionados de cobertura e filtros (10 testes), Prettier, `git diff --check`, a suíte completa (`27` arquivos aprovados, `60` testes aprovados e `1` suíte Resend pulada) e `pnpm build`. O build mantém apenas o aviso conhecido de chunk inicial acima de 500 kB, sem falha.

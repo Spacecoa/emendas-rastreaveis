@@ -149,3 +149,6 @@
 - [x] Executar verificações individuais de chat, API, acessibilidade, responsividade, segurança e integração GitHub.
 - [x] Corrigir somente regressões comprovadas e documentar melhorias priorizadas que dependam de autorização ou de novas fontes oficiais.
 - [x] Reexecutar a validação integral e entregar relatório final do checklist funcional.
+
+- [x] Implementar controles intuitivos de autor e partido no painel anual, com rótulos explicativos e estados claros.
+- [x] Validar seleção, limpeza, URL compartilhável, acessibilidade e responsividade dos novos filtros.
