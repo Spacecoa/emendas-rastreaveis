@@ -113,23 +113,37 @@ describe("API pública de emendas", () => {
   });
 
   it("pagina a carga oficial persistida sem repetir os registros da primeira página", async () => {
-    const [firstResponse, secondResponse] = await Promise.all([
-      fetch(`${baseUrl}/api/v1/emendas?ano=2025&pagina=1`),
-      fetch(`${baseUrl}/api/v1/emendas?ano=2025&pagina=2`),
-    ]);
-    const [firstPage, secondPage] = await Promise.all([
+    const [firstResponse, repeatedFirstResponse, secondResponse] =
+      await Promise.all([
+        fetch(`${baseUrl}/api/v1/emendas?ano=2025&pagina=1`),
+        fetch(`${baseUrl}/api/v1/emendas?ano=2025&pagina=1`),
+        fetch(`${baseUrl}/api/v1/emendas?ano=2025&pagina=2`),
+      ]);
+    const [firstPage, repeatedFirstPage, secondPage] = await Promise.all([
       firstResponse.json(),
+      repeatedFirstResponse.json(),
       secondResponse.json(),
     ]);
     const firstCodes = new Set(
       firstPage.data.map((record: { code: string }) => record.code)
     );
     expect(firstResponse.status).toBe(200);
+    expect(repeatedFirstResponse.status).toBe(200);
     expect(secondResponse.status).toBe(200);
     expect(firstPage.meta.page).toBe(1);
     expect(secondPage.meta.page).toBe(2);
     expect(firstPage.data.length).toBeGreaterThan(0);
     expect(secondPage.data.length).toBeGreaterThan(0);
+    expect(
+      firstPage.data.map((record: { code: string }) => record.code)
+    ).toEqual(
+      repeatedFirstPage.data.map((record: { code: string }) => record.code)
+    );
+    expect(
+      firstPage.data.map((record: { code: string }) => record.code)
+    ).toEqual(
+      [...firstCodes].sort((left, right) => left.localeCompare(right, "pt-BR"))
+    );
     expect(
       secondPage.data.some((record: { code: string }) =>
         firstCodes.has(record.code)

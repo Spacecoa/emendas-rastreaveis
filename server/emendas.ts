@@ -25,6 +25,7 @@ import {
   fetchPortalAmendments,
   type OfficialAmendment,
 } from "./portalTransparency";
+import { containsLikePattern } from "./querySafety";
 
 export async function upsertPortalSource(
   status: "available" | "failed",
@@ -255,11 +256,9 @@ export async function getStoredMunicipalityAmendments(input: {
     )
     .orderBy(amendments.code)
     .limit(100);
-  const records = await Promise.all(
-    rows.map(row => getStoredAmendment(row.code, input.year))
-  );
-  return records.filter(
-    (record): record is OfficialAmendment => record !== null
+  return getStoredAmendmentsByCodes(
+    rows.map(row => row.code),
+    input.year
   );
 }
 
@@ -570,51 +569,76 @@ export async function getPublicCoverageSummary(
   };
 }
 
+async function getStoredAmendmentsByCodes(
+  codes: string[],
+  year: number
+): Promise<OfficialAmendment[]> {
+  const db = await getDb();
+  const uniqueCodes = Array.from(new Set(codes));
+  if (!db || !uniqueCodes.length) return [];
+  const [amendmentRows, stageRows] = await Promise.all([
+    db
+      .select({ amendment: amendments, authorName: authors.name })
+      .from(amendments)
+      .leftJoin(authors, eq(amendments.authorId, authors.id))
+      .where(
+        and(eq(amendments.year, year), inArray(amendments.code, uniqueCodes))
+      )
+      .orderBy(asc(amendments.code), asc(amendments.id)),
+    db
+      .select({
+        amendmentId: executionStages.amendmentId,
+        stage: executionStages.stage,
+        amount: executionStages.amount,
+      })
+      .from(executionStages)
+      .innerJoin(amendments, eq(executionStages.amendmentId, amendments.id))
+      .where(
+        and(eq(amendments.year, year), inArray(amendments.code, uniqueCodes))
+      ),
+  ]);
+  const stagesByAmendment = new Map<number, Map<string, number | null>>();
+  for (const stage of stageRows) {
+    const amounts = stagesByAmendment.get(stage.amendmentId) ?? new Map();
+    amounts.set(
+      stage.stage,
+      stage.amount === null ? null : Number(stage.amount)
+    );
+    stagesByAmendment.set(stage.amendmentId, amounts);
+  }
+  return amendmentRows.map(row => {
+    const amendment = row.amendment;
+    const amounts = stagesByAmendment.get(amendment.id) ?? new Map();
+    const amountAt = (stage: string) => amounts.get(stage) ?? null;
+    return {
+      code: amendment.code,
+      year: amendment.year,
+      type: amendment.amendmentType,
+      author: row.authorName ?? null,
+      number: amendment.amendmentNumber,
+      locality: amendment.locality,
+      budgetFunction: amendment.budgetFunction,
+      budgetSubfunction: amendment.budgetSubfunction,
+      committed: amountAt("empenho"),
+      settled: amountAt("liquidacao"),
+      paid: amountAt("pagamento"),
+      remainingRegistered: amountAt("restos_inscritos"),
+      remainingCancelled: amountAt("restos_cancelados"),
+      remainingPaid: amountAt("restos_pagos"),
+      complianceStatus: amendment.complianceStatus,
+      source: amendment.source as OfficialAmendment["source"],
+      sourceUrl: amendment.sourceUrl,
+      extractedAt: amendment.extractedAt.toISOString(),
+      recordHash: amendment.recordHash,
+    };
+  });
+}
+
 export async function getStoredAmendment(
   code: string,
   year: number
 ): Promise<OfficialAmendment | null> {
-  const db = await getDb();
-  if (!db) return null;
-  const row = (
-    await db
-      .select({ amendment: amendments, authorName: authors.name })
-      .from(amendments)
-      .leftJoin(authors, eq(amendments.authorId, authors.id))
-      .where(and(eq(amendments.code, code), eq(amendments.year, year)))
-      .limit(1)
-  )[0];
-  if (!row) return null;
-  const amendment = row.amendment;
-  const stages = await db
-    .select()
-    .from(executionStages)
-    .where(eq(executionStages.amendmentId, amendment.id));
-  const amountAt = (stage: string) => {
-    const value = stages.find(item => item.stage === stage)?.amount;
-    return value === null || value === undefined ? null : Number(value);
-  };
-  return {
-    code: amendment.code,
-    year: amendment.year,
-    type: amendment.amendmentType,
-    author: row.authorName ?? null,
-    number: amendment.amendmentNumber,
-    locality: amendment.locality,
-    budgetFunction: amendment.budgetFunction,
-    budgetSubfunction: amendment.budgetSubfunction,
-    committed: amountAt("empenho"),
-    settled: amountAt("liquidacao"),
-    paid: amountAt("pagamento"),
-    remainingRegistered: amountAt("restos_inscritos"),
-    remainingCancelled: amountAt("restos_cancelados"),
-    remainingPaid: amountAt("restos_pagos"),
-    complianceStatus: amendment.complianceStatus,
-    source: amendment.source as OfficialAmendment["source"],
-    sourceUrl: amendment.sourceUrl,
-    extractedAt: amendment.extractedAt.toISOString(),
-    recordHash: amendment.recordHash,
-  };
+  return (await getStoredAmendmentsByCodes([code], year))[0] ?? null;
 }
 
 export async function searchStoredAmendments(input: {
@@ -629,10 +653,10 @@ export async function searchStoredAmendments(input: {
 }): Promise<OfficialAmendment[]> {
   const db = await getDb();
   if (!db) return [];
-  const query = input.query.trim();
+  const query = input.query.trim().slice(0, 120);
   const filters = [eq(amendments.year, input.year)];
   if (query) {
-    const pattern = `%${query}%`;
+    const pattern = containsLikePattern(query);
     filters.push(
       or(
         like(amendments.code, pattern),
@@ -664,12 +688,28 @@ export async function searchStoredAmendments(input: {
     )`);
   }
   if (input.status) filters.push(eq(amendments.complianceStatus, input.status));
-  if (input.author)
-    filters.push(like(authors.name, `%${input.author.trim()}%`));
-  if (input.budgetFunction)
+  if (input.author) {
     filters.push(
-      like(amendments.budgetFunction, `%${input.budgetFunction.trim()}%`)
+      like(authors.name, containsLikePattern(input.author.trim().slice(0, 255)))
     );
+  }
+  if (input.budgetFunction) {
+    filters.push(
+      like(
+        amendments.budgetFunction,
+        containsLikePattern(input.budgetFunction.trim().slice(0, 180))
+      )
+    );
+  }
+  if (input.minPaid !== undefined) {
+    filters.push(sql`EXISTS (
+      SELECT 1
+      FROM execution_stages AS pagamento
+      WHERE pagamento.amendmentId = ${amendments.id}
+        AND pagamento.stage = 'pagamento'
+        AND pagamento.amount >= ${input.minPaid}
+    )`);
+  }
 
   const page = Math.max(1, input.page ?? 1);
   const rows = await db
@@ -677,17 +717,14 @@ export async function searchStoredAmendments(input: {
     .from(amendments)
     .leftJoin(authors, eq(amendments.authorId, authors.id))
     .where(and(...filters))
+    .orderBy(asc(amendments.code), asc(amendments.id))
     .limit(40)
     .offset((page - 1) * 40);
-  const records = await Promise.all(
-    rows.map(row => getStoredAmendment(row.code, input.year))
+  const records = await getStoredAmendmentsByCodes(
+    rows.map(row => row.code),
+    input.year
   );
-  return records.filter(
-    (record): record is OfficialAmendment =>
-      record !== null &&
-      (input.minPaid === undefined ||
-        (record.paid !== null && record.paid >= input.minPaid))
-  );
+  return records;
 }
 
 export async function hasStoredAmendments(year: number): Promise<boolean> {

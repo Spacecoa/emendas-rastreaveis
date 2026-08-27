@@ -161,3 +161,11 @@
 - [x] Revalidar as telas simplificadas em desktop e celular, incluindo leitura por teclado e auditoria axe.
 - [x] Gerar um pacote completo do código-fonte versionado para revisão no Claude, excluindo credenciais, ambiente, dependências, build, dados e logs sensíveis.
 - [x] Validar o inventário e o pacote de código para ausência de segredos aparentes e alinhamento com o guia de auditoria.
+- [x] Verificar e eliminar a rota pública de armazenamento presignado sem uso pelo produto, impedindo acesso anônimo a caminhos arbitrários.
+- [x] Corrigir consultas públicas para escapar curingas de busca, limitar abuso por origem e remover padrões N+1 que pressionem o banco.
+- [x] Configurar com segurança a identificação de cliente atrás de proxy para que o limite de uso do chat não se torne global.
+- [x] Estabilizar a ordem dos resultados e das exportações com ordenação explícita e critérios de desempate verificáveis.
+- [x] Verificar o isolamento de sessão entre aplicações e documentar qualquer confirmação ainda necessária da plataforma.
+- [x] Testar os achados corrigidos contra as bases persistidas e registrar o parecer para os itens dependentes de confirmação humana.
+- [ ] Confirmar com a plataforma o isolamento de `JWT_SECRET` por projeto e uma política de limite agregada no gateway para a hospedagem com múltiplas instâncias.
+- [ ] Receber os outros achados da auditoria com arquivo, linha e cenário de reprodução para validação técnica individual.

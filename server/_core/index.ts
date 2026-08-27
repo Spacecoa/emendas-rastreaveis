@@ -4,11 +4,11 @@ import { createServer } from "http";
 import net from "net";
 import { createExpressMiddleware } from "@trpc/server/adapters/express";
 import { registerOAuthRoutes } from "./oauth";
-import { registerStorageProxy } from "./storageProxy";
 import { appRouter } from "../routers";
 import { registerPublicApi } from "../publicApi";
 import { registerScheduledHandlers } from "../scheduled";
 import { createContext } from "./context";
+import { registerPublicHttpSecurity } from "../httpSecurity";
 import { serveStatic, setupVite } from "./vite";
 
 function isPortAvailable(port: number): Promise<boolean> {
@@ -33,10 +33,11 @@ async function findAvailablePort(startPort: number = 3000): Promise<number> {
 async function startServer() {
   const app = express();
   const server = createServer(app);
-  // Configure body parser with larger size limit for file uploads
-  app.use(express.json({ limit: "50mb" }));
-  app.use(express.urlencoded({ limit: "50mb", extended: true }));
-  registerStorageProxy(app);
+  registerPublicHttpSecurity(app);
+  // A plataforma não recebe arquivos pela API pública. O limite cobre o chat
+  // e os formulários existentes sem aceitar corpos excessivamente grandes.
+  app.use(express.json({ limit: "64kb" }));
+  app.use(express.urlencoded({ limit: "64kb", extended: true }));
   registerOAuthRoutes(app);
   registerPublicApi(app);
   registerScheduledHandlers(app);

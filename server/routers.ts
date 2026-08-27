@@ -22,6 +22,7 @@ import { systemRouter } from "./_core/systemRouter";
 import { protectedProcedure, publicProcedure, router } from "./_core/trpc";
 import { getOfficialSuggestions } from "./publicApi";
 import { askPublicDataChat } from "./publicChat";
+import { getClientRequestKey } from "./publicRateLimit";
 
 const queryInput = z.object({
   query: z.string().trim().max(120).default(""),
@@ -239,7 +240,7 @@ export const appRouter = router({
       .mutation(async ({ ctx, input }) =>
         askPublicDataChat({
           ...input,
-          requestKey: ctx.req.ip ?? ctx.req.socket.remoteAddress ?? "public",
+          requestKey: getClientRequestKey(ctx.req),
         })
       ),
   }),
